@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">HideAndHunt</string>
+    <string name="playButtonText">Play</string>
+    <string name="start_game">Start game</string>
+
+    <string name="title_activity_predator">PredatorActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
