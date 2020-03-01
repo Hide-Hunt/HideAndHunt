@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import ch.epfl.sdp.databinding.ActivityLobbyBinding;
+import ch.epfl.sdp.game.PredatorActivity;
 
 public class LobbyActivity extends AppCompatActivity {
     private ActivityLobbyBinding lobbyBinding;

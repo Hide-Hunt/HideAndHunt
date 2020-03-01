@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ch.epfl.sdp">
 
     <application
@@ -11,10 +12,11 @@
         android:theme="@style/AppTheme"
         android:fullBackupContent="true">
         <activity
-            android:name=".PredatorActivity"
+            android:name=".game.PredatorActivity"
+            android:screenOrientation="sensorLandscape"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_predator"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/FullscreenNoTitle"
+            tools:ignore="LockedOrientationActivity" />
         <activity android:name=".LobbyActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -24,5 +26,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
