@@ -6,4 +6,8 @@
     <string name="title_activity_predator">PredatorActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!-- Prey catching fragment -->
+    <string name="prey_alive">Your prey is alive</string>
+    <string name="prey_dead">Your prey is dead</string>
 </resources>
