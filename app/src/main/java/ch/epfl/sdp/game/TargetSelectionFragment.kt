@@ -14,74 +14,85 @@ import java.io.Serializable
 import java.util.*
 
 /**
- * A simple [Fragment] subclass.
- * Use the [TargetSelectionFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * A player selection fragment.
+ * Use the [TargetSelectionFragment.newInstance] factory method to create an instance of this fragment.
  */
 class TargetSelectionFragment : Fragment() {
     interface OnTargetSelectedListener {
         fun onTargetSelected(targetID: Int)
     }
 
-    data class PreyList (val preys: List<Player>)
-
-    class TargetNotFound : IndexOutOfBoundsException()
-
     private var _binding: FragmentTargetSelectionBinding? = null
     private val binding get() = _binding!!
 
 
-    private lateinit var targetSelectionDialog: AlertDialog
-    private lateinit var listener: OnTargetSelectedListener
+    private var targetSelectionDialog: AlertDialog? = null
+    var listener: OnTargetSelectedListener? = null
     private lateinit var targets: Map<Int, Player>
+
     var selectedTargetID = 0
-    set(value) {
-        if (value == NO_TARGET || targets.containsKey(value)) {
-            field = value
-            updateTargetDisplay()
-            listener.onTargetSelected(selectedTargetID)
-        } else {
-            throw TargetNotFound()
+        set(value) {
+            if (value == NO_TARGET || targets.containsKey(value)) {
+                field = value
+                updateTargetDisplay()
+                listener?.onTargetSelected(selectedTargetID)
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { args ->
-            @Suppress("UNCHECKED_CAST") // TODO Do this in a cleaner way
-            val targetList = args.getSerializable(ARG_TARGETS) as List<Player>
-            targets = targetList.associateBy { it.id }.toMap()
-
-            val adapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, targetList)
-            val builder = AlertDialog.Builder(activity)
-            builder.setTitle("Select a target")
-                    .setAdapter(adapter) { _, which ->
-                        selectedTargetID = targetList[which].id
-                        updateTargetDisplay()
-                    }
-            targetSelectionDialog = builder.create()
+        val targetList = if (arguments != null) {
+            @Suppress("UNCHECKED_CAST")
+            arguments!!.getSerializable(ARG_TARGETS) as List<Player>
+        } else {
+            ArrayList()
         }
+
+        targets = targetList.associateBy { it.id }.toMap()
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, targetList)
+        val builder = AlertDialog.Builder(activity)
+        builder.setTitle(getString(R.string.targetSelectionDialogTitle))
+                .setAdapter(adapter) { _, which ->
+                    selectedTargetID = targetList[which].id
+                    updateTargetDisplay()
+                }
+        targetSelectionDialog = builder.create()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? { // Inflate the layout for this fragment
         _binding = FragmentTargetSelectionBinding.inflate(inflater, container, false)
-        binding.mainFrame.setOnClickListener { targetSelectionDialog.show() }
-        selectedTargetID = NO_TARGET
+
+        binding.targetSelectionMainLayout.setOnClickListener {
+            targetSelectionDialog?.show()
+        }
+
+        selectedTargetID = savedInstanceState?.getInt(ARG_SELECTED_TARGET_ID) ?: NO_TARGET
+
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.targetSelectionMainLayout.setOnClickListener(null)
         _binding = null
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = try {
-            context as OnTargetSelectedListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnTargetSelectedListener")
+        if (context is OnTargetSelectedListener) {
+            listener = context
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ARG_SELECTED_TARGET_ID, selectedTargetID)
     }
 
     private fun updateTargetDisplay() {
@@ -93,11 +104,11 @@ class TargetSelectionFragment : Fragment() {
     }
 
     companion object {
-        var NO_TARGET = -1
+        const val NO_TARGET = -1
         private const val ARG_TARGETS = "targets"
+        private const val ARG_SELECTED_TARGET_ID = "selectedTargetID"
         /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
+         * Use this factory method to create a new instance of this fragment using the provided parameters.
          *
          * @param targets List of all selectable targets
          * @return A new instance of fragment TargetSelectionFragment.
