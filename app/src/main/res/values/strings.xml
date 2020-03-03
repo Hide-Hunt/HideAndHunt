@@ -6,4 +6,7 @@
     <string name="title_activity_predator">PredatorActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="predator_faction_name">Predator</string>
+    <string name="prey_faction_name">Prey</string>
 </resources>
