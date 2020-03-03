@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 jacoco {
     toolVersion = "0.8.4"
@@ -42,6 +44,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 
