@@ -6,15 +6,22 @@ import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-   // private var mainBinding: ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var mainBinding: ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mainBinding.root)
-        mainBinding.playButton.setOnClickListener {
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.playButton.setOnClickListener {
             val intent = Intent(this@MainActivity, LobbyActivity::class.java)
             //val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+        binding.loginButton.setOnClickListener{
+            val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
         }
     }

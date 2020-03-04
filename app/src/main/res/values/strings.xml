@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">HideAndHunt</string>
+    <string name="app_name">Hide &amp; Hunt</string>
     <string name="playButtonText">Play</string>
+    <string name="loginButtonText">Login</string>
+    <string name="titleText">Hide &amp; Hunt</string>
     <string name="start_game">Start game</string>
 
     <string name="title_activity_predator">PredatorActivity</string>
