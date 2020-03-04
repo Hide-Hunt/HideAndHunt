@@ -25,7 +25,7 @@ class PlayerParametersFragment : Fragment(), View.OnClickListener {
         fun onFactionChange(newFaction: Faction)
     }
 
-    private var listener: OnFactionChangeListener? = null
+    var listener: OnFactionChangeListener? = null
     private lateinit var binding: FragmentPlayerParametersBinding
 
     override fun onAttach(context: Context) {
