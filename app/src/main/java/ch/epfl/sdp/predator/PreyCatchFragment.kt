@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.ActivityLobbyBinding
 import ch.epfl.sdp.databinding.FragmentPreyCatchBinding
+import java.lang.IllegalArgumentException
 
 class PreyCatchFragment : Fragment() {
 
@@ -30,6 +31,10 @@ class PreyCatchFragment : Fragment() {
             val txt = preyCatchBinding?.preyState
             txt?.setText(R.string.prey_dead)
         }
+    }
+
+    fun tagIdToString(id: ByteArray?): String {
+        return id?.fold("", { acc, b -> acc + b.toUByte().toString(16) }) ?: ""
     }
 
 }

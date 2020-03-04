@@ -25,24 +25,4 @@ class PreyCatchFragmentTestActivityTest {
             assert(activity.pcf != null)
         }
     }
-
-    @Test
-    fun tagToStringReturnsCorrectValues() {
-        val scenario = launchActivity<PreyCatchFragmentTestActivity>()
-        scenario.onActivity { activity ->
-            val bytes = ByteArray(2)
-            bytes[0] = 0xFF.toByte()
-            bytes[1] = 0xCA.toByte()
-            assert(activity.tagIdToString(bytes) == "FFCA")
-        }
-    }
-
-    @Test
-    fun tagToStringThrowsIfArgumentIsNull() {
-        val scenario = launchActivity<PreyCatchFragmentTestActivity>()
-        scenario.onActivity { activity ->
-            exceptionRule.expect(RuntimeException::class.java)
-            activity.tagIdToString(null)
-        }
-    }
 }

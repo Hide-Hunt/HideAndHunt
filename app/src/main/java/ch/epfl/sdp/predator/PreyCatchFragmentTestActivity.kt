@@ -48,15 +48,9 @@ class PreyCatchFragmentTestActivity : AppCompatActivity() {
         super.onNewIntent(intent);
         if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             val tag: Tag? = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
-            pcf.onNfcTagRead(this.tagIdToString(tag?.id))
+            pcf.onNfcTagRead(pcf.tagIdToString(tag?.id))
         }
     }
 
-    fun tagIdToString(id: ByteArray?): String {
-        if(id != null) {
-            return id.fold("", { acc, b -> acc + b.toUByte().toString(16) })
-        } else {
-            throw IllegalArgumentException("Null byte array")
-        }
-    }
+
 }

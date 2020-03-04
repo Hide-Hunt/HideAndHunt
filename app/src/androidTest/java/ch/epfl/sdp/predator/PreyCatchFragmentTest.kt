@@ -1,6 +1,7 @@
 package ch.epfl.sdp.predator
 
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -9,6 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.R
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.RuntimeException
 
 @RunWith(AndroidJUnit4::class)
 class PreyCatchFragmentTest {
@@ -47,5 +49,25 @@ class PreyCatchFragmentTest {
         scenario.onFragment { fragment -> fragment.targetTag = "tag" }
         scenario.onFragment { fragment -> fragment.onNfcTagRead("tag") }
         onView(withId(R.id.prey_state)).check(ViewAssertions.matches(withText(R.string.prey_dead)))
+    }
+
+    @Test
+    fun tagToStringReturnsCorrectValues() {
+        val scenario = launchFragmentInContainer<PreyCatchFragment>()
+        scenario.onFragment { frag ->
+            val bytes = ByteArray(2)
+            bytes[0] = 0xFF.toByte()
+            bytes[1] = 0xCA.toByte()
+            assert(frag.tagIdToString(bytes) == "FFCA")
+        }
+    }
+
+    @Test
+    fun tagToStringReturnsEmptyStringIfArgumentIsNull() {
+        val scenario = launchFragmentInContainer<PreyCatchFragment>()
+        scenario.onFragment { frag ->
+            val s = frag.tagIdToString(null)
+            assert(s == "")
+        }
     }
 }
