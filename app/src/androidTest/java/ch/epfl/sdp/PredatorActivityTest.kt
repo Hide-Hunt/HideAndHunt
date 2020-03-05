@@ -9,7 +9,7 @@ import org.junit.Test
 class PredatorActivityTest {
     @Test
     fun dummyLiveTest() {
-        launchActivity<PreyActivity>()
+        launchActivity<PredatorActivity>()
 
         Espresso.onView(ViewMatchers.withId(R.id.fullscreen_content)).perform(ViewActions.click())
     }
