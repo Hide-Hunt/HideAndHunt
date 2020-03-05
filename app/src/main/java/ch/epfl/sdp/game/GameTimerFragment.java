@@ -28,7 +28,7 @@ public class GameTimerFragment extends Fragment {
     private static final int COUNTDOWN_INTERVAL = 1000;
 
     private TextView textView;
-    private GameTimeOutListener listener;
+    public GameTimeOutListener listener;
 
     public GameTimerFragment() {}
 
