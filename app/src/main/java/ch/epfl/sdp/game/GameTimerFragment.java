@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import ch.epfl.sdp.R;
 import ch.epfl.sdp.databinding.FragmentGameTimerBinding;
 
 public class GameTimerFragment extends Fragment {
@@ -63,8 +64,7 @@ public class GameTimerFragment extends Fragment {
                         listener.onTimeOut();
                     }
                     else {
-                        String endText = "GAME OVER !";
-                        textView.setText(endText);
+                        textView.setText(R.string.game_over);
                     }
                 }
             }.start();
