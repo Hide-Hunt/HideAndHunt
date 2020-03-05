@@ -8,6 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.R
+import junit.framework.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.lang.RuntimeException
@@ -58,7 +59,7 @@ class PreyCatchFragmentTest {
             val bytes = ByteArray(2)
             bytes[0] = 0xFF.toByte()
             bytes[1] = 0xCA.toByte()
-            assert(frag.tagIdToString(bytes) == "FFCA")
+            assertEquals("ffca", frag.tagIdToString(bytes))
         }
     }
 
@@ -67,7 +68,7 @@ class PreyCatchFragmentTest {
         val scenario = launchFragmentInContainer<PreyCatchFragment>()
         scenario.onFragment { frag ->
             val s = frag.tagIdToString(null)
-            assert(s == "")
+            assertEquals("", s)
         }
     }
 }
