@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.fragment.app.FragmentContainerView
+    <fragment
         android:id="@+id/factionSelector"
         android:name="ch.epfl.sdp.lobby.PlayerParametersFragment"
         android:layout_width="wrap_content"
