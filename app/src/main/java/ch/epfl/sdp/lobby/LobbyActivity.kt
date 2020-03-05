@@ -9,7 +9,7 @@ import ch.epfl.sdp.databinding.ActivityLobbyBinding
 
 class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionChangeListener {
     private lateinit var lobbyBinding: ActivityLobbyBinding
-    private lateinit var myFaction: PlayerParametersFragment.Faction
+    private var myFaction: PlayerParametersFragment.Faction = PlayerParametersFragment.Faction.PREY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
