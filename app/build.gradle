@@ -59,6 +59,8 @@ dependencies {
     def fragment_version = "1.2.2"
     debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
     androidTestImplementation 'androidx.test:core-ktx:1.2.0'
+
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
 }
 
 
