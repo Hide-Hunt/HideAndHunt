@@ -10,6 +10,6 @@ class PredatorActivityTest {
 
     @Test
     fun activityDoesntCrash() {
-        val scenario = launchActivity<LobbyActivity>()
+        val scenario = launchActivity<PredatorActivity>()
     }
 }
