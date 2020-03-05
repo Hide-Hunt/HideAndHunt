@@ -1,5 +1,6 @@
 package ch.epfl.sdp.game;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -11,14 +12,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import ch.epfl.sdp.R;
+import ch.epfl.sdp.databinding.FragmentGameTimerBinding;
 
 public class GameTimerFragment extends Fragment {
+
+    public interface GameTimeOutListener {
+        void onTimeOut();
+    }
+
+
+    private FragmentGameTimerBinding binding;
 
     private static final String ARG_TIME = "time";
     private static final int COUNTDOWN_INTERVAL = 1000;
 
     private TextView textView;
+    private GameTimeOutListener listener;
 
     public GameTimerFragment() {}
 
@@ -33,30 +42,52 @@ public class GameTimerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_game_timer,container,false);
+        binding = FragmentGameTimerBinding.inflate(inflater,container,false);
+        return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        textView = view.findViewById(R.id.currentTime);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        textView = binding.currentTime;
+
         if (getArguments() != null) {
             new CountDownTimer(getArguments().getLong(ARG_TIME), COUNTDOWN_INTERVAL) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    int seconds = (int) (millisUntilFinished / 1000) % 60;
-                    String secondsString;
-                    if (seconds < 10) secondsString = "0" + seconds;
-                    else secondsString = String.valueOf(seconds);
-                    String timeLeft = (int) millisUntilFinished / 60000 + ":" + secondsString;
-                    textView.setText(timeLeft);
+                    textView.setText(millisToTimeString(millisUntilFinished));
                 }
 
                 @Override
                 public void onFinish() {
-                    String endText = "GAME OVER !";
-                    textView.setText(endText);
+                    if (listener != null) {
+                        listener.onTimeOut();
+                    }
+                    else {
+                        String endText = "GAME OVER !";
+                        textView.setText(endText);
+                    }
                 }
             }.start();
+        } else {
+            textView.setText("--:--");
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof GameTimeOutListener) {
+            this.listener = (GameTimeOutListener) context;
+        }
+    }
+
+    private String millisToTimeString(long millis) {
+        int seconds = (int) (millis / 1000) % 60;
+
+        String secondsString;
+        if (seconds < 10) secondsString = "0" + seconds;
+        else secondsString = String.valueOf(seconds);
+
+        return (int) millis / 60000 + ":" + secondsString;
     }
 }
