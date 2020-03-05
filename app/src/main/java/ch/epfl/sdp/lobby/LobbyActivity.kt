@@ -9,7 +9,7 @@ import ch.epfl.sdp.databinding.ActivityLobbyBinding
 
 class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionChangeListener {
     private lateinit var lobbyBinding: ActivityLobbyBinding
-    private var myFaction: PlayerParametersFragment.Faction = PlayerParametersFragment.Faction.PREY
+    private var myFaction: PlayerParametersFragment.Faction = PlayerParametersFragment.Faction.PREDATOR
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,10 +17,11 @@ class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionCha
 
         setContentView(lobbyBinding.root)
         lobbyBinding.startGameButton.setOnClickListener {
-            val intent = if (myFaction == PlayerParametersFragment.Faction.PREDATOR)
+            val intent = if (myFaction == PlayerParametersFragment.Faction.PREDATOR) {
                 Intent(this@LobbyActivity, PredatorActivity::class.java)
-            else
+            } else {
                 Intent(this@LobbyActivity, PreyActivity::class.java)
+            }
             startActivity(intent)
         }
     }

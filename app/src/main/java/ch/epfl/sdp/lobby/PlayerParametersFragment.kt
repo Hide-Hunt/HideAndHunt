@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.FragmentPlayerParametersBinding
@@ -15,13 +16,14 @@ import ch.epfl.sdp.databinding.FragmentPlayerParametersBinding
  * Use the [PlayerParametersFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class PlayerParametersFragment : Fragment(), View.OnClickListener {
+class PlayerParametersFragment : Fragment() {
 
-    enum class Faction{
+    enum class Faction {
         PREY,
         PREDATOR,
     }
-    interface OnFactionChangeListener{
+
+    interface OnFactionChangeListener {
         fun onFactionChange(newFaction: Faction)
     }
 
@@ -45,15 +47,21 @@ class PlayerParametersFragment : Fragment(), View.OnClickListener {
         arguments?.let {
             // Check whether the required parameters are in there
         }
-        binding = FragmentPlayerParametersBinding.inflate(layoutInflater)
-
-        binding.switchFaction.setOnClickListener(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_player_parameters, container, false)
+
+        binding = FragmentPlayerParametersBinding.inflate(inflater)
+
+        binding.switchFaction.setOnClickListener {
+            if (binding.switchFaction.isChecked) {
+                listener?.onFactionChange(Faction.PREY)
+            } else {
+                listener?.onFactionChange(Faction.PREDATOR)
+            }
+        }
+        return binding.root
     }
 
     companion object {
@@ -72,10 +80,4 @@ class PlayerParametersFragment : Fragment(), View.OnClickListener {
                 }
     }
 
-    override fun onClick(v: View?) {
-        if(binding.switchFaction.isChecked)
-            listener?.onFactionChange(Faction.PREY)
-        else
-            listener?.onFactionChange(Faction.PREDATOR)
-    }
 }
