@@ -17,10 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".PreyActivity"
+            android:name=".game.PreyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_prey"
-            android:theme="@style/FullscreenTheme"/>
+            android:theme="@style/FullscreenNoTitle"/>
         <activity
             android:name=".game.PredatorActivity"
             android:screenOrientation="sensorLandscape"

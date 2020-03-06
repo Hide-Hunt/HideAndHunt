@@ -1,9 +1,10 @@
-package ch.epfl.sdp
+package ch.epfl.sdp.game
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import ch.epfl.sdp.R
 import kotlinx.android.synthetic.main.activity_prey.*
 
 /**
