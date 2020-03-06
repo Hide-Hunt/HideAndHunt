@@ -15,7 +15,7 @@
         android:layout_marginTop="24dp"
         android:gravity="center"
         android:keepScreenOn="true"
-        android:text="Predator"
+        android:text="@string/predator_title"
         android:textColor="#33b5e5"
         android:textSize="50sp"
         android:textStyle="bold"
@@ -34,27 +34,16 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/targetInfo2"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/targetDistancePlaceHolder"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fullscreen_content">
 
-        <TextView
-            android:id="@+id/distanceLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Target distance:"
-            android:textAlignment="center" />
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/currentTargetDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="-" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

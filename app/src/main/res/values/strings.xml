@@ -12,4 +12,5 @@
 
     <string name="no_distance_label">Acquiring target…</string>
     <string name="distance_signal_description">distance_signal</string>
+    <string name="predator_title">Predator</string>
 </resources>
