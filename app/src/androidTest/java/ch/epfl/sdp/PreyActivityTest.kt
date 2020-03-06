@@ -4,16 +4,14 @@ import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import ch.epfl.sdp.lobby.LobbyActivity
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class PredatorActivityTest {
-
+class PreyActivityTest{
     @Test
-    fun activityDoesNotCrash() {
-        launchActivity<PredatorActivity>()
+    fun dummyLiveTest() {
+        launchActivity<PreyActivity>()
+
         Espresso.onView(ViewMatchers.withId(R.id.fullscreen_content)).perform(ViewActions.click())
     }
 }
