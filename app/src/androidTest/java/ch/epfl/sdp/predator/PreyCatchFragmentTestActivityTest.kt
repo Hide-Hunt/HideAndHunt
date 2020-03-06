@@ -23,4 +23,12 @@ class PreyCatchFragmentTestActivityTest {
             assertNotEquals(null, activity.pcf)
         }
     }
+
+    @Test
+    fun fragmentFunctionCallDoesNotCrash() {
+        val scenario = launchActivity<PreyCatchFragmentTestActivity>()
+        scenario.onActivity { activity ->
+            activity.pcf.onNfcTagRead(activity.pcf.tagIdToString(ByteArray(10)))
+        }
+    }
 }

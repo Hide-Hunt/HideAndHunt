@@ -14,7 +14,7 @@ import java.lang.IllegalArgumentException
 class PreyCatchFragment : Fragment() {
 
     var targetTag: String = ""
-    private var preyCatchBinding: FragmentPreyCatchBinding? = null
+    private lateinit var preyCatchBinding: FragmentPreyCatchBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,13 +23,13 @@ class PreyCatchFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         preyCatchBinding = FragmentPreyCatchBinding.inflate(inflater)
-        return preyCatchBinding?.root
+        return preyCatchBinding.root
     }
 
     fun onNfcTagRead(tagID: String) {
         if(tagID != "" && tagID == targetTag) {
-            val txt = preyCatchBinding?.preyState
-            txt?.setText(R.string.prey_dead)
+            val txt = preyCatchBinding.preyState
+            txt.setText(R.string.prey_dead)
         }
     }
 
