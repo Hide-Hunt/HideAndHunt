@@ -1,25 +1,58 @@
 package ch.epfl.sdp.game
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.widget.SeekBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import ch.epfl.sdp.databinding.ActivityPredatorBinding
 import ch.epfl.sdp.game.TargetSelectionFragment.Companion.newInstance
 import ch.epfl.sdp.game.TargetSelectionFragment.OnTargetSelectedListener
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
+    private lateinit var mLocationManager: LocationManager
     private var _binding: ActivityPredatorBinding? = null
     private val binding get() = _binding!!
 
     private var gameID = 0
     private var player: Player? = null
     private var targetID = 0
-    private val lastKnownLocation: Location? = null
+    private val lastKnownLocation: Location = Location(0.0,0.0)
     private lateinit var players: HashMap<Int, Player>
     private lateinit var targetSelectionFragment: TargetSelectionFragment
     private lateinit var targetSDistanceFragment: TargetDistanceFragment
+
+    private val mLocationListener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: android.location.Location) {
+            lastKnownLocation.latitude = location.latitude
+            lastKnownLocation.longitude = location.longitude
+            if (targetID != TargetSelectionFragment.NO_TARGET) {
+                targetSDistanceFragment.distance =
+                        players[targetID]?.lastKnownLocation?.distanceTo(lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
+            }
+        }
+
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+            Toast.makeText(applicationContext, "Location: onStatusChanged: $status", Toast.LENGTH_LONG).show()
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            if (targetID != TargetSelectionFragment.NO_TARGET) {
+                targetSDistanceFragment.distance = TargetDistanceFragment.NO_DISTANCE
+            }
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            targetSDistanceFragment.distance = TargetDistanceFragment.DISABLED
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +66,19 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         else { // Restore state from previous activity
             loadBundle(savedInstanceState)
         } */
+
+        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        enableRequestUpdates()
+
+        binding.distanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (targetID != TargetSelectionFragment.NO_TARGET) targetSDistanceFragment.distance = progress
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+
+        })
     }
 
     private fun loadIntentPayload(intent: Intent) {
@@ -55,7 +101,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         targetSelectionFragment = newInstance(ArrayList(players.values.toList()))
         fragmentTransaction.replace(binding.targetSelectionPlaceHolder.id, targetSelectionFragment)
 
-        targetSDistanceFragment = TargetDistanceFragment.newInstance(arrayListOf(0,10,20,30,40))
+        targetSDistanceFragment = TargetDistanceFragment.newInstance(arrayListOf(0,10,25,50,75))
         fragmentTransaction.replace(binding.targetDistancePlaceHolder.id, targetSDistanceFragment)
 
         fragmentTransaction.commit() // save the changes
@@ -78,5 +124,28 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
             players[targetID]?.lastKnownLocation = null
             targetSDistanceFragment.distance = TargetDistanceFragment.NO_DISTANCE
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+            enableRequestUpdates()
+        }
+    }
+
+    private fun enableRequestUpdates() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
+                return
+            }
+        }
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME.toLong(), LOCATION_REFRESH_DISTANCE.toFloat(), mLocationListener)
+    }
+
+    companion object {
+        private const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10
+        private const val LOCATION_REFRESH_TIME = 1000
+        private const val LOCATION_REFRESH_DISTANCE = 5
     }
 }
