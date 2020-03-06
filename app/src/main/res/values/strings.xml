@@ -3,6 +3,7 @@
     <string name="playButtonText">Play</string>
     <string name="start_game">Start game</string>
 
+    <string name="title_activity_predator">PredatorActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
@@ -13,4 +14,5 @@
     <string name="no_distance_label">Acquiring target…</string>
     <string name="distance_signal_description">distance_signal</string>
     <string name="predator_title">Predator</string>
+    <string name="tracking_disabled">Tracking disabled</string>
 </resources>
