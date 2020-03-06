@@ -22,7 +22,7 @@ class TargetDistanceFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var ranges: ArrayList<Int>
-    var distance = NO_DISTANCE
+    var distance = DISABLED
         set(value) {
             field = if (value < 0) { NO_DISTANCE } else { value }
             updateDistanceDisplay()
@@ -46,7 +46,7 @@ class TargetDistanceFragment : Fragment() {
     }
 
     private fun updateDistanceDisplay() {
-        if (distance != NO_DISTANCE) {
+        if (distance >= 0) {
             val index = ranges.indexOfFirst { i -> i > distance }
             if (index != -1) {
                 binding.distanceLabel.text = "%d - %d".format(ranges[index-1], ranges[index])
@@ -63,16 +63,20 @@ class TargetDistanceFragment : Fragment() {
                 binding.distanceLabel.text = "%d+".format(ranges.last())
                 binding.distanceImage.setImageResource(R.drawable.ic_signal_0)
             }
-        } else {
+        } else if (distance == NO_DISTANCE) {
             binding.distanceLabel.text = getString(R.string.no_distance_label)
             binding.distanceImage.setImageResource(R.drawable.no_signal_animation)
             val frameAnimation = binding.distanceImage.drawable as AnimationDrawable
             frameAnimation.start()
+        } else {
+            binding.distanceLabel.text = getString(R.string.tracking_disabled)
+            binding.distanceImage.setImageDrawable(null)
         }
     }
 
     companion object {
         const val NO_DISTANCE = -1
+        const val DISABLED = -2
 
         /**
          * Use this factory method to create a new instance of

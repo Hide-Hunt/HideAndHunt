@@ -7,6 +7,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import ch.epfl.sdp.EspressoTestsMatchers.noDrawable
 import ch.epfl.sdp.EspressoTestsMatchers.withDrawable
 import ch.epfl.sdp.R
 import kotlinx.android.synthetic.main.fragment_target_distance.*
@@ -16,19 +17,19 @@ import org.junit.Test
 
 class TargetDistanceFragmentTest {
     @Test
-    fun defaultDistanceShouldBeNoDistance() {
+    fun defaultDistanceShouldBeDisabled() {
         val scenario = launchFragmentInContainer<TargetDistanceFragment>()
         scenario.onFragment { fragment ->
-            assertEquals(fragment.distance, TargetDistanceFragment.NO_DISTANCE)
+            assertEquals(fragment.distance, TargetDistanceFragment.DISABLED)
         }
     }
 
     @Test
-    fun defaultLabelShouldBeAcquiring() {
+    fun defaultLabelShouldBeTrackingDisabled() {
         val scenario = launchFragmentInContainer<TargetDistanceFragment>()
         scenario.onFragment { fragment ->
             val resources = ApplicationProvider.getApplicationContext<Application>().resources
-            val text = resources.getString(R.string.no_distance_label)
+            val text = resources.getString(R.string.tracking_disabled)
             assertEquals(fragment.distanceLabel.text, text)
         }
     }
@@ -36,7 +37,7 @@ class TargetDistanceFragmentTest {
     @Test
     fun defaultImageShouldBeNoSignalAnimation() {
         launchFragmentInContainer<TargetDistanceFragment>()
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.no_signal_animation)))
+        onView(withId(R.id.distanceImage)).check(matches(noDrawable()))
     }
 
     @Test
@@ -156,6 +157,8 @@ class TargetDistanceFragmentTest {
         scenario.onFragment { it.distance = 41 }
         onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_0)))
         scenario.onFragment { it.distance = 100 }
+        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_0)))
+        scenario.onFragment { it.distance = TargetDistanceFragment.NO_DISTANCE }
         onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_0)))
     }
 }
