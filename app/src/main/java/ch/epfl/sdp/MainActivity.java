@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import ch.epfl.sdp.databinding.ActivityMainBinding;
+import ch.epfl.sdp.lobby.LobbyActivity;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mainBinding;

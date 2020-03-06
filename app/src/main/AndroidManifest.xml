@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".predator.PreyCatchFragmentTestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,12 +19,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".PreyActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_prey"
+            android:theme="@style/FullscreenTheme"/>
+        <activity
             android:name=".PredatorActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:label="@string/title_activity_predator"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".LobbyActivity" />
+        <activity android:name=".lobby.LobbyActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
