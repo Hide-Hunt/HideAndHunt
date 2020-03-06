@@ -10,6 +10,7 @@ class PredatorActivityTest {
 
     @Test
     fun activityDoesntCrash() {
-        val scenario = launchActivity<LobbyActivity>()
+        launchActivity<PredatorActivity>()
+        Espresso.onView(ViewMatchers.withId(R.id.fullscreen_content)).perform(ViewActions.click())
     }
 }
