@@ -52,7 +52,7 @@ class TargetSelectionFragment : Fragment() {
 
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, targetList)
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle(getString(R.string.targetSelectionDialogTitle))
+        builder.setTitle(getString(R.string.target_selection_dialog_title))
                 .setAdapter(adapter) { _, which ->
                     selectedTargetID = targetList[which].id
                     updateTargetDisplay()

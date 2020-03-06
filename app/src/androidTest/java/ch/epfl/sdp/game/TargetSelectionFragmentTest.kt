@@ -115,7 +115,7 @@ class TargetSelectionFragmentTest {
         // Click on the crosshair icon
         onView(withId(R.id.crosshair_icon)).perform(click())
         // Check for dialog being displayed
-        onView(withText(R.string.targetSelectionDialogTitle)).inRoot(isDialog()).check(matches(isDisplayed()))
+        onView(withText(R.string.target_selection_dialog_title)).inRoot(isDialog()).check(matches(isDisplayed()))
     }
 
     @Test
@@ -124,7 +124,7 @@ class TargetSelectionFragmentTest {
         // Click on the current target text
         onView(withId(R.id.currentTarget)).perform(click())
         // Check for dialog being displayed
-        onView(withText(R.string.targetSelectionDialogTitle)).inRoot(isDialog()).check(matches(isDisplayed()))
+        onView(withText(R.string.target_selection_dialog_title)).inRoot(isDialog()).check(matches(isDisplayed()))
     }
 
     @Test
@@ -133,7 +133,7 @@ class TargetSelectionFragmentTest {
         // Click on the current target text
         onView(withId(R.id.targetSelectionMainLayout)).perform(click())
         // Check for dialog being displayed
-        onView(withText(R.string.targetSelectionDialogTitle)).inRoot(isDialog()).check(matches(isDisplayed()))
+        onView(withText(R.string.target_selection_dialog_title)).inRoot(isDialog()).check(matches(isDisplayed()))
     }
 
     @Test

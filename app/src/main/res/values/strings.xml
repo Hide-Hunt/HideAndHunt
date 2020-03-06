@@ -14,7 +14,7 @@
 
     <string name="crosshair_icon">crosshair_icon</string>
     <string name="no_target">No target</string>
-    <string name="targetSelectionDialogTitle">Select a target</string>
+    <string name="target_selection_dialog_title">Select a target</string>
 
     <string name="no_distance_label">Acquiring target…</string>
     <string name="distance_signal_description">distance_signal</string>
