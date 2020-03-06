@@ -24,7 +24,7 @@ class TargetDistanceFragment : Fragment() {
     private lateinit var ranges: ArrayList<Int>
     var distance = DISABLED
         set(value) {
-            field = if (value < 0) { NO_DISTANCE } else { value }
+            field = if (value >= 0 || value == NO_DISTANCE || value == DISABLED) { value } else { NO_DISTANCE }
             updateDistanceDisplay()
         }
 
