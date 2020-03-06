@@ -27,18 +27,23 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         if (savedInstanceState == null) { // First load
             loadIntentPayload(intent)
             loadFragments()
-        } else { // Restore state from previous activity
+        } /* TODO get those information from bundle
+        else { // Restore state from previous activity
             loadBundle(savedInstanceState)
-        }
+        } */
     }
 
-    private fun loadIntentPayload(intent: Intent) { // TODO get those information from intent
+    private fun loadIntentPayload(intent: Intent) {
+        // TODO get those information from intent
         fakeLoad()
     }
 
-    private fun loadBundle(bundle: Bundle) { // TODO get those information from bundle
+    /*
+    private fun loadBundle(bundle: Bundle) {
+    // TODO get those information from bundle
         fakeLoad()
     }
+    */
 
     private fun loadFragments() { // create a FragmentManager
         val fm = supportFragmentManager
