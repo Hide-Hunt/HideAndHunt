@@ -3,6 +3,7 @@ package ch.epfl.sdp
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,21 @@ class LoginActivity : AppCompatActivity() {
         binding.loginSubmitButton.setOnClickListener {
             signIn(userNameLogin.text, userPasswordLogin.text)
         }
+        binding.registerSubmitButton.setOnClickListener {
+            register(userNameLogin.text, userPasswordLogin.text)
+        }
+    }
+
+    private fun register(email:Editable, password:Editable) {
+        auth.createUserWithEmailAndPassword(email.toString(), password.toString())
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val user = auth.currentUser
+                        changeDummyText("User " + user?.email + " created and logged-in")
+                    } else {
+                        changeDummyText("Creation of user failed")
+                    }
+                }
     }
 
     private fun signIn(email:Editable, password:Editable) {
@@ -31,14 +47,16 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         val user = auth.currentUser
-                        loginTextResult.text = "Login success"
                         Log.d("DEBUG", "User login success")
-                        setResult(10)
+                        changeDummyText("User " + user?.email + " logged in")
                     } else {
-                        loginTextResult.text = "Login failed"
                         Log.d("DEBUG", "User login failure")
-                        setResult(11)
+                        changeDummyText("Logged in failed")
                     }
                 }
+    }
+
+    private fun changeDummyText(text:String) {
+        binding.loginTextResult.text = text;
     }
 }
