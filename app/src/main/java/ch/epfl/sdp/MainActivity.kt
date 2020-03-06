@@ -9,19 +9,20 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.playButton.setOnClickListener {
             val intent = Intent(this@MainActivity, LobbyActivity::class.java)
-            //val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
         binding.loginButton.setOnClickListener{
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
+            startActivity(intent)
+        }
+        binding.registerButton.setOnClickListener{
+            val intent = Intent(this@MainActivity, RegisterActivity::class.java)
             startActivity(intent)
         }
     }

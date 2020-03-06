@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "835559017131-ul0vpdqdj5a6j2panmnspqlst4kjkssk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sdp",
+            "certificate_hash": "a4354fe39a744731dbc0b663acd78c103619f143"
+          }
+        },
+        {
           "client_id": "835559017131-4u0278oleu1hiilg7p58ha79pgat7lbo.apps.googleusercontent.com",
           "client_type": 3
         }
