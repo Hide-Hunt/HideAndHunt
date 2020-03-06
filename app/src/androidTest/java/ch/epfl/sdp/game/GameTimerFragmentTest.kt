@@ -38,5 +38,4 @@ class GameTimerFragmentTest {
         Thread.sleep(1001)
         assertTrue(callbackCalled)
     }
-
 }
