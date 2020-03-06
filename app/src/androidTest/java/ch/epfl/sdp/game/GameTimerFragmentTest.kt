@@ -8,6 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.R
+import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,6 +26,12 @@ class GameTimerFragmentTest {
     }
 
     @Test
+    fun timerShowsNoTimeWithoutArguments() {
+        launchFragmentInContainer<GameTimerFragment>()
+        onView(withId(R.id.currentTime)).check(ViewAssertions.matches(withText(R.string.no_timer)))
+    }
+
+    @Test
     fun testTimeOutListener() {
         val fragmentArgs = Bundle().apply { putLong("time", 1000) }
         val scenario = launchFragmentInContainer<GameTimerFragment>(fragmentArgs)
@@ -34,7 +41,10 @@ class GameTimerFragmentTest {
                 callbackCalled = true
             }
         }
-        scenario.onFragment { fragment -> fragment.listener = listener }
+        scenario.onFragment {
+            fragment -> fragment.listener = listener
+            assertEquals(fragment.listener,listener)
+        }
         Thread.sleep(1001)
         assertTrue(callbackCalled)
     }

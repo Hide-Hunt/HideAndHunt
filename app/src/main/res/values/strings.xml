@@ -3,6 +3,7 @@
     <string name="playButtonText">Play</string>
     <string name="start_game">Start game</string>
     <string name="game_over">GAME OVER !</string>
+    <string name="no_timer">--:--</string>
 
     <string name="title_activity_predator">PredatorActivity</string>
     <string name="dummy_button">Dummy Button</string>

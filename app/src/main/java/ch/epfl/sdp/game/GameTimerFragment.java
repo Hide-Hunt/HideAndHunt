@@ -69,7 +69,7 @@ public class GameTimerFragment extends Fragment {
                 }
             }.start();
         } else {
-            textView.setText("--:--");
+            textView.setText(R.string.no_timer);
         }
     }
 
