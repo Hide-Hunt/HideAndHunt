@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco'
+apply plugin: 'com.google.protobuf'
 
 jacoco {
     toolVersion = "0.8.4"
@@ -51,6 +52,10 @@ dependencies {
     implementation "androidx.core:core-ktx:+"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
+    implementation 'com.google.protobuf:protobuf-lite:3.0.1'
     debugImplementation 'androidx.fragment:fragment-testing:1.2.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:core-ktx:1.2.0'
@@ -86,6 +91,30 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     //noinspection GrDeprecatedAPIUsage
     sourceDirectories = files([mainSrc])
 }
+
 repositories {
     mavenCentral()
+    maven {
+        url "https://repo.eclipse.org/content/repositories/paho-snapshots/"
+    }
+}
+
+sourceSets{
+    main {
+        java.srcDirs += "${protobuf.generatedFilesBaseDir}/main/javalite"
+    }
+}
+
+protobuf {
+    protoc { artifact = 'com.google.protobuf:protoc:3.10.0' }
+    plugins {
+        javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                javalite {}
+            }
+        }
+    }
 }

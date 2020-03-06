@@ -1,6 +1,6 @@
 package ch.epfl.sdp.game
 
 interface PlayerUpdateListener {
-    fun OnPlayerLocationUpdate(id: Int, location: Location)
-    fun OnPreyCatches(id: Int)
+    fun onPlayerLocationUpdate(playerID: Int, location: Location)
+    fun onPreyCatches(playerID: Int)
 }
