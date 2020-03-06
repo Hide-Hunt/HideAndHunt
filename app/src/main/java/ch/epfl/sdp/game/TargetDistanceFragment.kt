@@ -1,13 +1,14 @@
 package ch.epfl.sdp.game
 
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import ch.epfl.sdp.R
-
 import ch.epfl.sdp.databinding.FragmentTargetDistanceBinding
+
 
 private const val ARG_RANGES = "ranges"
 
@@ -30,8 +31,7 @@ class TargetDistanceFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            //ranges = it.getIntegerArrayList(ARG_RANGES)!!
-            ranges = arrayListOf(0, 10, 25, 50, 100)
+            ranges = it.getIntegerArrayList(ARG_RANGES)!!
         }
     }
 
@@ -50,11 +50,24 @@ class TargetDistanceFragment : Fragment() {
             val index = ranges.indexOfFirst { i -> i > distance }
             if (index != -1) {
                 binding.distanceLabel.text = "%d - %d".format(ranges[index-1], ranges[index])
+                binding.distanceImage.setImageResource(
+                        when (index) {
+                            1 -> R.drawable.ic_signal_4
+                            2 -> R.drawable.ic_signal_3
+                            3 -> R.drawable.ic_signal_2
+                            4 -> R.drawable.ic_signal_1
+                            else -> R.drawable.ic_signal_0
+                        }
+                )
             } else {
                 binding.distanceLabel.text = "%d+".format(ranges.last())
+                binding.distanceImage.setImageResource(R.drawable.ic_signal_0)
             }
         } else {
             binding.distanceLabel.text = getString(R.string.no_distance_label)
+            binding.distanceImage.setImageResource(R.drawable.no_signal_animation)
+            val frameAnimation = binding.distanceImage.drawable as AnimationDrawable
+            frameAnimation.start()
         }
     }
 
