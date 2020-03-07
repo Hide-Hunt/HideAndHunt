@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.game.PredatorActivity
 import ch.epfl.sdp.game.PreyActivity
 import ch.epfl.sdp.databinding.ActivityLobbyBinding
-import ch.epfl.sdp.game.NFCTagHelper.byteArrayFromHexString
-import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.game.data.Player
+import ch.epfl.sdp.game.data.Predator
+import ch.epfl.sdp.game.data.Prey
 
 class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionChangeListener {
     private lateinit var lobbyBinding: ActivityLobbyBinding
@@ -21,12 +21,22 @@ class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionCha
         // Fake data for next activity
         val players = ArrayList<Player>()
 
-        for (i in 0..9) {
-            val faction = if (Math.random() % 2 == 0.0) Faction.PREDATOR else Faction.PREY
-            players.add(Player(i, faction, i.toString()))
+        for (i in 0..19) {
+            val p = if (Math.random() % 2 == 0.0) {
+                Predator(i)
+            } else {
+                val p = Prey(i, i.toString())
+
+                if (i >= 7) {
+                    p.state = Prey.PreyState.DEAD
+                }
+
+                p
+            }
+            players.add(p)
         }
-        players.add(Player(24, Faction.PREY, "040D5702D36480"))
-        players.add(Player(42, Faction.PREY, "B2F55C01"))
+        players.add(Prey(24, "040D5702D36480"))
+        players.add(Prey(42, "B2F55C01"))
 
         setContentView(lobbyBinding.root)
         lobbyBinding.startGameButton.setOnClickListener {

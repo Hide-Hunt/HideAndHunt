@@ -16,11 +16,10 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import ch.epfl.sdp.databinding.ActivityPredatorBinding
-import ch.epfl.sdp.game.TargetSelectionFragment.Companion.newInstance
 import ch.epfl.sdp.game.TargetSelectionFragment.OnTargetSelectedListener
-import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Player
+import ch.epfl.sdp.game.data.Prey
 
 
 class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
@@ -35,8 +34,10 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
     private val lastKnownLocation: Location = Location(0.0, 0.0)
     private var players = HashMap<Int, Player>()
     private var preys = HashMap<String, Int>()
+
     private lateinit var targetSelectionFragment: TargetSelectionFragment
     private lateinit var targetSDistanceFragment: TargetDistanceFragment
+    private lateinit var preyFragment: PreyFragment
 
     private val mLocationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: android.location.Location) {
@@ -103,7 +104,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
             val playerList = intent.getSerializableExtra("players") as ArrayList<Player>
             for (p in playerList) {
                 players[p.id] = p
-                if (p.faction ==  Faction.PREY) {
+                if (p is Prey) {
                     preys[p.NFCTag] = p.id
                 }
             }
@@ -119,12 +120,16 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         val fm = supportFragmentManager
         // create a FragmentTransaction to begin the transaction and replace the Fragment
         val fragmentTransaction = fm.beginTransaction()
+
         // replace the FrameLayout with new Fragment
-        targetSelectionFragment = newInstance(ArrayList(players.values.toList()))
+        targetSelectionFragment = TargetSelectionFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
         fragmentTransaction.add(binding.targetSelectionPlaceHolder.id, targetSelectionFragment)
 
         targetSDistanceFragment = TargetDistanceFragment.newInstance(arrayListOf(0,10,25,50,75))
         fragmentTransaction.add(binding.targetDistancePlaceHolder.id, targetSDistanceFragment)
+
+        preyFragment = PreyFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
+        fragmentTransaction.add(binding.preysPlaceHolder.id, preyFragment)
 
         fragmentTransaction.commit() // save the changes
     }
@@ -159,7 +164,13 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
     }
 
     private fun onPreyCatch(preyID: Int) {
-        Toast.makeText(this, "Catched a prey : id=" + players[preyID]?.id, Toast.LENGTH_LONG).show()
+        players[preyID]?.let {
+            if (it is Prey && it.state == Prey.PreyState.ALIVE) {
+                it.state = Prey.PreyState.DEAD
+                preyFragment.setPreyState(preyID, Prey.PreyState.DEAD)
+                Toast.makeText(this, "Catched a prey : id=" + players[preyID]?.id, Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {

@@ -11,8 +11,7 @@ import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.R
-import ch.epfl.sdp.game.data.Faction
-import ch.epfl.sdp.game.data.Player
+import ch.epfl.sdp.game.data.Prey
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,6 +19,12 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class TargetSelectionFragmentTest {
+    private val preys = arrayListOf(
+            Prey(1, "AAAA"),
+            Prey(2, "BBBB"),
+            Prey(3, "CCCC")
+    )
+
     @Test
     fun settingListenerCallsOnTargetSelected() {
         val scenario = launchFragmentInContainer<TargetSelectionFragment>()
@@ -61,11 +66,7 @@ class TargetSelectionFragmentTest {
     @Test
     fun listenerCallbackShouldBeCalledWithNoTargetWhenTargetChangesToInvalidId() {
         val fragmentArgs = Bundle().apply {
-            putSerializable("targets", arrayListOf(
-                    Player(3, Faction.PREDATOR),
-                    Player(4, Faction.PREDATOR),
-                    Player(5, Faction.PREDATOR)
-            ))
+            putSerializable("targets", preys)
         }
         val scenario = launchFragmentInContainer<TargetSelectionFragment>(fragmentArgs)
 
@@ -77,24 +78,20 @@ class TargetSelectionFragmentTest {
         scenario.onFragment { fragment -> fragment.listener = listener }
 
         scenario.onFragment { fragment -> fragment.selectedTargetID = 0 }
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 1 }
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 2 }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = 4 }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = 5 }
         scenario.onFragment { fragment -> fragment.selectedTargetID = TargetSelectionFragment.NO_TARGET }
     }
 
     @Test
     fun listenerCallbackShouldBeCalledWhenTargetChanges() {
         val fragmentArgs = Bundle().apply {
-            putSerializable("targets", arrayListOf(
-                    Player(0, Faction.PREDATOR),
-                    Player(1, Faction.PREDATOR),
-                    Player(2, Faction.PREDATOR)
-            ))
+            putSerializable("targets", preys)
         }
         val scenario = launchFragmentInContainer<TargetSelectionFragment>(fragmentArgs)
 
         val listener = object : TargetSelectionFragment.OnTargetSelectedListener {
-            var expectedTargetInCallback = 0
+            var expectedTargetInCallback = 1
             override fun onTargetSelected(targetID: Int) {
                 assertEquals(expectedTargetInCallback, targetID)
                 expectedTargetInCallback++
@@ -105,9 +102,9 @@ class TargetSelectionFragmentTest {
         }
         scenario.onFragment { fragment -> fragment.listener = listener }
 
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 0 }
         scenario.onFragment { fragment -> fragment.selectedTargetID = 1 }
         scenario.onFragment { fragment -> fragment.selectedTargetID = 2 }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = 3 }
         scenario.onFragment { fragment -> fragment.selectedTargetID = TargetSelectionFragment.NO_TARGET }
     }
 
@@ -140,36 +137,26 @@ class TargetSelectionFragmentTest {
 
     @Test
     fun targetSelectionDialogShouldListAllTargets() {
-        val targets = arrayListOf(
-                Player(0, Faction.PREDATOR),
-                Player(1, Faction.PREDATOR),
-                Player(2, Faction.PREDATOR)
-        )
         val fragmentArgs = Bundle().apply {
-            putSerializable("targets", targets)
+            putSerializable("targets", preys)
         }
         launchFragmentInContainer<TargetSelectionFragment>(fragmentArgs)
 
-        for (t in targets) {
-            onView(withText(t.toString())).check(doesNotExist())
+        for (prey in preys) {
+            onView(withText(prey.toString())).check(doesNotExist())
         }
 
         onView(withId(R.id.targetSelectionMainLayout)).perform(click())
 
-        for (t in targets) {
-            onView(withText(t.toString())).inRoot(isDialog()).check(matches(isDisplayed()))
+        for (prey in preys) {
+            onView(withText(prey.toString())).inRoot(isDialog()).check(matches(isDisplayed()))
         }
     }
 
     @Test
     fun selectingTargetShouldCallListenerWithTargetID() {
-        val targets = arrayListOf(
-                Player(0, Faction.PREDATOR),
-                Player(1, Faction.PREDATOR),
-                Player(2, Faction.PREDATOR)
-        )
         val fragmentArgs = Bundle().apply {
-            putSerializable("targets", targets)
+            putSerializable("targets", preys)
         }
         val scenario = launchFragmentInContainer<TargetSelectionFragment>(fragmentArgs)
 
@@ -183,48 +170,38 @@ class TargetSelectionFragmentTest {
         }
         scenario.onFragment { fragment -> fragment.listener = listener }
 
-        for (t in targets) {
+        for (prey in preys) {
             onView(withId(R.id.targetSelectionMainLayout)).perform(click())
-            onView(withText(t.toString())).inRoot(isDialog()).perform(click())
+            onView(withText(prey.toString())).inRoot(isDialog()).perform(click())
         }
     }
 
     @Test
     fun selectingTargetShouldUpdateTargetText() {
-        val targets = arrayListOf(
-                Player(0, Faction.PREDATOR),
-                Player(1, Faction.PREDATOR),
-                Player(2, Faction.PREDATOR)
-        )
         val fragmentArgs = Bundle().apply {
-            putSerializable("targets", targets)
+            putSerializable("targets", preys)
         }
         launchFragmentInContainer<TargetSelectionFragment>(fragmentArgs)
 
         onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("No target")))
-        for (t in targets) {
+        for (prey in preys) {
             onView(withId(R.id.targetSelectionMainLayout)).perform(click())
-            onView(withText(t.toString())).inRoot(isDialog()).perform(click())
-            onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("Player " + t.id)))
+            onView(withText(prey.toString())).inRoot(isDialog()).perform(click())
+            onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("Player " + prey.id)))
         }
     }
 
     @Test
     fun selectionShouldStayAfterRecreation() {
-        val targets = arrayListOf(
-                Player(0, Faction.PREDATOR),
-                Player(1, Faction.PREDATOR),
-                Player(2, Faction.PREDATOR)
-        )
         val fragmentArgs = Bundle().apply {
-            putSerializable("targets", targets)
+            putSerializable("targets", preys)
         }
 
         val scenario = launchFragmentInContainer<TargetSelectionFragment>(fragmentArgs)
 
         onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("No target")))
         onView(withId(R.id.targetSelectionMainLayout)).perform(click())
-        onView(withText(targets[1].toString())).inRoot(isDialog()).perform(click())
+        onView(withText(preys[1].toString())).inRoot(isDialog()).perform(click())
         onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("Player 1")))
 
         scenario.recreate()

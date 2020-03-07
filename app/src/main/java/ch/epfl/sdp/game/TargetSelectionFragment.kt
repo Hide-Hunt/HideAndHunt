@@ -26,9 +26,10 @@ class TargetSelectionFragment : Fragment() {
     private var _binding: FragmentTargetSelectionBinding? = null
     private val binding get() = _binding!!
 
-
     private var targetSelectionDialog: AlertDialog? = null
     var listener: OnTargetSelectedListener? = null
+
+    // TODO use a ViewModel / Model to share this state with activity and other models
     private lateinit var targets: Map<Int, Player>
 
     var selectedTargetID = 0
