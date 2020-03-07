@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.FragmentTargetSelectionBinding
+import ch.epfl.sdp.game.data.Player
 import java.io.Serializable
 import java.util.*
 
@@ -113,7 +114,7 @@ class TargetSelectionFragment : Fragment() {
          * @param targets List of all selectable targets
          * @return A new instance of fragment TargetSelectionFragment.
          */
-        fun <T> newInstance(targets: T): TargetSelectionFragment where T : List<Player?>?, T : Serializable? {
+        fun <T> newInstance(targets: T): TargetSelectionFragment where T : List<Player>, T : Serializable {
             val fragment = TargetSelectionFragment()
             val args = Bundle()
             args.putSerializable(ARG_TARGETS, targets)

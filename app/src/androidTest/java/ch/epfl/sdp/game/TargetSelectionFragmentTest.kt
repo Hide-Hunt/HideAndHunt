@@ -11,6 +11,8 @@ import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.R
+import ch.epfl.sdp.game.data.Faction
+import ch.epfl.sdp.game.data.Player
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

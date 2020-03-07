@@ -1,4 +1,4 @@
-package ch.epfl.sdp.game
+package ch.epfl.sdp.game.data
 
 enum class Faction {
     PREDATOR,
