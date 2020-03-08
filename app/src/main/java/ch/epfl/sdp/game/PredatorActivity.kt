@@ -39,7 +39,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
 
     private lateinit var gameTimerFragment: GameTimerFragment
     private lateinit var targetSelectionFragment: TargetSelectionFragment
-    private lateinit var targetSDistanceFragment: TargetDistanceFragment
+    private lateinit var targetDistanceFragment: TargetDistanceFragment
     private lateinit var preyFragment: PreyFragment
 
     private val mLocationListener: LocationListener = object : LocationListener {
@@ -50,7 +50,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
             locationSynchronizer.updateOwnLocation(lastKnownLocation)
 
             if (targetID != TargetSelectionFragment.NO_TARGET) {
-                targetSDistanceFragment.distance =
+                targetDistanceFragment.distance =
                         players[targetID]?.lastKnownLocation?.distanceTo(lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
             }
         }
@@ -61,12 +61,12 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
 
         override fun onProviderEnabled(provider: String) {
             if (targetID != TargetSelectionFragment.NO_TARGET) {
-                targetSDistanceFragment.distance = TargetDistanceFragment.NO_DISTANCE
+                targetDistanceFragment.distance = TargetDistanceFragment.NO_DISTANCE
             }
         }
 
         override fun onProviderDisabled(provider: String) {
-            targetSDistanceFragment.distance = TargetDistanceFragment.DISABLED
+            targetDistanceFragment.distance = TargetDistanceFragment.DISABLED
         }
     }
 
@@ -93,7 +93,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
                 if (players.containsKey(playerID)) {
                     players[playerID]!!.lastKnownLocation = location
                     if (playerID == targetID) {
-                        targetSDistanceFragment.distance =
+                        targetDistanceFragment.distance =
                                 players[targetID]?.lastKnownLocation?.distanceTo(lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
                     }
                 }
@@ -149,8 +149,8 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         targetSelectionFragment = TargetSelectionFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
         fragmentTransaction.add(binding.targetSelectionPlaceHolder.id, targetSelectionFragment)
 
-        targetSDistanceFragment = TargetDistanceFragment.newInstance(arrayListOf(0,10,25,50,75))
-        fragmentTransaction.add(binding.targetDistancePlaceHolder.id, targetSDistanceFragment)
+        targetDistanceFragment = TargetDistanceFragment.newInstance(arrayListOf(0,10,25,50,75))
+        fragmentTransaction.add(binding.targetDistancePlaceHolder.id, targetDistanceFragment)
 
         preyFragment = PreyFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
         fragmentTransaction.add(binding.preysPlaceHolder.id, preyFragment)
@@ -174,7 +174,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         this.targetID = targetID
         if (targetID != TargetSelectionFragment.NO_TARGET) {
             players[targetID]?.lastKnownLocation = null
-            targetSDistanceFragment.distance = TargetDistanceFragment.NO_DISTANCE
+            targetDistanceFragment.distance = TargetDistanceFragment.NO_DISTANCE
             locationSynchronizer.subscribeToPlayer(this.targetID)
         }
     }
@@ -231,7 +231,9 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        locationSynchronizer.stop()
+        if (gameID >= 0 && playerID >= 0) {
+            locationSynchronizer.stop()
+        }
     }
 
     companion object {
