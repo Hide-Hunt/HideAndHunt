@@ -37,6 +37,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
     private var players = HashMap<Int, Player>()
     private var preys = HashMap<String, Int>()
 
+    private lateinit var gameTimerFragment: GameTimerFragment
     private lateinit var targetSelectionFragment: TargetSelectionFragment
     private lateinit var targetSDistanceFragment: TargetDistanceFragment
     private lateinit var preyFragment: PreyFragment
@@ -142,6 +143,9 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         val fragmentTransaction = fm.beginTransaction()
 
         // replace the FrameLayout with new Fragment
+        gameTimerFragment = GameTimerFragment.create(2*60*1000)
+        fragmentTransaction.add(binding.gameTimerPlaceHolder.id, gameTimerFragment)
+
         targetSelectionFragment = TargetSelectionFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
         fragmentTransaction.add(binding.targetSelectionPlaceHolder.id, targetSelectionFragment)
 
