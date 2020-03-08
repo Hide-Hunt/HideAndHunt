@@ -5,6 +5,7 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 object NFCTestHelper {
     // Based on https://stackoverflow.com/questions/30841803/how-to-mock-a-android-nfc-tag-object-for-unit-testing
     fun createMockTag(id: ByteArray): Tag {

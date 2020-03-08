@@ -26,6 +26,14 @@ class PredatorActivityTest {
             Prey(5, "CCCC")
     )
 
+    private val activityIntent = Intent()
+    init {
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        activityIntent.putExtra("gameID", 0)
+        activityIntent.putExtra("playerID", 0)
+        activityIntent.putExtra("players", players)
+    }
+
     @get:Rule
     val activityRule = ActivityTestRule(PredatorActivity::class.java, false, false)
 
@@ -36,11 +44,6 @@ class PredatorActivityTest {
 
     @Test
     fun activityWithStartIntentDoesntCrash() {
-        val activityIntent = Intent()
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        activityIntent.putExtra("gameID", 0)
-        activityIntent.putExtra("playerID", 0)
-        activityIntent.putExtra("players", players)
         val activity = activityRule.launchActivity(activityIntent)
         activityRule.runOnUiThread {
             activity.recreate()
@@ -49,32 +52,15 @@ class PredatorActivityTest {
 
     @Test
     fun allPreyShouldBeInitiallyAlive() {
-        val activityIntent = Intent()
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        activityIntent.putExtra("gameID", 0)
-        activityIntent.putExtra("playerID", 0)
-        activityIntent.putExtra("players", players)
-
         activityRule.launchActivity(activityIntent)
 
         onView(withId(R.id.preyStateList)).check(matches(hasChildCount(3)))
 
-        onView(allOf(isDescendantOfA(withId(R.id.preyStateList)), withId(R.id.prey_name), withText("Prey 1")))
-                .check(matches(hasSibling(withDrawable(R.drawable.ic_running_icon))))
-        onView(allOf(isDescendantOfA(withId(R.id.preyStateList)), withId(R.id.prey_name), withText("Prey 3")))
-                .check(matches(hasSibling(withDrawable(R.drawable.ic_running_icon))))
-        onView(allOf(isDescendantOfA(withId(R.id.preyStateList)), withId(R.id.prey_name), withText("Prey 5")))
-                .check(matches(hasSibling(withDrawable(R.drawable.ic_running_icon))))
+        checkAllPreyAlive()
     }
 
     @Test
     fun killingAPreyShouldLeaveAllOtherAliveAndTheKilledPreyDead() {
-        val activityIntent = Intent()
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        activityIntent.putExtra("gameID", 0)
-        activityIntent.putExtra("playerID", 0)
-        activityIntent.putExtra("players", players)
-
         activityRule.launchActivity(activityIntent)
 
         val tag = NFCTestHelper.createMockTag((players[3] as Prey).NFCTag.byteArrayFromHexString())
@@ -96,12 +82,6 @@ class PredatorActivityTest {
 
     @Test
     fun scanningEmptyTagShouldNotTriggerCallback() {
-        val activityIntent = Intent()
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        activityIntent.putExtra("gameID", 0)
-        activityIntent.putExtra("playerID", 0)
-        activityIntent.putExtra("players", players)
-
         activityRule.launchActivity(activityIntent)
 
         val tag = NFCTestHelper.createMockTag(ByteArray(0))
@@ -113,23 +93,11 @@ class PredatorActivityTest {
 
         onView(withId(R.id.preyStateList)).check(matches(hasChildCount(3)))
 
-        onView(allOf(isDescendantOfA(withId(R.id.preyStateList)), withId(R.id.prey_name), withText("Prey 1")))
-                .check(matches(hasSibling(withDrawable(R.drawable.ic_running_icon))))
-        onView(allOf(isDescendantOfA(withId(R.id.preyStateList)), withId(R.id.prey_name), withText("Prey 3")))
-                .check(matches(hasSibling(withDrawable(R.drawable.ic_running_icon))))
-        onView(allOf(isDescendantOfA(withId(R.id.preyStateList)), withId(R.id.prey_name), withText("Prey 5")))
-                .check(matches(hasSibling(withDrawable(R.drawable.ic_running_icon))))
+        checkAllPreyAlive()
     }
 
     @Test
     fun scanningWrongTagShouldNotTriggerCallback() {
-        val activityIntent = Intent()
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        activityIntent.putExtra("gameID", 0)
-        activityIntent.putExtra("playerID", 0)
-        activityIntent.putExtra("players", players)
-
-
         activityRule.launchActivity(activityIntent)
 
         val tag = NFCTestHelper.createMockTag("ABBA".byteArrayFromHexString())
@@ -141,6 +109,10 @@ class PredatorActivityTest {
 
         onView(withId(R.id.preyStateList)).check(matches(hasChildCount(3)))
 
+        checkAllPreyAlive()
+    }
+
+    private fun checkAllPreyAlive() {
         onView(allOf(isDescendantOfA(withId(R.id.preyStateList)), withId(R.id.prey_name), withText("Prey 1")))
                 .check(matches(hasSibling(withDrawable(R.drawable.ic_running_icon))))
         onView(allOf(isDescendantOfA(withId(R.id.preyStateList)), withId(R.id.prey_name), withText("Prey 3")))

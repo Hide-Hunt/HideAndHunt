@@ -47,73 +47,24 @@ class TargetDistanceFragmentTest {
         }
 
         val scenario = launchFragmentInContainer<TargetDistanceFragment>(fragmentArgs)
-        scenario.onFragment { fragment ->
-            fragment.distance = 0
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "0 - 10")
-            fragment.distance = 1
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "0 - 10")
-            fragment.distance = 9
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "0 - 10")
-            fragment.distance = 10
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "10 - 20")
-            fragment.distance = 11
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "10 - 20")
-            fragment.distance = 19
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "10 - 20")
-            fragment.distance = 20
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "20 - 30")
-            fragment.distance = 21
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "20 - 30")
-            fragment.distance = 29
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "20 - 30")
-            fragment.distance = 30
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "30 - 40")
-            fragment.distance = 31
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "30 - 40")
-            fragment.distance = 39
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "30 - 40")
-            fragment.distance = 40
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "40+")
-            fragment.distance = 41
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "40+")
-            fragment.distance = 100
-        }
-        scenario.onFragment { fragment ->
-            assertEquals(fragment.distanceLabel.text, "40+")
-            fragment.distance = TargetDistanceFragment.NO_DISTANCE
-        }
-        scenario.onFragment { fragment ->
-            val resources = ApplicationProvider.getApplicationContext<Application>().resources
-            val text = resources.getString(R.string.no_distance_label)
-            assertEquals(fragment.distanceLabel.text, text)
+        val resources = ApplicationProvider.getApplicationContext<Application>().resources
+        val tests = listOf(
+                Pair( 0,  "0 - 10"),    Pair( 1,  "0 - 10"),    Pair( 9,  "0 - 10"),
+                Pair(10, "10 - 20"),    Pair(11, "10 - 20"),    Pair(19, "10 - 20"),
+                Pair(20, "20 - 30"),    Pair(21, "20 - 30"),    Pair(29, "20 - 30"),
+                Pair(30, "30 - 40"),    Pair(31, "30 - 40"),    Pair(39, "30 - 40"),
+                Pair(40, "40+"),        Pair(41, "40+"),        Pair(100,"40+"),
+
+                Pair(TargetDistanceFragment.NO_DISTANCE, resources.getString(R.string.no_distance_label))
+        )
+
+        for (test in tests) {
+            scenario.onFragment { fragment ->
+                fragment.distance = test.first
+            }
+            scenario.onFragment { fragment ->
+                assertEquals(fragment.distanceLabel.text, test.second)
+            }
         }
     }
 
@@ -124,41 +75,21 @@ class TargetDistanceFragmentTest {
         }
 
         val scenario = launchFragmentInContainer<TargetDistanceFragment>(fragmentArgs)
-        scenario.onFragment { it.distance = 0 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_4)))
-        scenario.onFragment { it.distance = 1 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_4)))
-        scenario.onFragment { it.distance = 9 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_4)))
+        val tests = listOf(
+                Pair( 0, R.drawable.ic_signal_4),    Pair( 1, R.drawable.ic_signal_4),    Pair( 9, R.drawable.ic_signal_4),
+                Pair(10, R.drawable.ic_signal_3),    Pair(11, R.drawable.ic_signal_3),    Pair(19, R.drawable.ic_signal_3),
+                Pair(20, R.drawable.ic_signal_2),    Pair(21, R.drawable.ic_signal_2),    Pair(29, R.drawable.ic_signal_2),
+                Pair(30, R.drawable.ic_signal_1),    Pair(31, R.drawable.ic_signal_1),    Pair(39, R.drawable.ic_signal_1),
+                Pair(40, R.drawable.ic_signal_0),    Pair(41, R.drawable.ic_signal_0),    Pair(100,R.drawable.ic_signal_0),
 
-        scenario.onFragment { it.distance = 10 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_3)))
-        scenario.onFragment { it.distance = 11 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_3)))
-        scenario.onFragment { it.distance = 19 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_3)))
+                Pair(TargetDistanceFragment.NO_DISTANCE, R.drawable.ic_signal_0)
+        )
 
-        scenario.onFragment { it.distance = 20 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_2)))
-        scenario.onFragment { it.distance = 21 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_2)))
-        scenario.onFragment { it.distance = 29 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_2)))
-
-        scenario.onFragment { it.distance = 30 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_1)))
-        scenario.onFragment { it.distance = 31 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_1)))
-        scenario.onFragment { it.distance = 39 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_1)))
-
-        scenario.onFragment { it.distance = 40 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_0)))
-        scenario.onFragment { it.distance = 41 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_0)))
-        scenario.onFragment { it.distance = 100 }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_0)))
-        scenario.onFragment { it.distance = TargetDistanceFragment.NO_DISTANCE }
-        onView(withId(R.id.distanceImage)).check(matches(withDrawable(R.drawable.ic_signal_0)))
+        for (test in tests) {
+            scenario.onFragment { fragment ->
+                fragment.distance = test.first
+            }
+            onView(withId(R.id.distanceImage)).check(matches(withDrawable(test.second)))
+        }
     }
 }
