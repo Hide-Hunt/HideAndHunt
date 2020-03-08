@@ -95,7 +95,7 @@ class TargetSelectionFragmentTest {
             override fun onTargetSelected(targetID: Int) {
                 assertEquals(expectedTargetInCallback, targetID)
                 expectedTargetInCallback++
-                if (expectedTargetInCallback == 3) {
+                if (expectedTargetInCallback == 4) {
                     expectedTargetInCallback = TargetSelectionFragment.NO_TARGET
                 }
             }
@@ -161,7 +161,7 @@ class TargetSelectionFragmentTest {
         val scenario = launchFragmentInContainer<TargetSelectionFragment>(fragmentArgs)
 
         val listener = object : TargetSelectionFragment.OnTargetSelectedListener {
-            var expectedTargetInCallback = 0
+            var expectedTargetInCallback = 1
             override fun onTargetSelected(targetID: Int) {
                 assertEquals(expectedTargetInCallback, targetID)
                 Log.d("tested", "assertEquals(%d, %d)".format(expectedTargetInCallback, targetID))
@@ -202,10 +202,10 @@ class TargetSelectionFragmentTest {
         onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("No target")))
         onView(withId(R.id.targetSelectionMainLayout)).perform(click())
         onView(withText(preys[1].toString())).inRoot(isDialog()).perform(click())
-        onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("Player 1")))
+        onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("Player 2")))
 
         scenario.recreate()
 
-        onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("Player 1")))
+        onView(withId(R.id.currentTarget)).check(matches(isDisplayed())).check(matches(withText("Player 2")))
     }
 }
