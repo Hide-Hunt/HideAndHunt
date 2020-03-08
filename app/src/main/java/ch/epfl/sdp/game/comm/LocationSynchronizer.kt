@@ -15,4 +15,6 @@ interface LocationSynchronizer {
     fun unsubscribeFromPlayer(playerID: Int)
 
     fun setPlayerUpdateListener(listener: PlayerUpdateListener)
+
+    fun stop()
 }

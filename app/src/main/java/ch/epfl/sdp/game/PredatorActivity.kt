@@ -229,6 +229,11 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        locationSynchronizer.stop()
+    }
+
     companion object {
         private const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10
         private const val LOCATION_REFRESH_TIME = 1000

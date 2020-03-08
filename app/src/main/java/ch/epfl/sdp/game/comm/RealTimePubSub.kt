@@ -9,4 +9,6 @@ interface RealTimePubSub {
     fun subscribe(topic: String)
     fun unsubscribe(topic: String)
     fun setOnPublishListener(listener: OnPublishListener)
+
+    fun stop()
 }

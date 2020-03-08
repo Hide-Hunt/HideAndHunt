@@ -54,7 +54,14 @@ class MQTTRealTimePubSub internal constructor(context: Context) : RealTimePubSub
         }
     }
 
+    override fun stop() {
+        if (!mqttAndroidClient.isConnected) return
+        mqttAndroidClient.close()
+    }
+
     override fun publish(topic: String, payload: ByteArray) {
+        if (!mqttAndroidClient.isConnected) return
+
         try {
             val message = MqttMessage(payload)
             mqttAndroidClient.publish(topic, message)
@@ -65,10 +72,12 @@ class MQTTRealTimePubSub internal constructor(context: Context) : RealTimePubSub
     }
 
     override fun subscribe(topic: String) {
+        if (!mqttAndroidClient.isConnected) return
         mqttAndroidClient.subscribe(topic, 0)
     }
 
     override fun unsubscribe(topic: String) {
+        if (!mqttAndroidClient.isConnected) return
         mqttAndroidClient.unsubscribe(topic)
     }
 

@@ -28,6 +28,8 @@ class SimpleLocationSynchronizerTest {
             this.listener = listener
         }
 
+        override fun stop() {}
+
         fun sendLocationUpdate(playerID: Int, location: Location) {
             val protoLoc = LocationOuterClass.Location.newBuilder()
                     .setLatitude(location.latitude)
