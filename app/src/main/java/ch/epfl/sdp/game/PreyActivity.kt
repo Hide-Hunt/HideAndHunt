@@ -1,135 +1,136 @@
 package ch.epfl.sdp.game
 
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
-import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
-import ch.epfl.sdp.R
-import kotlinx.android.synthetic.main.activity_prey.*
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import ch.epfl.sdp.databinding.ActivityPreyBinding
+import ch.epfl.sdp.game.comm.LocationSynchronizer
+import ch.epfl.sdp.game.comm.MQTTRealTimePubSub
+import ch.epfl.sdp.game.comm.RealTimePubSub
+import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 class PreyActivity : AppCompatActivity() {
-    private val mHideHandler = Handler()
-    private val mHidePart2Runnable = Runnable {
-        // Delayed removal of status and navigation bar
+    private var _binding: ActivityPreyBinding? = null
+    private val binding get() = _binding!!
 
-        // Note that some of these constants are new as of API 16 (Jelly Bean)
-        // and API 19 (KitKat). It is safe to use them, as they are inlined
-        // at compile-time and do nothing on earlier devices.
-        fullscreen_content.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LOW_PROFILE or
-                        View.SYSTEM_UI_FLAG_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-    }
-    private val mShowPart2Runnable = Runnable {
-        // Delayed display of UI elements
-        supportActionBar?.show()
-        fullscreen_content_controls.visibility = View.VISIBLE
-    }
-    private var mVisible: Boolean = false
-    private val mHideRunnable = Runnable { hide() }
+    private var mLocationManager: LocationManager? = null
+    private var mUpdateNb = 0
+    private var mPlayerID = -1
 
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private val mDelayHideTouchListener = View.OnTouchListener { _, _ ->
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
+    private lateinit var pubSub: RealTimePubSub
+    private var locationSynchronizer: LocationSynchronizer? = null
+
+    private val mLocationListener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            mUpdateNb++
+            binding.updateNb.text = mUpdateNb.toString()
+            binding.location.text = String.format("%s,  %s", location.latitude, location.longitude)
+            binding.repeatLastLocation.isEnabled = true
+            locationSynchronizer?.updateOwnLocation(ch.epfl.sdp.game.data.Location(location.latitude, location.longitude))
         }
-        false
+
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+            Toast.makeText(applicationContext, "onStatusChanged: $status", Toast.LENGTH_LONG).show()
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            binding.GPSDisabledLabel.visibility = View.INVISIBLE
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            binding.GPSDisabledLabel.visibility = View.VISIBLE
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        _binding = ActivityPreyBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setContentView(R.layout.activity_prey)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        pubSub = MQTTRealTimePubSub(this)
+        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        mVisible = true
+        assert(mLocationManager != null)
 
-        // Set up the user interaction to manually show or hide the system UI.
-        fullscreen_content.setOnClickListener { toggle() }
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        dummy_button.setOnTouchListener(mDelayHideTouchListener)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100)
-    }
-
-    private fun toggle() {
-        if (mVisible) {
-            hide()
+        if (mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            binding.GPSDisabledLabel.visibility = View.INVISIBLE
         } else {
-            show()
+            binding.GPSDisabledLabel.visibility = View.VISIBLE
+        }
+        binding.tracking.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.playerID.isEnabled = false
+                enableRequestUpdates()
+            } else {
+                binding.playerID.isEnabled = true
+                disableRequestUpdates()
+            }
+        }
+        binding.playerID.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                try {
+                    mPlayerID = s.toString().toInt()
+                    binding.tracking.isEnabled = s.isNotEmpty()
+                } catch (ignored: NumberFormatException) {
+                }
+            }
+        })
+        binding.repeatLastLocation.setOnClickListener(View.OnClickListener {
+            if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return@OnClickListener
+            }
+            val last = mLocationManager!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (last != null) {
+                locationSynchronizer?.updateOwnLocation(ch.epfl.sdp.game.data.Location(last.latitude, last.longitude))
+            } else {
+                Toast.makeText(applicationContext, "No last known location", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+            enableRequestUpdates()
         }
     }
 
-    private fun hide() {
-        // Hide UI first
-        supportActionBar?.hide()
-        fullscreen_content_controls.visibility = View.GONE
-        mVisible = false
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable)
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY.toLong())
+    private fun enableRequestUpdates() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
+                return
+            }
+        }
+        locationSynchronizer = SimpleLocationSynchronizer(0, mPlayerID, pubSub)
+        mLocationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME.toLong(), LOCATION_REFRESH_DISTANCE.toFloat(), mLocationListener)
     }
 
-    private fun show() {
-        // Show the system bar
-        fullscreen_content.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        mVisible = true
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable)
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY.toLong())
-    }
-
-    /**
-     * Schedules a call to hide() in [delayMillis], canceling any
-     * previously scheduled calls.
-     */
-    private fun delayedHide(delayMillis: Int) {
-        mHideHandler.removeCallbacks(mHideRunnable)
-        mHideHandler.postDelayed(mHideRunnable, delayMillis.toLong())
+    private fun disableRequestUpdates() {
+        mLocationManager!!.removeUpdates(mLocationListener)
+        locationSynchronizer = null
     }
 
     companion object {
-        /**
-         * Whether or not the system UI should be auto-hidden after
-         * [AUTO_HIDE_DELAY_MILLIS] milliseconds.
-         */
-        private val AUTO_HIDE = true
-
-        /**
-         * If [AUTO_HIDE] is set, the number of milliseconds to wait after
-         * user interaction before hiding the system UI.
-         */
-        private val AUTO_HIDE_DELAY_MILLIS = 3000
-
-        /**
-         * Some older devices needs a small delay between UI widget updates
-         * and a change of the status and navigation bar.
-         */
-        private val UI_ANIMATION_DELAY = 300
+        private const val LOCATION_REFRESH_DISTANCE = 5
+        private const val LOCATION_REFRESH_TIME = 1000
+        private const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10
     }
 }
