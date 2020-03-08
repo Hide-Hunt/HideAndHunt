@@ -40,7 +40,6 @@ class PreyActivity : AppCompatActivity() {
             mUpdateNb++
             binding.updateNb.text = mUpdateNb.toString()
             binding.location.text = String.format("%s,  %s", location.latitude, location.longitude)
-            binding.repeatLastLocation.isEnabled = true
             locationSynchronizer?.updateOwnLocation(ch.epfl.sdp.game.data.Location(location.latitude, location.longitude))
         }
 
