@@ -3,6 +3,7 @@ package ch.epfl.sdp.game
 import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -84,6 +85,8 @@ class TargetDistanceFragmentTest {
 
                 Pair(TargetDistanceFragment.NO_DISTANCE, R.drawable.ic_signal_0)
         )
+
+        scenario.moveToState(Lifecycle.State.RESUMED)
 
         for (test in tests) {
             scenario.onFragment { fragment ->

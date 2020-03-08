@@ -3,6 +3,7 @@ package ch.epfl.sdp.game
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
@@ -100,6 +101,9 @@ class TargetSelectionFragmentTest {
                 }
             }
         }
+
+        scenario.moveToState(Lifecycle.State.RESUMED)
+
         scenario.onFragment { fragment -> fragment.listener = listener }
 
         scenario.onFragment { fragment -> fragment.selectedTargetID = 1 }
