@@ -1,12 +1,13 @@
-package ch.epfl.sdp.game
+package ch.epfl.sdp.game.data
 
-class Player(var id: Int, var faction: Faction) {
+import java.io.Serializable
+
+open class Player(var id: Int) : Serializable {
     var lastKnownLocation: Location? = null
 
     override fun toString(): String {
         return "Player{" +
                 "id=" + id +
-                ", faction=" + faction +
                 ", lastKnownLocation=" + lastKnownLocation +
                 '}'
     }

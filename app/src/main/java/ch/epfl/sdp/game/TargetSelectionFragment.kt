@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.FragmentTargetSelectionBinding
+import ch.epfl.sdp.game.data.Player
 import java.io.Serializable
 import java.util.*
 
@@ -25,9 +26,10 @@ class TargetSelectionFragment : Fragment() {
     private var _binding: FragmentTargetSelectionBinding? = null
     private val binding get() = _binding!!
 
-
     private var targetSelectionDialog: AlertDialog? = null
     var listener: OnTargetSelectedListener? = null
+
+    // TODO use a ViewModel / Model to share this state with activity and other models
     private lateinit var targets: Map<Int, Player>
 
     var selectedTargetID = 0
@@ -52,7 +54,7 @@ class TargetSelectionFragment : Fragment() {
 
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, targetList)
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle(getString(R.string.targetSelectionDialogTitle))
+        builder.setTitle(getString(R.string.target_selection_dialog_title))
                 .setAdapter(adapter) { _, which ->
                     selectedTargetID = targetList[which].id
                     updateTargetDisplay()
@@ -113,7 +115,7 @@ class TargetSelectionFragment : Fragment() {
          * @param targets List of all selectable targets
          * @return A new instance of fragment TargetSelectionFragment.
          */
-        fun <T> newInstance(targets: T): TargetSelectionFragment where T : List<Player?>?, T : Serializable? {
+        fun <T> newInstance(targets: T): TargetSelectionFragment where T : List<Player>, T : Serializable {
             val fragment = TargetSelectionFragment()
             val args = Bundle()
             args.putSerializable(ARG_TARGETS, targets)

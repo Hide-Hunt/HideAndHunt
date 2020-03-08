@@ -1,5 +1,6 @@
 package ch.epfl.sdp.game
 
+import ch.epfl.sdp.game.data.Location
 import org.junit.Test
 
 import org.junit.Assert.*

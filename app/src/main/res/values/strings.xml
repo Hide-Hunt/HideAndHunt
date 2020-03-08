@@ -5,6 +5,10 @@
 
     <string name="title_activity_predator">PredatorActivity</string>
     <string name="dummy_button">Dummy Button</string>
+
+    <!-- Prey catching fragment -->
+    <string name="prey_alive">Your prey is alive</string>
+    <string name="prey_dead">Your prey is dead</string>
     <string name="dummy_content">Hide\nYourself</string>
 
     <string name="predator_faction_name">Predator</string>
@@ -14,7 +18,7 @@
 
     <string name="crosshair_icon">crosshair_icon</string>
     <string name="no_target">No target</string>
-    <string name="targetSelectionDialogTitle">Select a target</string>
+    <string name="target_selection_dialog_title">Select a target</string>
 
     <string name="no_distance_label">Acquiring target…</string>
     <string name="distance_signal_description">distance_signal</string>

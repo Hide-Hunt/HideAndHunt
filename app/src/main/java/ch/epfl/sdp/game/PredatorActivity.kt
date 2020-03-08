@@ -1,33 +1,43 @@
 package ch.epfl.sdp.game
 
 import android.Manifest
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
+import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.Bundle
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import ch.epfl.sdp.databinding.ActivityPredatorBinding
-import ch.epfl.sdp.game.TargetSelectionFragment.Companion.newInstance
 import ch.epfl.sdp.game.TargetSelectionFragment.OnTargetSelectedListener
+import ch.epfl.sdp.game.data.Location
+import ch.epfl.sdp.game.data.Player
+import ch.epfl.sdp.game.data.Prey
+
 
 class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
     private lateinit var mLocationManager: LocationManager
     private var _binding: ActivityPredatorBinding? = null
     private val binding get() = _binding!!
 
-    private var gameID = 0
-    private var player: Player? = null
-    private var targetID = 0
-    private val lastKnownLocation: Location = Location(0.0,0.0)
-    private lateinit var players: HashMap<Int, Player>
+    private var gameID = -1
+    private var playerID = -1
+    private var targetID = -1
+
+    private val lastKnownLocation: Location = Location(0.0, 0.0)
+    private var players = HashMap<Int, Player>()
+    private var preys = HashMap<String, Int>()
+
     private lateinit var targetSelectionFragment: TargetSelectionFragment
     private lateinit var targetSDistanceFragment: TargetDistanceFragment
+    private lateinit var preyFragment: PreyFragment
 
     private val mLocationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: android.location.Location) {
@@ -58,17 +68,18 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         super.onCreate(savedInstanceState)
         _binding = ActivityPredatorBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         // Get game information
         if (savedInstanceState == null) { // First load
-            loadIntentPayload(intent)
-            loadFragments()
-        } /* TODO get those information from bundle
-        else { // Restore state from previous activity
-            loadBundle(savedInstanceState)
-        } */
+            if(!loadIntentPayload(intent)) {
+                finish()
+                return
+            }
+        }
+
+        loadFragments()
 
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        enableRequestUpdates()
 
         binding.distanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -80,42 +91,56 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
 
         })
     }
+    private fun loadIntentPayload(intent: Intent) : Boolean {
+        gameID = intent.getIntExtra("gameID", -1)
+        playerID = intent.getIntExtra("playerID", -1)
 
-    private fun loadIntentPayload(intent: Intent) {
-        // TODO get those information from intent
-        fakeLoad()
-    }
+        if (gameID < 0 || playerID < 0) {
+            return false
+        }
 
-    /*
-    private fun loadBundle(bundle: Bundle) {
-    // TODO get those information from bundle
-        fakeLoad()
+        @Suppress("UNCHECKED_CAST")
+        try {
+            val playerList = intent.getSerializableExtra("players") as ArrayList<Player>
+            for (p in playerList) {
+                players[p.id] = p
+                if (p is Prey) {
+                    preys[p.NFCTag] = p.id
+                }
+            }
+        } catch (e: NullPointerException) {
+            return false
+        }
+
+
+        return true
     }
-    */
 
     private fun loadFragments() { // create a FragmentManager
         val fm = supportFragmentManager
         // create a FragmentTransaction to begin the transaction and replace the Fragment
         val fragmentTransaction = fm.beginTransaction()
+
         // replace the FrameLayout with new Fragment
-        targetSelectionFragment = newInstance(ArrayList(players.values.toList()))
-        fragmentTransaction.replace(binding.targetSelectionPlaceHolder.id, targetSelectionFragment)
+        targetSelectionFragment = TargetSelectionFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
+        fragmentTransaction.add(binding.targetSelectionPlaceHolder.id, targetSelectionFragment)
 
         targetSDistanceFragment = TargetDistanceFragment.newInstance(arrayListOf(0,10,25,50,75))
-        fragmentTransaction.replace(binding.targetDistancePlaceHolder.id, targetSDistanceFragment)
+        fragmentTransaction.add(binding.targetDistancePlaceHolder.id, targetSDistanceFragment)
+
+        preyFragment = PreyFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
+        fragmentTransaction.add(binding.preysPlaceHolder.id, preyFragment)
 
         fragmentTransaction.commit() // save the changes
     }
 
-    private fun fakeLoad() {
-        gameID = 0
-        targetID = TargetSelectionFragment.NO_TARGET
-        player = Player(0, Faction.PREDATOR)
-        players = HashMap()
-        for (i in 1..9) {
-            val faction = if (Math.random() % 2 == 0.0) Faction.PREDATOR else Faction.PREY
-            players[i] = Player(i, faction)
-        }
+    override fun onResume() {
+        super.onResume()
+        val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val adapter = NfcAdapter.getDefaultAdapter(this)
+        adapter?.enableForegroundDispatch(this, pendingIntent, null, null)
+        enableRequestUpdates()
     }
 
     override fun onTargetSelected(targetID: Int) {
@@ -123,6 +148,28 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         if (targetID != TargetSelectionFragment.NO_TARGET) {
             players[targetID]?.lastKnownLocation = null
             targetSDistanceFragment.distance = TargetDistanceFragment.NO_DISTANCE
+        }
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+    public override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
+            NFCTagHelper.intentToNFCTag(intent)?.let {
+                preys[it]?.let { preyID ->
+                    onPreyCatch(preyID)
+                }
+            }
+        }
+    }
+
+    private fun onPreyCatch(preyID: Int) {
+        players[preyID]?.let {
+            if (it is Prey && it.state == Prey.PreyState.ALIVE) {
+                it.state = Prey.PreyState.DEAD
+                preyFragment.setPreyState(preyID, Prey.PreyState.DEAD)
+                Toast.makeText(this, "Catched a prey : id=" + players[preyID]?.id, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -141,6 +188,16 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
             }
         }
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME.toLong(), LOCATION_REFRESH_DISTANCE.toFloat(), mLocationListener)
+    }
+
+    private fun disableRequestUpdates() {
+        mLocationManager.removeUpdates(mLocationListener)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disableRequestUpdates()
+        NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
     }
 
     companion object {

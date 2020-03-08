@@ -25,20 +25,20 @@ class LobbyActivityTest {
     fun testLaunchPrey() {
         launchActivity<LobbyActivity>()
 
+        Espresso.onView(ViewMatchers.withId(R.id.switch_faction)).perform(ViewActions.click())
         Espresso.onView(ViewMatchers.withId(R.id.startGameButton)).perform(ViewActions.click())
 
         //TODO : Check that the intend contains the relevant information
-        intended(hasComponent(PredatorActivity::class.java.name))
+        intended(hasComponent(PreyActivity::class.java.name))
     }
 
     @Test
     fun testLaunchPredator() {
         launchActivity<LobbyActivity>()
 
-        Espresso.onView(ViewMatchers.withId(R.id.switch_faction)).perform(ViewActions.click())
         Espresso.onView(ViewMatchers.withId(R.id.startGameButton)).perform(ViewActions.click())
 
         //TODO : Check that the intend contains the relevant information
-        intended(hasComponent(PreyActivity::class.java.name))
+        intended(hasComponent(PredatorActivity::class.java.name))
     }
 }
