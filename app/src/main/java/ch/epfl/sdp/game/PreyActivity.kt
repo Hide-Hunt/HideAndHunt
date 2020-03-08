@@ -88,6 +88,7 @@ class PreyActivity : AppCompatActivity() {
                     mPlayerID = s.toString().toInt()
                     binding.tracking.isEnabled = s.isNotEmpty()
                 } catch (ignored: NumberFormatException) {
+                    binding.tracking.isEnabled = false
                 }
             }
         })
