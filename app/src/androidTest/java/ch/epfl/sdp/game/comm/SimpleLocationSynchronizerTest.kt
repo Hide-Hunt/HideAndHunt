@@ -6,8 +6,7 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class SimpleLocationSynchronizerTest {
-    class FakePubSub : RealTimePubSub {
-        var gameID: Int = 0
+    class FakePubSub(private val gameID: Int) : RealTimePubSub {
         var expectedTopic: String = ""
         var expectedPayload: ByteArray = ByteArray(0)
         private var listener: RealTimePubSub.OnPublishListener? = null
@@ -37,8 +36,11 @@ class SimpleLocationSynchronizerTest {
             listener?.onPublish("${gameID}/${playerID}", protoLoc.toByteArray())
         }
 
-        fun sendCatchPublish(preyID: Int) {
-            val catch = CatchOuterClass.Catch.newBuilder().setPreyID(preyID).build()
+        fun sendCatchPublish(predatorID: Int, preyID: Int) {
+            val catch = CatchOuterClass.Catch.newBuilder()
+                    .setPredatorID(predatorID)
+                    .setPreyID(preyID)
+                    .build()
             listener?.onPublish("${gameID}/catch", catch.toByteArray())
         }
     }
@@ -46,7 +48,7 @@ class SimpleLocationSynchronizerTest {
     @Test
     fun updateOwnLocation() {
         val location = Location(24.0, 42.0)
-        val pubSub = FakePubSub()
+        val pubSub = FakePubSub(12)
         val payload = LocationOuterClass.Location.newBuilder()
                 .setLatitude(location.latitude)
                 .setLongitude(location.longitude)
@@ -60,7 +62,7 @@ class SimpleLocationSynchronizerTest {
 
     @Test
     fun subscribeToPlayer() {
-        val pubSub = FakePubSub()
+        val pubSub = FakePubSub(12)
         val locationEmitter = SimpleLocationSynchronizer(12, 34, pubSub)
         pubSub.expectedTopic = "12/34"
         locationEmitter.subscribeToPlayer(34)
@@ -68,7 +70,7 @@ class SimpleLocationSynchronizerTest {
 
     @Test
     fun unsubscribeFromPlayer() {
-        val pubSub = FakePubSub()
+        val pubSub = FakePubSub(12)
         val locationEmitter = SimpleLocationSynchronizer(12, 34, pubSub)
         pubSub.expectedTopic = "12/34"
         locationEmitter.unsubscribeFromPlayer(34)
@@ -76,7 +78,7 @@ class SimpleLocationSynchronizerTest {
 
     @Test
     fun onPlayerLocationUpdateShouldBeCalledOnPlayerLocationUpdate() {
-        val pubSub = FakePubSub()
+        val pubSub = FakePubSub(12)
         val locationEmitter = SimpleLocationSynchronizer(12, 34, pubSub)
 
         var gotExpectedMessage = false
@@ -84,14 +86,13 @@ class SimpleLocationSynchronizerTest {
 
         locationEmitter.setPlayerUpdateListener(object : LocationSynchronizer.PlayerUpdateListener {
             override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
-                if (playerID == 42 &&
-                        location.latitude == expectedLocation.latitude &&
-                        location.longitude == expectedLocation.longitude) {
-                    gotExpectedMessage = true
-                }
+                assertEquals(42, playerID)
+                assertEquals(expectedLocation.latitude, location.latitude, 0.001)
+                assertEquals(expectedLocation.longitude, location.longitude, 0.001)
+                gotExpectedMessage = true
             }
 
-            override fun onPreyCatches(playerID: Int) {
+            override fun onPreyCatches(predatorID: Int, preyID: Int) {
                 fail()
             }
         })
@@ -103,7 +104,7 @@ class SimpleLocationSynchronizerTest {
 
     @Test
     fun onPreyCatchesShouldBeCalledOnCatchPublish() {
-        val pubSub = FakePubSub()
+        val pubSub = FakePubSub(12)
         val locationEmitter = SimpleLocationSynchronizer(12, 34, pubSub)
 
         var gotExpectedMessage = false
@@ -113,14 +114,14 @@ class SimpleLocationSynchronizerTest {
                 fail()
             }
 
-            override fun onPreyCatches(playerID: Int) {
-                if (playerID == 42) {
-                    gotExpectedMessage = true
-                }
+            override fun onPreyCatches(predatorID: Int, preyID: Int) {
+                assertEquals(42, predatorID)
+                assertEquals(24, preyID)
+                gotExpectedMessage = true
             }
         })
 
-        pubSub.sendCatchPublish(42)
+        pubSub.sendCatchPublish(42, 24)
 
         assertTrue(gotExpectedMessage)
     }

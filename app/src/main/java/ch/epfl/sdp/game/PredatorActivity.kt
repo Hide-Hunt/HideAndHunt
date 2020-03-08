@@ -10,13 +10,15 @@ import android.location.LocationManager
 import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.Bundle
-import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import ch.epfl.sdp.databinding.ActivityPredatorBinding
 import ch.epfl.sdp.game.TargetSelectionFragment.OnTargetSelectedListener
+import ch.epfl.sdp.game.comm.LocationSynchronizer
+import ch.epfl.sdp.game.comm.MQTTRealTimePubSub
+import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Player
 import ch.epfl.sdp.game.data.Prey
@@ -43,6 +45,9 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         override fun onLocationChanged(location: android.location.Location) {
             lastKnownLocation.latitude = location.latitude
             lastKnownLocation.longitude = location.longitude
+
+            locationSynchronizer.updateOwnLocation(lastKnownLocation)
+
             if (targetID != TargetSelectionFragment.NO_TARGET) {
                 targetSDistanceFragment.distance =
                         players[targetID]?.lastKnownLocation?.distanceTo(lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
@@ -64,6 +69,8 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
         }
     }
 
+    private lateinit var locationSynchronizer: LocationSynchronizer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityPredatorBinding.inflate(layoutInflater)
@@ -79,17 +86,30 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
 
         loadFragments()
 
-        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        binding.distanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (targetID != TargetSelectionFragment.NO_TARGET) targetSDistanceFragment.distance = progress
+        locationSynchronizer = SimpleLocationSynchronizer(gameID, playerID, MQTTRealTimePubSub(this))
+        locationSynchronizer.setPlayerUpdateListener(object : LocationSynchronizer.PlayerUpdateListener {
+            override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
+                if (players.containsKey(playerID)) {
+                    players[playerID]!!.lastKnownLocation = location
+                    if (playerID == targetID) {
+                        targetSDistanceFragment.distance =
+                                players[targetID]?.lastKnownLocation?.distanceTo(lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
+                    }
+                }
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-
+            override fun onPreyCatches(predatorID: Int, preyID: Int) {
+                players[predatorID]?.let {
+                    if (it is Prey && it.state == Prey.PreyState.ALIVE) {
+                        it.state = Prey.PreyState.DEAD
+                        preyFragment.setPreyState(predatorID, Prey.PreyState.DEAD)
+                        Toast.makeText(this@PredatorActivity, "Predator $predatorID catched prey $preyID", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
         })
+
+        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
     private fun loadIntentPayload(intent: Intent) : Boolean {
         gameID = intent.getIntExtra("gameID", -1)
@@ -144,10 +164,14 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
     }
 
     override fun onTargetSelected(targetID: Int) {
+        if (this.targetID != TargetSelectionFragment.NO_TARGET) {
+            locationSynchronizer.unsubscribeFromPlayer(this.targetID)
+        }
         this.targetID = targetID
         if (targetID != TargetSelectionFragment.NO_TARGET) {
             players[targetID]?.lastKnownLocation = null
             targetSDistanceFragment.distance = TargetDistanceFragment.NO_DISTANCE
+            locationSynchronizer.subscribeToPlayer(this.targetID)
         }
     }
 
@@ -169,6 +193,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
                 it.state = Prey.PreyState.DEAD
                 preyFragment.setPreyState(preyID, Prey.PreyState.DEAD)
                 Toast.makeText(this, "Catched a prey : id=" + players[preyID]?.id, Toast.LENGTH_LONG).show()
+                locationSynchronizer.declareCatch(preyID)
             }
         }
     }

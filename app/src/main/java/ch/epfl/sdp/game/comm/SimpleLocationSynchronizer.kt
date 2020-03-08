@@ -4,14 +4,15 @@ import ch.epfl.sdp.game.data.Location
 
 class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerID: Int, private val pubSub: RealTimePubSub) : LocationSynchronizer {
     private var listener : LocationSynchronizer.PlayerUpdateListener? = null
-    private val topicOffset = gameID.toString().length // gameID + char('/')
+    private val topicOffset = gameID.toString().length + 1// gameID + char('/')
 
     init {
         pubSub.setOnPublishListener(object : RealTimePubSub.OnPublishListener {
             override fun onPublish(topic: String, payload: ByteArray) {
                 val channel = topic.substring(topicOffset)
                 if (channel == "catch") {
-                    listener?.onPreyCatches(CatchOuterClass.Catch.parseFrom(payload).preyID)
+                    val catch = CatchOuterClass.Catch.parseFrom(payload)
+                    listener?.onPreyCatches(catch.predatorID, catch.preyID)
                 } else {
                     try {
                         val playerID = channel.toInt()
@@ -29,6 +30,14 @@ class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerI
                 .setLongitude(location.longitude)
                 .build()
         pubSub.publish("$gameID/$ownPlayerID", payload.toByteArray())
+    }
+
+    override fun declareCatch(playerID: Int) {
+        val payload = CatchOuterClass.Catch.newBuilder()
+                .setPredatorID(ownPlayerID)
+                .setPreyID(playerID)
+                .build()
+        pubSub.publish("$gameID/catch", payload.toByteArray())
     }
 
     override fun subscribeToPlayer(playerID: Int) {
