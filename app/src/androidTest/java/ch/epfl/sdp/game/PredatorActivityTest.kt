@@ -1,22 +1,17 @@
 package ch.epfl.sdp.game
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import ch.epfl.sdp.EspressoTestsMatchers.withDrawable
 import ch.epfl.sdp.NFCTestHelper
-import ch.epfl.sdp.PassMissingRoot
 import ch.epfl.sdp.R
-import ch.epfl.sdp.ToastMatcher
 import ch.epfl.sdp.game.NFCTagHelper.byteArrayFromHexString
 import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.game.data.Prey
-import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matchers.allOf
 import org.junit.Rule
 import org.junit.Test

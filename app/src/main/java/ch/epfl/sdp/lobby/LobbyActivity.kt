@@ -3,12 +3,13 @@ package ch.epfl.sdp.lobby
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import ch.epfl.sdp.databinding.ActivityLobbyBinding
 import ch.epfl.sdp.game.PredatorActivity
 import ch.epfl.sdp.game.PreyActivity
-import ch.epfl.sdp.databinding.ActivityLobbyBinding
 import ch.epfl.sdp.game.data.Player
 import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.game.data.Prey
+import ch.epfl.sdp.game.data.PreyState
 
 class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionChangeListener {
     private lateinit var lobbyBinding: ActivityLobbyBinding
@@ -28,7 +29,7 @@ class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionCha
                 val p = Prey(i, i.toString())
 
                 if (i >= 7) {
-                    p.state = Prey.PreyState.DEAD
+                    p.state = PreyState.DEAD
                 }
 
                 p

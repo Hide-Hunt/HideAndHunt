@@ -15,12 +15,11 @@ class DrawableMatcher internal constructor(private val expectedId: Int) : TypeSa
         if (target !is ImageView) {
             return false
         }
-        val imageView = target
         if (expectedId == EMPTY) {
-            return imageView.drawable == null
+            return target.drawable == null
         }
         if (expectedId == ANY) {
-            return imageView.drawable != null
+            return target.drawable != null
         }
         val resources = target.getContext().resources
         val expectedDrawable = ResourcesCompat.getDrawable(resources, expectedId, null)
@@ -28,7 +27,7 @@ class DrawableMatcher internal constructor(private val expectedId: Int) : TypeSa
         if (expectedDrawable == null) {
             return false
         }
-        val bitmap = getBitmap(imageView.drawable)
+        val bitmap = getBitmap(target.drawable)
         val otherBitmap = getBitmap(expectedDrawable)
         return bitmap.sameAs(otherBitmap)
     }

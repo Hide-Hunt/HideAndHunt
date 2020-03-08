@@ -22,6 +22,7 @@ import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Player
 import ch.epfl.sdp.game.data.Prey
+import ch.epfl.sdp.game.data.PreyState
 
 
 class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
@@ -101,9 +102,9 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
 
             override fun onPreyCatches(predatorID: Int, preyID: Int) {
                 players[predatorID]?.let {
-                    if (it is Prey && it.state == Prey.PreyState.ALIVE) {
-                        it.state = Prey.PreyState.DEAD
-                        preyFragment.setPreyState(predatorID, Prey.PreyState.DEAD)
+                    if (it is Prey && it.state == PreyState.ALIVE) {
+                        it.state = PreyState.DEAD
+                        preyFragment.setPreyState(predatorID, PreyState.DEAD)
                         Toast.makeText(this@PredatorActivity, "Predator $predatorID catched prey $preyID", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -193,9 +194,9 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
 
     private fun onPreyCatch(preyID: Int) {
         players[preyID]?.let {
-            if (it is Prey && it.state == Prey.PreyState.ALIVE) {
-                it.state = Prey.PreyState.DEAD
-                preyFragment.setPreyState(preyID, Prey.PreyState.DEAD)
+            if (it is Prey && it.state == PreyState.ALIVE) {
+                it.state = PreyState.DEAD
+                preyFragment.setPreyState(preyID, PreyState.DEAD)
                 Toast.makeText(this, "Catched a prey : id=" + players[preyID]?.id, Toast.LENGTH_LONG).show()
                 locationSynchronizer.declareCatch(preyID)
             }

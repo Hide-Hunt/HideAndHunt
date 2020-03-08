@@ -1,14 +1,15 @@
 package ch.epfl.sdp.game
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.R
 import ch.epfl.sdp.game.data.Prey
+import ch.epfl.sdp.game.data.PreyState
 
 /**
  * A fragment representing a list of Items.
@@ -20,7 +21,7 @@ class PreyFragment : Fragment() {
 
     private val comparator = Comparator<Prey> { o1, o2 ->
         when {
-            o1.state == Prey.PreyState.DEAD && o2.state == Prey.PreyState.ALIVE -> 1
+            o1.state == PreyState.DEAD && o2.state == PreyState.ALIVE -> 1
             o1.state == o2.state && o1.id > o2.id -> 1
             else -> -1
         }
@@ -54,7 +55,7 @@ class PreyFragment : Fragment() {
         return view
     }
 
-    fun setPreyState(preyID: Int, state: Prey.PreyState) {
+    fun setPreyState(preyID: Int, state: PreyState) {
         viewAdapter.mValues.first { it.id == preyID }.state = state
         viewAdapter.mValues.sortWith(comparator)
         viewAdapter.notifyDataSetChanged()
