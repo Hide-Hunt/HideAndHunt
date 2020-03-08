@@ -19,4 +19,10 @@ class LocationTest {
         val b = Location(12.0, 22.0)
         assertEquals(549357.6f, a.distanceTo(b), 0.1f)
     }
+
+    @Test
+    fun toStringShouldPrintLatitudeAndLongitude() {
+        val l = Location(latitude = 42.0, longitude = 24.0)
+        assertEquals("Location(latitude=42.0, longitude=24.0)", l.toString())
+    }
 }

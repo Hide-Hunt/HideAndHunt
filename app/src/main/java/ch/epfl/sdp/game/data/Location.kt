@@ -6,4 +6,8 @@ class Location(var latitude: Double, var longitude: Double) {
         android.location.Location.distanceBetween(latitude, longitude, other.latitude, other.longitude, results)
         return results[0]
     }
+
+    override fun toString(): String {
+        return "Location(latitude=$latitude, longitude=$longitude)"
+    }
 }
