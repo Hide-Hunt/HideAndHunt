@@ -14,6 +14,5 @@ class PreyActivityTest{
 
         onView(withId(R.id.playerID)).perform(typeText("1")).perform(closeSoftKeyboard())
         onView(withId(R.id.tracking)).perform(click())
-        onView(withId(R.id.repeatLastLocation)).perform(click())
     }
 }
