@@ -11,10 +11,6 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-
     defaultConfig {
         applicationId "ch.epfl.sdp"
         minSdkVersion 21
@@ -38,6 +34,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 
     kotlinOptions {
