@@ -1,15 +1,32 @@
 package ch.epfl.sdp.game.comm
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import ch.epfl.sdp.game.Location
-import ch.epfl.sdp.game.PlayerUpdateListener
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
-class MQTTRealTimePubSub internal constructor(context: Context, private val gameID: Int) : PlayerUpdateListener {
+class MQTTRealTimePubSub internal constructor(context: Context) : RealTimePubSub {
+    private var listener: RealTimePubSub.OnPublishListener? = null
     private val mqttAndroidClient: MqttAndroidClient
+
+    init {
+        mqttAndroidClient = MqttAndroidClient(context, SERVER_URI, CLIENT_ID)
+        mqttAndroidClient.setCallback(object : MqttCallbackExtended {
+            override fun connectComplete(b: Boolean, s: String) {
+                Log.w("mqtt", s)
+            }
+
+            override fun connectionLost(throwable: Throwable) {}
+            override fun messageArrived(topic: String, mqttMessage: MqttMessage) {
+                Log.w("Mqtt", mqttMessage.toString())
+                listener?.onPublish(topic, mqttMessage.payload)
+            }
+
+            override fun deliveryComplete(iMqttDeliveryToken: IMqttDeliveryToken) {}
+        })
+        connect()
+    }
+
     private fun connect() {
         val mqttConnectOptions = MqttConnectOptions()
         mqttConnectOptions.isAutomaticReconnect = true
@@ -37,22 +54,26 @@ class MQTTRealTimePubSub internal constructor(context: Context, private val game
         }
     }
 
-    @SuppressLint("DefaultLocale")
-    override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
+    override fun publish(topic: String, payload: ByteArray) {
         try {
-            val payload = LocationOuterClass.Location.newBuilder()
-                    .setLatitude(location.latitude)
-                    .setLongitude(location.longitude)
-                    .build()
-            val message = MqttMessage(payload.toByteArray())
-            mqttAndroidClient.publish(String.format("%d/%d", gameID, playerID), message)
+            val message = MqttMessage(payload)
+            mqttAndroidClient.publish(topic, message)
         } catch (e: MqttException) {
             System.err.println("Error Publishing: " + e.message)
             e.printStackTrace()
         }
     }
 
-    override fun onPreyCatches(playerID: Int) { // TODO Send the message on MQTT
+    override fun subscribe(topic: String) {
+        mqttAndroidClient.subscribe(topic, 0)
+    }
+
+    override fun unsubscribe(topic: String) {
+        mqttAndroidClient.unsubscribe(topic)
+    }
+
+    override fun setOnPublishListener(listener: RealTimePubSub.OnPublishListener) {
+        this.listener = listener
     }
 
     companion object {
@@ -60,22 +81,5 @@ class MQTTRealTimePubSub internal constructor(context: Context, private val game
         private const val SERVER_URI = "tcp://kangaroo.rmq.cloudamqp.com:1883"
         private const val USERNAME = "jprnwwdd:jprnwwdd"
         private const val PASSWORD = "aDs-KxLr1cTqGgBSWKExxmCUXBcsWfOE"
-    }
-
-    init {
-        mqttAndroidClient = MqttAndroidClient(context, SERVER_URI, CLIENT_ID)
-        mqttAndroidClient.setCallback(object : MqttCallbackExtended {
-            override fun connectComplete(b: Boolean, s: String) {
-                Log.w("mqtt", s)
-            }
-
-            override fun connectionLost(throwable: Throwable) {}
-            override fun messageArrived(topic: String, mqttMessage: MqttMessage) {
-                Log.w("Mqtt", mqttMessage.toString())
-            }
-
-            override fun deliveryComplete(iMqttDeliveryToken: IMqttDeliveryToken) {}
-        })
-        connect()
     }
 }

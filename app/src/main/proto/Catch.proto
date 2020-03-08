@@ -1,0 +1,6 @@
+syntax = "proto3";
+package ch.epfl.sdp.game.comm;
+
+message Catch {
+    int32 preyID = 1;
+}
