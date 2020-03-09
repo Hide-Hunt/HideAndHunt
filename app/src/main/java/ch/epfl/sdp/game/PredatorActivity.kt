@@ -101,10 +101,10 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
             }
 
             override fun onPreyCatches(predatorID: Int, preyID: Int) {
-                players[predatorID]?.let {
+                players[preyID]?.let {
                     if (it is Prey && it.state == PreyState.ALIVE) {
                         it.state = PreyState.DEAD
-                        preyFragment.setPreyState(predatorID, PreyState.DEAD)
+                        preyFragment.setPreyState(preyID, PreyState.DEAD)
                         Toast.makeText(this@PredatorActivity, "Predator $predatorID catched prey $preyID", Toast.LENGTH_LONG).show()
                     }
                 }
