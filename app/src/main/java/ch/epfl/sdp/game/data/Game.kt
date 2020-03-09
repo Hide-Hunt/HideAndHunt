@@ -10,7 +10,7 @@ class Game (
         var duration: Int = 0,
         val params: Map<String, GameOption> = HashMap(),
         var state: GameState = GameState.LOBBY,
-        var participation: Participation = Participation(),
+        var participation: List<Participation> = emptyList(),
         var startDate: Date = Date(),
         var endDate: Date = Date(),
         var creationDate: Date = Date()
