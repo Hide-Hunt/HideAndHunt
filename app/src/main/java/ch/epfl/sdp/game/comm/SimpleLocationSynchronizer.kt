@@ -8,6 +8,12 @@ class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerI
 
     init {
         pubSub.setOnPublishListener(object : RealTimePubSub.OnPublishListener {
+            override fun onConnect() {
+                pubSub.subscribe("$gameID/catch")
+            }
+
+            override fun onConnectionLost() {}
+
             override fun onPublish(topic: String, payload: ByteArray) {
                 val channel = topic.substring(topicOffset)
                 if (channel == "catch") {
