@@ -13,16 +13,22 @@ class MQTTRealTimePubSub internal constructor(context: Context) : RealTimePubSub
         mqttAndroidClient = MqttAndroidClient(context, SERVER_URI, CLIENT_ID)
         mqttAndroidClient.setCallback(object : MqttCallbackExtended {
             override fun connectComplete(b: Boolean, s: String) {
-                Log.w("mqtt", s)
+                Log.w("mqtt", "connected to: $s")
+                listener?.onConnect()
             }
 
-            override fun connectionLost(throwable: Throwable) {}
+            override fun connectionLost(throwable: Throwable) {
+                Log.w("mqtt", "connection lost")
+                listener?.onConnectionLost()
+            }
             override fun messageArrived(topic: String, mqttMessage: MqttMessage) {
-                Log.w("Mqtt", mqttMessage.toString())
+                Log.w("mqtt", mqttMessage.toString())
                 listener?.onPublish(topic, mqttMessage.payload)
             }
 
-            override fun deliveryComplete(iMqttDeliveryToken: IMqttDeliveryToken) {}
+            override fun deliveryComplete(iMqttDeliveryToken: IMqttDeliveryToken) {
+                Log.w("mqtt", "delivery complete")
+            }
         })
         connect()
     }

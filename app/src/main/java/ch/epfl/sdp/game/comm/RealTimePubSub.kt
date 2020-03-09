@@ -2,6 +2,8 @@ package ch.epfl.sdp.game.comm
 
 interface RealTimePubSub {
     interface OnPublishListener {
+        fun onConnect()
+        fun onConnectionLost()
         fun onPublish(topic: String, payload: ByteArray)
     }
 
