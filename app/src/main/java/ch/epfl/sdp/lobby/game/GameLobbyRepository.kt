@@ -14,5 +14,7 @@ interface GameLobbyRepository {
 
     fun getPlayers(cb : (List<Participation>) -> Unit)
 
+    fun getAdminId(cb : (Int) -> Unit)
+
     fun setPlayerReady(player : User)
 }
