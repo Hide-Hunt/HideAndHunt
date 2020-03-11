@@ -61,7 +61,7 @@ class PreyActivity : AppCompatActivity() {
         _binding = ActivityPreyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        pubSub = MQTTRealTimePubSub(this)
+        pubSub = MQTTRealTimePubSub(this, null)
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         assert(mLocationManager != null)

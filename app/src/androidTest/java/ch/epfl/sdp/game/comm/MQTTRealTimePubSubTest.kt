@@ -11,11 +11,15 @@ class MQTTRealTimePubSubTest {
     fun shouldNotCrashIfNotConnected() {
         val scenario = launchFragment<EmptyFragment>()
         scenario.onFragment {
-            val mqttRealTimePubSub = MQTTRealTimePubSub(it.context!!)
+            val mqttRealTimePubSub = MQTTRealTimePubSub(it.context!!, null)
             mqttRealTimePubSub.publish("a", ByteArray(0))
             mqttRealTimePubSub.subscribe("a")
             mqttRealTimePubSub.unsubscribe("a")
             mqttRealTimePubSub.setOnPublishListener(object : RealTimePubSub.OnPublishListener {
+                override fun onConnect() {}
+
+                override fun onConnectionLost() {}
+
                 override fun onPublish(topic: String, payload: ByteArray) {}
             })
         }
@@ -25,7 +29,7 @@ class MQTTRealTimePubSubTest {
     fun shouldNotCrashIfUnsubscribeWithoutSubscription() {
         val scenario = launchFragment<EmptyFragment>()
         scenario.onFragment {
-            MQTTRealTimePubSub(it.context!!).unsubscribe("a")
+            MQTTRealTimePubSub(it.context!!, null).unsubscribe("a")
         }
     }
 }

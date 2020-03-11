@@ -6,15 +6,22 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
+import androidx.test.rule.GrantPermissionRule
 import ch.epfl.sdp.EspressoTestsMatchers.withDrawable
 import ch.epfl.sdp.NFCTestHelper
 import ch.epfl.sdp.R
 import ch.epfl.sdp.game.NFCTagHelper.byteArrayFromHexString
 import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.game.data.Prey
+import io.moquette.BrokerConstants
+import io.moquette.broker.Server
+import io.moquette.broker.config.MemoryConfig
 import org.hamcrest.Matchers.allOf
 import org.junit.Rule
 import org.junit.Test
+import java.io.File
+import java.util.*
+
 
 class PredatorActivityTest {
     private val players = arrayListOf(
@@ -32,10 +39,26 @@ class PredatorActivityTest {
         activityIntent.putExtra("gameID", 0)
         activityIntent.putExtra("playerID", 0)
         activityIntent.putExtra("players", players)
+        activityIntent.putExtra("mqttURI", "tcp://localhost:1883")
     }
 
     @get:Rule
     val activityRule = ActivityTestRule(PredatorActivity::class.java, false, false)
+    @get:Rule
+    var grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    @get:Rule
+    var grantPermissionRule2: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+    private fun setUpMockMqttServer(): () -> Unit {
+        val memoryConfig = MemoryConfig(Properties())
+        memoryConfig.setProperty(BrokerConstants.PERSISTENT_STORE_PROPERTY_NAME, File.createTempFile(BrokerConstants.DEFAULT_MOQUETTE_STORE_H2_DB_FILENAME, null).absolutePath)
+        val server = Server()
+        server.startServer(memoryConfig)
+
+        return fun() {
+            server.stopServer()
+        }
+    }
 
     @Test
     fun activityWithoutStartIntentDoesntCrash() {
@@ -44,10 +67,12 @@ class PredatorActivityTest {
 
     @Test
     fun activityWithStartIntentDoesntCrash() {
+        val stop = setUpMockMqttServer()
         val activity = activityRule.launchActivity(activityIntent)
         activityRule.runOnUiThread {
             activity.recreate()
         }
+        stop()
     }
 
     @Test

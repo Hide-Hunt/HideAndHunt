@@ -88,7 +88,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
 
         loadFragments()
 
-        locationSynchronizer = SimpleLocationSynchronizer(gameID, playerID, MQTTRealTimePubSub(this))
+        locationSynchronizer = SimpleLocationSynchronizer(gameID, playerID, MQTTRealTimePubSub(this, intent?.extras?.getString("mqttURI")))
         locationSynchronizer.setPlayerUpdateListener(object : LocationSynchronizer.PlayerUpdateListener {
             override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
                 if (players.containsKey(playerID)) {

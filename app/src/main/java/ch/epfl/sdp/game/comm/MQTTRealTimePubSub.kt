@@ -5,12 +5,12 @@ import android.util.Log
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
-class MQTTRealTimePubSub internal constructor(context: Context) : RealTimePubSub {
+class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : RealTimePubSub {
     private var listener: RealTimePubSub.OnPublishListener? = null
     private val mqttAndroidClient: MqttAndroidClient
 
     init {
-        mqttAndroidClient = MqttAndroidClient(context, SERVER_URI, CLIENT_ID)
+        mqttAndroidClient = MqttAndroidClient(context, uri ?: SERVER_URI, CLIENT_ID)
         mqttAndroidClient.setCallback(object : MqttCallbackExtended {
             override fun connectComplete(b: Boolean, s: String) {
                 Log.w("mqtt", "connected to: $s")
