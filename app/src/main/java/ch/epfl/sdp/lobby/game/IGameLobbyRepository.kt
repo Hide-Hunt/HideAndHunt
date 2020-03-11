@@ -4,9 +4,10 @@ import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.user.User
 
-interface GameLobbyRepository {
+interface IGameLobbyRepository {
 
-    fun gitGameId(cb : (Int) -> Unit)
+
+    fun getGameId(cb : (Int) -> Unit)
 
     fun getGameName(cb : (String) -> Unit)
 
@@ -16,5 +17,5 @@ interface GameLobbyRepository {
 
     fun getAdminId(cb : (Int) -> Unit)
 
-    fun setPlayerReady(player : User)
+    fun changePlayerReady(user: User)
 }
