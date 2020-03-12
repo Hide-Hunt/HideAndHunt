@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import ch.epfl.sdp.R
-import ch.epfl.sdp.databinding.ActivityLobbyBinding
 import ch.epfl.sdp.databinding.FragmentPreyCatchBinding
 import java.lang.IllegalArgumentException
 
