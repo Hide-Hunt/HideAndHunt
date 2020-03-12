@@ -3,7 +3,9 @@
     package="ch.epfl.sdp">
 
     <uses-permission android:name="android.permission.NFC" />
+
     <uses-feature android:name="android.hardware.nfc" />
+
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
@@ -12,18 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".predator.PreyCatchFragmentTestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".lobby.GameCreationActivity"></activity>
+        <activity android:name=".predator.PreyCatchFragmentTestActivity"></activity>
         <activity
             android:name=".PreyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_prey"
-            android:theme="@style/FullscreenTheme"/>
+            android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".PredatorActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

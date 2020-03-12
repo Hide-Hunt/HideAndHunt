@@ -17,4 +17,10 @@
     <string name="prey_faction_name">Prey</string>
 
     <string name="title_activity_prey">PreyActivity</string>
+
+    <!-- Game Creation Activity -->
+    <string name="gameCreation_title">New Game</string>
+    <string name="gameCreation_game_name">Game Name</string>
+    <string name="gameCreation_duration">Duration</string>
+    <string name="gameCreation_create">Create !</string>
 </resources>
