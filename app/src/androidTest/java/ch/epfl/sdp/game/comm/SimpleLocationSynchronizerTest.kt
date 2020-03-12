@@ -24,7 +24,7 @@ class SimpleLocationSynchronizerTest {
             assertEquals(expectedTopic, topic)
         }
 
-        override fun setOnPublishListener(listener: RealTimePubSub.OnPublishListener) {
+        override fun setOnPublishListener(listener: RealTimePubSub.OnPublishListener?) {
             this.listener = listener
         }
 

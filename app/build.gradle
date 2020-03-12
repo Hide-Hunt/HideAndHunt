@@ -21,11 +21,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    packagingOptions {
-        pickFirst "META-INF/INDEX.LIST"
-        pickFirst "META-INF/io.netty.versions.properties"
-    }
-
     buildTypes {
         debug {
             testCoverageEnabled true
@@ -77,9 +72,6 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
     androidTestImplementation "com.android.support.test:runner:1.0.2"
-    androidTestImplementation 'io.moquette:moquette-netty-parser:0.9'
-    androidTestImplementation 'io.moquette:moquette-broker:0.12.1'
-    androidTestImplementation 'io.moquette:moquette-parser-commons:0.8.1'
     debugImplementation 'androidx.fragment:fragment-testing:1.2.2'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }
