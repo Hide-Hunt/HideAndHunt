@@ -60,5 +60,7 @@ class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerI
 
     override fun stop() {
         pubSub.stop()
+        pubSub.setOnPublishListener(null)
+        listener = null
     }
 }

@@ -61,7 +61,6 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
     }
 
     override fun stop() {
-        if (!mqttAndroidClient.isConnected) return
         mqttAndroidClient.close()
     }
 
@@ -87,7 +86,7 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
         mqttAndroidClient.unsubscribe(topic)
     }
 
-    override fun setOnPublishListener(listener: RealTimePubSub.OnPublishListener) {
+    override fun setOnPublishListener(listener: RealTimePubSub.OnPublishListener?) {
         this.listener = listener
     }
 

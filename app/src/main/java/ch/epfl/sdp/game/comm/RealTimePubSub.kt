@@ -10,7 +10,7 @@ interface RealTimePubSub {
     fun publish(topic: String, payload: ByteArray)
     fun subscribe(topic: String)
     fun unsubscribe(topic: String)
-    fun setOnPublishListener(listener: OnPublishListener)
+    fun setOnPublishListener(listener: OnPublishListener?)
 
     fun stop()
 }
