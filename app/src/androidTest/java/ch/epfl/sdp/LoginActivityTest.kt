@@ -27,11 +27,6 @@ class LoginActivityTest {
     }
 
     @Test
-    fun dummyTest() {
-        Assert.assertEquals(4, 2 + 2.toLong())
-    }
-
-    @Test
     fun canCreateActivityWithoutCrash() {
         launchActivity<LoginActivity>().onActivity {activity -> activity.setOtherConnector(mockConnector)}
         //onView(withId(R.id.loginSubmitButton)).perform(click())
