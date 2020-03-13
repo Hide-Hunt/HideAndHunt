@@ -8,8 +8,6 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ch.epfl.sdp.PredatorActivity
-import ch.epfl.sdp.PreyActivity
 import ch.epfl.sdp.R
 import ch.epfl.sdp.lobby.LobbyActivity
 import org.junit.Rule
