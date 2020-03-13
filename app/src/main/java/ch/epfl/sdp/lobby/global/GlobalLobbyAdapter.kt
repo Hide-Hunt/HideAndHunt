@@ -33,8 +33,8 @@ class GlobalLobbyAdapter(val data: List<Game>) :  RecyclerView.Adapter<GlobalLob
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.itemView.setOnClickListener(holder)
         (holder.linearLayout.getChildAt(0) as TextView).text = data[position].name
-        (holder.linearLayout.getChildAt(1) as TextView).text = "Created by: "+data[position].admin
-        (holder.linearLayout.getChildAt(2) as TextView).text = "Players: "+data[position].name
+        (holder.linearLayout.getChildAt(1) as TextView).text = holder.itemView.context.getString(R.string.game_created_by)+data[position].admin
+        (holder.linearLayout.getChildAt(2) as TextView).text = holder.itemView.context.getString(R.string.player_in_lobby)+data[position].participation.size
     }
 
     override fun getItemCount() = data.size
