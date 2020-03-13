@@ -27,7 +27,6 @@
             android:label="@string/title_activity_prey"
             android:theme="@style/FullscreenNoTitle"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".LobbyActivity" />
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".game.PredatorActivity"

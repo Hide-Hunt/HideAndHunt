@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
+import ch.epfl.sdp.lobby.LobbyActivity
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -19,10 +20,6 @@ class MainActivity : AppCompatActivity() {
         }
         binding.loginButton.setOnClickListener{
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
-            startActivity(intent)
-        }
-        binding.registerButton.setOnClickListener{
-            val intent = Intent(this@MainActivity, RegisterActivity::class.java)
             startActivity(intent)
         }
     }
