@@ -12,7 +12,8 @@ import ch.epfl.sdp.databinding.FragmentGlobalLobbyBinding
 
 class GlobalLobbyFragment : Fragment() {
 
-    private lateinit var binding: FragmentGlobalLobbyBinding
+    private var _binding: FragmentGlobalLobbyBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     var repo: IGlobalLobbyRepository? = null
@@ -25,7 +26,7 @@ class GlobalLobbyFragment : Fragment() {
         super.onAttach(context)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentGlobalLobbyBinding.inflate(inflater)
+        _binding = FragmentGlobalLobbyBinding.inflate(inflater)
         repo?.getAllGames { games ->
             viewManager = LinearLayoutManager(context)
             viewAdapter = GlobalLobbyAdapter(games)
@@ -36,6 +37,11 @@ class GlobalLobbyFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

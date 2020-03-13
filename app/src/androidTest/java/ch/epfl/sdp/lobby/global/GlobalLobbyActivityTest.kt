@@ -21,7 +21,9 @@ class GlobalLobbyActivityTest {
 
     @Test
     fun activityDoesNotCrash() {
-        launchActivity<GlobalLobbyActivity>()
+        val scenario = launchActivity<GlobalLobbyActivity>()
+        Thread.sleep(100)
+        scenario.onActivity { it.recreate() }
         Thread.sleep(100)
     }
 

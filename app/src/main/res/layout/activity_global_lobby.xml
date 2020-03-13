@@ -4,11 +4,4 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".lobby.global.GlobalLobbyActivity" >
-
-    <fragment
-        android:id="@+id/fragment3"
-        android:name="ch.epfl.sdp.lobby.global.GlobalLobbyFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</FrameLayout>
+    tools:context=".lobby.global.GlobalLobbyActivity" />
