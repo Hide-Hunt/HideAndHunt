@@ -16,7 +16,6 @@ class GameTest {
         assertEquals("", game.admin)
         assertEquals("", game.name)
         assertEquals(0, game.duration)
-        assertTrue(game.params is HashMap)
         assertEquals(GameState.LOBBY, game.state)
         assertTrue(game.participation.isEmpty())
     }
