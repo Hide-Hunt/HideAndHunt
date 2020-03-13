@@ -53,8 +53,13 @@ class GameTimerFragmentTest {
     fun timerShowsRightTime() {
         val fragmentArgs = Bundle().apply { putLong("time", 12000) }
         launchFragmentInContainer<GameTimerFragment>(fragmentArgs)
+        Thread.sleep(500)
         onView(withId(R.id.currentTime)).check(ViewAssertions.matches(withText("0:11")))
-        Thread.sleep(3000)
+        Thread.sleep(1000)
+        onView(withId(R.id.currentTime)).check(ViewAssertions.matches(withText("0:10")))
+        Thread.sleep(1000)
+        onView(withId(R.id.currentTime)).check(ViewAssertions.matches(withText("0:09")))
+        Thread.sleep(1000)
         onView(withId(R.id.currentTime)).check(ViewAssertions.matches(withText("0:08")))
     }
 }
