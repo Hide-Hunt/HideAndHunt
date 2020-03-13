@@ -7,8 +7,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.epfl.sdp.R
 import org.junit.Test
 
-import org.junit.Assert.*
-
 class PlayerParametersFragmentTest {
 
     @Test

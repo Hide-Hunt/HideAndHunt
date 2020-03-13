@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ch.epfl.sdp">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.nfc" />
 
@@ -17,22 +23,28 @@
         <activity android:name=".lobby.GameCreationActivity"></activity>
         <activity android:name=".predator.PreyCatchFragmentTestActivity"></activity>
         <activity
-            android:name=".PreyActivity"
+            android:name=".game.PreyActivity"
+            android:screenOrientation="sensorLandscape"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_prey"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/FullscreenNoTitle"
+            tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".PredatorActivity"
+            android:name=".game.PredatorActivity"
+            android:screenOrientation="sensorLandscape"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_predator"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/FullscreenNoTitle"
+            tools:ignore="LockedOrientationActivity" />
+
         <activity android:name=".lobby.LobbyActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
+    </application>
 </manifest>
