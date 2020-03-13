@@ -4,14 +4,14 @@ import java.util.*
 import kotlin.collections.HashMap
 
 class Game (
-        var id: Int = 0,
-        var name: String = "",
-        var admin: String = "",
-        var duration: Int = 0,
-        val params: Map<String, GameOption> = HashMap(),
-        var state: GameState = GameState.LOBBY,
-        var participation: List<Participation> = emptyList(),
-        var startDate: Date = Date(),
-        var endDate: Date = Date(),
-        var creationDate: Date = Date()
+        var id: Int,
+        var name: String,
+        var admin: String,
+        var duration: Int,
+        val params: Map<String, GameOption>,
+        var state: GameState,
+        var participation: List<Participation>,
+        var startDate: Date,
+        var endDate: Date,
+        var creationDate: Date
 )

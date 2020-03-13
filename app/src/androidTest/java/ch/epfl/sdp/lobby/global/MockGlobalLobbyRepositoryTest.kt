@@ -17,4 +17,11 @@ class MockGlobalLobbyRepositoryTest {
         assertEquals(true, called)
     }
 
+    @Test
+    fun moreThanZeroGames() {
+        val glr = MockGlobalLobbyRepository(MockDB())
+        var size = 0
+        glr.getAllGames { games -> size = games.size }
+        assertTrue(size > 0)
+    }
 }
