@@ -11,7 +11,14 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     private val players = listOf(
             Participation(User("George Kittle", 85), false, "CAFE", PlayerParametersFragment.Faction.PREY),
             Participation(User("Nick Bosa", 97), false, "0A0A", PlayerParametersFragment.Faction.PREDATOR),
-            Participation(User("Richard Sherman", 25), false, "C0BA", PlayerParametersFragment.Faction.PREDATOR))
+            Participation(User("Richard Sherman", 25), false, "C0BA", PlayerParametersFragment.Faction.PREDATOR),
+            Participation(User("Dummy User", 12), false, "AB00", PlayerParametersFragment.Faction.PREY),
+            Participation(User("Hello World", 42), true, "C0B0", PlayerParametersFragment.Faction.PREY),
+            Participation(User("Morgan Freeman", 91), false, "0BBB", PlayerParametersFragment.Faction.PREDATOR),
+            Participation(User("Jack Sparrow", 7), true, "0AAC", PlayerParametersFragment.Faction.PREY),
+            Participation(User("Britney Spears", 21), false, "AC00", PlayerParametersFragment.Faction.PREDATOR),
+            Participation(User("Spiderman", 21), false, "A0AA", PlayerParametersFragment.Faction.PREDATOR),
+            Participation(User("Neymar Jr", 21), false, "C000", PlayerParametersFragment.Faction.PREDATOR))
 
 
 

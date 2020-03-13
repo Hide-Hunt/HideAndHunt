@@ -20,7 +20,7 @@ class GameLobbyActivity : AppCompatActivity()  {
         rv.layoutManager = LinearLayoutManager(this)
 
         //caller id is hardcoded for now
-        repository.getPlayers { playerList -> rv.adapter = GameLobbyAdapter(playerList,this,playerList[1].user.uid) }
+        repository.getPlayers { playerList -> rv.adapter = GameLobbyAdapter(playerList,playerList[1].user.uid) }
 
     }
 }

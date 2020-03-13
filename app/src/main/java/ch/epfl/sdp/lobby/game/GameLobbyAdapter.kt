@@ -18,14 +18,13 @@ import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
 import kotlin.coroutines.coroutineContext
 
 class GameLobbyAdapter(
-        private var players : List<Participation>, private val context : Context,
-        private val callerId : Int ) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
+        private var players : List<Participation>, private val callerId : Int ) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameLobbyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.game_lobby_player_cell,parent,false)
-        return GameLobbyViewHolder(view,context)
+        return GameLobbyViewHolder(view)
     }
 
 
@@ -44,33 +43,35 @@ class GameLobbyAdapter(
         else "Not Ready"
     }
 
-    private  fun  factionToString(isReady : PlayerParametersFragment.Faction) : String {
-        return "PREY"
+    private  fun  factionToString(faction : PlayerParametersFragment.Faction) : String {
+        return if (faction == PlayerParametersFragment.Faction.PREY) "PREY"
+        else "PREDATOR"
     }
 
-    class GameLobbyViewHolder(itemView: View,  private val context : Context) : RecyclerView.ViewHolder(itemView) {
-
-        private lateinit var currentPair: Pair<String,String>
+    class GameLobbyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun display(name : String, faction : String, isReady : String, displaySelectionFragment : Boolean)  {
 
-            itemView.faction_layout.removeAllViews()
+            val factionLayout = itemView.faction_layout
+            factionLayout.removeAllViews()
+
             if (displaySelectionFragment) {
                 try {
-                    val activity = context as AppCompatActivity
+                    val activity = factionLayout.context as AppCompatActivity
                     activity.supportFragmentManager.beginTransaction().add(
-                            R.id.faction_layout, PlayerParametersFragment()
+                            factionLayout.id, PlayerParametersFragment()
                     ).commit()
                 }
-                catch (e :ClassCastException ) {
-                    Log.d(TAG, "Can't get the fragment manager with this");
+                catch (e : ClassCastException ) {
+                    Log.d(TAG, "Can't get the fragment manager with this")
                 }
             }
             else {
-                val factionTextView = TextView(context)
+                val factionTextView = TextView(factionLayout.context)
                 factionTextView.text = faction
-                itemView.faction_layout.addView(factionTextView)
+                factionLayout.addView(factionTextView)
             }
+
             itemView.player_name.text = name
             itemView.player_is_ready.text = isReady
         }
