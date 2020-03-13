@@ -54,6 +54,11 @@ class GameTimerFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
         private const val ARG_TIME = "time"
         private const val COUNTDOWN_INTERVAL = 1000
