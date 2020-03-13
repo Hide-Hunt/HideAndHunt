@@ -74,6 +74,11 @@ class TargetDistanceFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
         const val NO_DISTANCE = -1
         const val DISABLED = -2

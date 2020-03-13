@@ -27,8 +27,7 @@ import ch.epfl.sdp.game.data.PreyState
 
 class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
     private lateinit var mLocationManager: LocationManager
-    private var _binding: ActivityPredatorBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: ActivityPredatorBinding
 
     private var gameID = -1
     private var playerID = -1
@@ -75,7 +74,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityPredatorBinding.inflate(layoutInflater)
+        binding = ActivityPredatorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Get game information

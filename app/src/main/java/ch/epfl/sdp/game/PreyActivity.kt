@@ -25,22 +25,21 @@ import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
  * status bar and navigation/system bar) with user interaction.
  */
 class PreyActivity : AppCompatActivity() {
-    private var _binding: ActivityPreyBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: ActivityPreyBinding
 
-    private var mLocationManager: LocationManager? = null
+    private lateinit var mLocationManager: LocationManager
     private var mUpdateNb = 0
     private var mPlayerID = -1
 
     private lateinit var pubSub: RealTimePubSub
-    private var locationSynchronizer: LocationSynchronizer? = null
+    private lateinit var locationSynchronizer: LocationSynchronizer
 
     private val mLocationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             mUpdateNb++
             binding.updateNb.text = mUpdateNb.toString()
             binding.location.text = String.format("%s,  %s", location.latitude, location.longitude)
-            locationSynchronizer?.updateOwnLocation(ch.epfl.sdp.game.data.Location(location.latitude, location.longitude))
+            locationSynchronizer.updateOwnLocation(ch.epfl.sdp.game.data.Location(location.latitude, location.longitude))
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
@@ -58,15 +57,13 @@ class PreyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityPreyBinding.inflate(layoutInflater)
+        binding = ActivityPreyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         pubSub = MQTTRealTimePubSub(this, null)
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        assert(mLocationManager != null)
-
-        if (mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             binding.GPSDisabledLabel.visibility = View.INVISIBLE
         } else {
             binding.GPSDisabledLabel.visibility = View.VISIBLE
@@ -96,9 +93,9 @@ class PreyActivity : AppCompatActivity() {
             if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return@OnClickListener
             }
-            val last = mLocationManager!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val last = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             if (last != null) {
-                locationSynchronizer?.updateOwnLocation(ch.epfl.sdp.game.data.Location(last.latitude, last.longitude))
+                locationSynchronizer.updateOwnLocation(ch.epfl.sdp.game.data.Location(last.latitude, last.longitude))
             } else {
                 Toast.makeText(applicationContext, "No last known location", Toast.LENGTH_SHORT).show()
             }
@@ -120,12 +117,11 @@ class PreyActivity : AppCompatActivity() {
             }
         }
         locationSynchronizer = SimpleLocationSynchronizer(0, mPlayerID, pubSub)
-        mLocationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME.toLong(), LOCATION_REFRESH_DISTANCE.toFloat(), mLocationListener)
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME.toLong(), LOCATION_REFRESH_DISTANCE.toFloat(), mLocationListener)
     }
 
     private fun disableRequestUpdates() {
-        mLocationManager!!.removeUpdates(mLocationListener)
-        locationSynchronizer = null
+        mLocationManager.removeUpdates(mLocationListener)
     }
 
     companion object {
