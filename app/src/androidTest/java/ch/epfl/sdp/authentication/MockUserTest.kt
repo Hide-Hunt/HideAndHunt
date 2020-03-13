@@ -18,7 +18,7 @@ class MockUserTest {
         val mock = MockUserConnector()
         for (i in 0..5) {
             Assert.assertTrue(mock.connect("test$i@test.com", "password$i"))
-            Assert.assertEquals("test0@test.com", user.username)
+            Assert.assertEquals("test$i@test.com", user.username)
             Assert.assertEquals(i.toString(), user.uid)
             Assert.assertTrue(user.connected)
             Assert.assertTrue(mock.disconnect())
@@ -54,13 +54,11 @@ class MockUserTest {
         val mock = MockUserConnector()
         Assert.assertTrue(mock.register("testing", "C-C-C-CANDEAAAA"))
         Assert.assertEquals("testing", user.username)
-        Assert.assertEquals("0", user.uid)
         Assert.assertTrue(user.connected)
         Assert.assertTrue(mock.disconnect())
         Assert.assertFalse(user.connected)
         Assert.assertTrue(mock.connect("testing", "C-C-C-CANDEAAAA"))
         Assert.assertEquals("testing", user.username)
-        Assert.assertEquals("0", user.uid)
         Assert.assertTrue(user.connected)
     }
 
