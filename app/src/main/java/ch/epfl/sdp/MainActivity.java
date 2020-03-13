@@ -2,6 +2,7 @@ package ch.epfl.sdp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        mainBinding.newGameButton.setOnClickListener(new View.OnClickListener() {
+        binding.newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, GameCreationActivity.class);
