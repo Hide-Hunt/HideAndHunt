@@ -18,6 +18,25 @@
 
     <string name="title_activity_prey">PreyActivity</string>
 
+    <string name="crosshair_icon">crosshair_icon</string>
+    <string name="no_target">No target</string>
+    <string name="target_selection_dialog_title">Select a target</string>
+
+    <string name="no_distance_label">Acquiring target…</string>
+    <string name="distance_signal_description">distance_signal</string>
+    <string name="predator_title">Predator</string>
+    <string name="tracking_disabled">Tracking disabled</string>
+
+    <string name="player_id">Player ID:</string>
+    <string name="updates">#Updates:</string>
+    <string name="last_location">Last location:</string>
+    <string name="tracking">Tracking</string>
+    <string name="player_id_hint">Player ID</string>
+    <string name="zero">0</string>
+    <string name="gps_disabled">GPS Disabled</string>
+    <string name="repeat_last_location">Repeat last location</string>
+    <string name="prey_name">Prey %d</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="player_in_lobby">\"Players in the lobby: \"</string>
     <string name="game_created_by">\"Created by: \"</string>
