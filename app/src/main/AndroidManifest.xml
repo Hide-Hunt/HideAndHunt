@@ -29,8 +29,10 @@
             android:label="@string/title_activity_prey"
             android:theme="@style/FullscreenNoTitle"
             tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".authentication.LoginActivity" />
         <activity
             android:name=".game.PredatorActivity"
+            android:label="@string/title_activity_predator"
             android:screenOrientation="sensorLandscape"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullscreenNoTitle"
