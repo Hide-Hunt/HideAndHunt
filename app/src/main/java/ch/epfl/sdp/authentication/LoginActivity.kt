@@ -1,16 +1,14 @@
-package ch.epfl.sdp
+package ch.epfl.sdp.authentication
 
 import android.os.Bundle
 import android.text.Editable
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityLoginBinding
 import kotlinx.android.synthetic.main.activity_login.*
-import ch.epfl.sdp.authentication.*
 
 class LoginActivity : AppCompatActivity() {
 
-    private var _binding: ActivityLoginBinding? = null
-    private val binding get() =_binding!!
+    private lateinit var binding: ActivityLoginBinding
     private var connector:IUserConnector = FirebaseUserConnector()
 
     fun setOtherConnector(con: IUserConnector) {
@@ -20,7 +18,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        _binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.loginSubmitButton.setOnClickListener {

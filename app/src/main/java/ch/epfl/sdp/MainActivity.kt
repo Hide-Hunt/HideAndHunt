@@ -5,14 +5,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.lobby.LobbyActivity
+import ch.epfl.sdp.authentication.LoginActivity
 
 class MainActivity : AppCompatActivity() {
-    private var _binding: ActivityMainBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.playButton.setOnClickListener {
             val intent = Intent(this@MainActivity, LobbyActivity::class.java)
