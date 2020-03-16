@@ -9,7 +9,7 @@ import ch.epfl.sdp.lobby.PlayerParametersFragment
 import ch.epfl.sdp.user.User
 import java.util.*
 
-class MockGlobalLobbyRepository(private val database: DB) : IGlobalLobbyRepository {
+class MockGlobalLobbyRepository() : IGlobalLobbyRepository {
 
     val participation1 = listOf<Participation>(Participation(User("JeanMichel", 42), false, "FFCA", PlayerParametersFragment.Faction.PREY))
     val participation2 = listOf<Participation>(

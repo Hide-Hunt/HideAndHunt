@@ -11,7 +11,7 @@ class MockGlobalLobbyRepositoryTest {
 
     @Test
     fun callbackIsCalled() {
-        val glr = MockGlobalLobbyRepository(MockDB())
+        val glr = MockGlobalLobbyRepository()
         var called = false
         glr.getAllGames { called = true }
         assertEquals(true, called)
@@ -19,7 +19,7 @@ class MockGlobalLobbyRepositoryTest {
 
     @Test
     fun moreThanZeroGames() {
-        val glr = MockGlobalLobbyRepository(MockDB())
+        val glr = MockGlobalLobbyRepository()
         var size = 0
         glr.getAllGames { games -> size = games.size }
         assertTrue(size > 0)

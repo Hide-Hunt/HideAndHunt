@@ -143,7 +143,7 @@ repositories {
     }
 }
 
-sourceSets{
+sourceSets {
     main {
         java.srcDirs += "${protobuf.generatedFilesBaseDir}/main/javalite"
     }

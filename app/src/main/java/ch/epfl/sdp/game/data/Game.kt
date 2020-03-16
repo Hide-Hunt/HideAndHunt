@@ -3,7 +3,7 @@ package ch.epfl.sdp.game.data
 import java.util.*
 import kotlin.collections.HashMap
 
-class Game (
+data class Game (
         var id: Int,
         var name: String,
         var admin: String,

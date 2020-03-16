@@ -52,4 +52,7 @@
 
     <string name="player_in_lobby">Players in the lobby: </string>
     <string name="game_created_by">Created by: </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
