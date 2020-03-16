@@ -6,9 +6,11 @@ import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -24,6 +26,7 @@ import ch.epfl.sdp.game.GameTimerFragment
 import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.lobby.LobbyActivity
+import org.hamcrest.core.AllOf.allOf
 import org.junit.*
 import org.junit.runner.RunWith
 import java.util.Date
@@ -78,7 +81,9 @@ class GlobalLobbyFragmentTest {
     @Test
     fun clickOnGameStartsLobbyActivity() {
         val scenario = launchFragmentInContainer<GlobalLobbyFragment>(baseBundle)
-        onView(withId(R.id.global_lobby_recycler)).perform(RecyclerViewActions.actionOnItemAtPosition<GlobalLobbyAdapter.MyViewHolder>(0, click()))
+        val recyclerView: ViewInteraction = onView(
+                allOf(withId(R.id.global_lobby_recycler), isDisplayed()));
+        recyclerView.perform(actionOnItemAtPosition<GlobalLobbyAdapter.MyViewHolder>(0, click()));
         intended(IntentMatchers.hasComponent(LobbyActivity::class.java.name))
     }
 }
