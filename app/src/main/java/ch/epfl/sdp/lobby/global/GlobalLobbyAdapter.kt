@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.R
 import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.lobby.LobbyActivity
+import ch.epfl.sdp.lobby.global.GlobalLobbyAdapter.*
 
-class GlobalLobbyAdapter(val data: List<Game>) :  RecyclerView.Adapter<GlobalLobbyAdapter.MyViewHolder>() {
+class GlobalLobbyAdapter(var data: List<Game>) :  RecyclerView.Adapter<MyViewHolder>() {
 
     class MyViewHolder(val linearLayout: LinearLayout, val data: List<Game>) : RecyclerView.ViewHolder(linearLayout), View.OnClickListener {
 
@@ -25,7 +26,7 @@ class GlobalLobbyAdapter(val data: List<Game>) :  RecyclerView.Adapter<GlobalLob
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GlobalLobbyAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val linearLayout = LayoutInflater.from(parent.context).inflate(R.layout.global_lobby_item_view, parent, false) as LinearLayout
         return MyViewHolder(linearLayout, data)
     }
@@ -33,8 +34,8 @@ class GlobalLobbyAdapter(val data: List<Game>) :  RecyclerView.Adapter<GlobalLob
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.itemView.setOnClickListener(holder)
         (holder.linearLayout.getChildAt(0) as TextView).text = data[position].name
-        (holder.linearLayout.getChildAt(1) as TextView).text = holder.itemView.context.getString(R.string.game_created_by)+data[position].admin
-        (holder.linearLayout.getChildAt(2) as TextView).text = holder.itemView.context.getString(R.string.player_in_lobby)+data[position].participation.size
+        (holder.linearLayout.getChildAt(1) as TextView).text = holder.itemView.context.getString(R.string.game_created_by).format(data[position].admin)
+        (holder.linearLayout.getChildAt(2) as TextView).text = holder.itemView.context.getString(R.string.player_in_lobby).format(data[position].participation.size)
     }
 
     override fun getItemCount() = data.size

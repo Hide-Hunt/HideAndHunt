@@ -1,7 +1,6 @@
 package ch.epfl.sdp.lobby.global
 
 import ch.epfl.sdp.db.Callback
-import ch.epfl.sdp.db.DB
 import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
@@ -9,15 +8,15 @@ import ch.epfl.sdp.lobby.PlayerParametersFragment
 import ch.epfl.sdp.user.User
 import java.util.*
 
-class MockGlobalLobbyRepository() : IGlobalLobbyRepository {
+class MockGlobalLobbyRepository : IGlobalLobbyRepository {
 
-    val participation1 = listOf<Participation>(Participation(User("JeanMichel", 42), false, "FFCA", PlayerParametersFragment.Faction.PREY))
-    val participation2 = listOf<Participation>(
+    private val participation1 = listOf<Participation>(Participation(User("JeanMichel", 42), false, "FFCA", PlayerParametersFragment.Faction.PREY))
+    private val participation2 = listOf<Participation>(
             Participation(User("George Kittle", 85), true, "CAFE", PlayerParametersFragment.Faction.PREY),
             Participation(User("Nick Bosa", 97), true, "0A0A", PlayerParametersFragment.Faction.PREDATOR),
             Participation(User("Richard Sherman", 25), true, "C0BA", PlayerParametersFragment.Faction.PREDATOR)
     )
-    var games = listOf<Game>(
+    private var games = listOf<Game>(
             Game(1, "Classical Game in Geneva", "Alex",
                     3600, emptyMap(),
                     GameState.LOBBY, emptyList(),
@@ -36,7 +35,5 @@ class MockGlobalLobbyRepository() : IGlobalLobbyRepository {
     )
 
 
-    override fun getAllGames(cb: Callback<List<Game>>) {
-        cb(games)
-    }
+    override fun getAllGames(cb: Callback<List<Game>>)= cb(games)
 }

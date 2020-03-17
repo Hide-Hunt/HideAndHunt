@@ -1,7 +1,6 @@
 package ch.epfl.sdp.game.data
 
 import java.util.*
-import kotlin.collections.HashMap
 
 data class Game (
         var id: Int,

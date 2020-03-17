@@ -1,18 +1,10 @@
 package ch.epfl.sdp.lobby.global
 
 import android.content.Intent
-import androidx.test.core.app.launchActivity
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsTestRule
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ch.epfl.sdp.DefaultRepoFactory
-import ch.epfl.sdp.R
+import ch.epfl.sdp.DefaultMockRepoFactory
 import ch.epfl.sdp.db.IRepoFactory
-import ch.epfl.sdp.lobby.LobbyActivity
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,10 +15,10 @@ class GlobalLobbyActivityTest {
     @get:Rule
     val activityRule = IntentsTestRule(GlobalLobbyActivity::class.java, false, false)
 
-    lateinit var repoFactory: IRepoFactory
+    private lateinit var repoFactory: IRepoFactory
     @Before
     fun setup() {
-        repoFactory = object : DefaultRepoFactory() {
+        repoFactory = object : DefaultMockRepoFactory() {
             override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
                 return MockGlobalLobbyRepository()
             }

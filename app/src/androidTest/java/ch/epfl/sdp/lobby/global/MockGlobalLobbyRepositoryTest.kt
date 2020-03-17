@@ -1,7 +1,6 @@
 package ch.epfl.sdp.lobby.global
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ch.epfl.sdp.db.MockDB
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith

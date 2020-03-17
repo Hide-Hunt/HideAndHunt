@@ -1,6 +1,6 @@
 package ch.epfl.sdp.user
 
-class User (
+data class User (
         var name: String,
         var uid: Int
 )

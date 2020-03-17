@@ -23,19 +23,16 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="PlaceHolder"
         android:textSize="24sp" />
 
     <TextView
         android:id="@+id/txt_admin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/txt_players"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

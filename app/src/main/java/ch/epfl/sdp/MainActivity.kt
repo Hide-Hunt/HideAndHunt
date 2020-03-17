@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
-import ch.epfl.sdp.lobby.LobbyActivity
 import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.db.IRepoFactory
-import ch.epfl.sdp.db.MockDB
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository

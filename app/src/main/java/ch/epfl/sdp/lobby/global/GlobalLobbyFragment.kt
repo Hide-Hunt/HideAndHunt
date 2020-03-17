@@ -10,14 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.databinding.FragmentGlobalLobbyBinding
 import ch.epfl.sdp.db.IRepoFactory
+import ch.epfl.sdp.game.data.Game
 
 class GlobalLobbyFragment : Fragment() {
 
-    val REPO_FACTORY_ARG = "repoFacto"
-
     private var _binding: FragmentGlobalLobbyBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: GlobalLobbyAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var repo: IGlobalLobbyRepository
 
@@ -28,9 +27,6 @@ class GlobalLobbyFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentGlobalLobbyBinding.inflate(inflater)
         repo.getAllGames { games ->
@@ -42,6 +38,16 @@ class GlobalLobbyFragment : Fragment() {
             }
         }
 
+        binding.globalLobbySwiperefresh.setOnRefreshListener {
+            repo.getAllGames { games ->
+                viewAdapter.data = games
+                viewAdapter.notifyDataSetChanged()
+                binding.globalLobbySwiperefresh.isRefreshing = false
+            }
+
+        }
+
+
         return binding.root
     }
 
@@ -51,6 +57,8 @@ class GlobalLobbyFragment : Fragment() {
     }
 
     companion object {
+        private const val REPO_FACTORY_ARG = "repoFacto"
+
         @JvmStatic
         fun newInstance(factory: IRepoFactory) = GlobalLobbyFragment().apply {
             val args = Bundle()
