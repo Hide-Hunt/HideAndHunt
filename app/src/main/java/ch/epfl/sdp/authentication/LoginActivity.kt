@@ -30,9 +30,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun register(email:Editable, password:Editable, connector:IUserConnector) {
-        connector.register(email.toString(), password.toString())
+        connector.register(email.toString(), password.toString(), "TestPseudo")
         if(user.connected)
-            changeDummyText("Account created and logged in as " + user.username)
+            changeDummyText("Account created and logged in as " + user.pseudo)
         else
             changeDummyText("Account creation failed")
     }
@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
     private fun signIn(email:Editable, password:Editable, connector: IUserConnector) {
         connector.connect(email.toString(), password.toString())
         if(user.connected)
-            changeDummyText("User logged in as " + user.username)
+            changeDummyText("User logged in as " + user.pseudo)
         else
             changeDummyText("Logging failed")
     }
