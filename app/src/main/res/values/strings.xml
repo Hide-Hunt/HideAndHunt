@@ -49,4 +49,8 @@
     <string name="gps_disabled">GPS Disabled</string>
     <string name="repeat_last_location">Repeat last location</string>
     <string name="prey_name">Prey %d</string>
+
+    <string name="player_in_lobby">Players in the lobby: %d</string>
+    <string name="game_created_by">Created by: %s</string>
+    <string name="available_games">Available Games</string>
 </resources>
