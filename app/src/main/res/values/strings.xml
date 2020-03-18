@@ -11,6 +11,9 @@
     <string name="leave">Leave</string>
     <string name="start">Start</string>
 
+    <string name="game_name">Game name : </string>
+    <string name="game_duration">Game duration : </string>
+
     <!-- Prey catching fragment -->
     <string name="prey_alive">Your prey is alive</string>
     <string name="prey_dead">Your prey is dead</string>
