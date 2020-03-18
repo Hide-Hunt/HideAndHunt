@@ -19,9 +19,8 @@
             android:id="@+id/textView9"
             android:layout_width="410dp"
             android:layout_height="46dp"
-            android:gravity="center_vertical"
-            android:text="@string/gameCreation_title"
-            android:textAlignment="center" />
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/gameCreation_title" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -42,18 +41,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:height="120px"
-                    android:gravity="center_vertical"
-                    android:text="@string/gameCreation_game_name"
-                    android:textAlignment="textEnd" />
+                    android:gravity="right|center_vertical"
+                    android:text="@string/gameCreation_game_name" />
 
                 <TextView
                     android:id="@+id/textView7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:height="120px"
-                    android:gravity="center_vertical"
-                    android:text="@string/gameCreation_duration"
-                    android:textAlignment="textEnd" />
+                    android:gravity="right|center_vertical"
+                    android:text="@string/gameCreation_duration" />
 
             </LinearLayout>
 
