@@ -4,7 +4,7 @@ import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents.intended
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -25,6 +25,6 @@ class GameCreationActivityTest {
     fun testFillFormAndSend() {
         launchActivity<GameCreationActivity>()
         Espresso.onView(ViewMatchers.withId(R.id.create_button)).perform(ViewActions.click())
-        intended(hasComponent(LobbyActivity::class.java.name))
+        intended(IntentMatchers.hasComponent(LobbyActivity::class.java.name))
     }
 }

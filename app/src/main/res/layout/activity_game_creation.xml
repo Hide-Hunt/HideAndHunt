@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/textView9"
-            android:layout_width="410dp"
+            android:layout_width="match_parent"
             android:layout_height="46dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/gameCreation_title" />
@@ -25,12 +25,12 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="330dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="186dp"
+                android:layout_width="118dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="50px"
                 android:layout_marginRight="10px"
@@ -85,7 +85,7 @@
         <Button
             android:id="@+id/create_button"
             android:layout_width="match_parent"
-            android:layout_height="71dp"
+            android:layout_height="58dp"
             android:text="@string/gameCreation_create" />
 
     </LinearLayout>
