@@ -1,9 +1,7 @@
 package ch.epfl.sdp.lobby.game
 
-import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.lobby.PlayerParametersFragment
-import ch.epfl.sdp.user.User
 
 interface IGameLobbyRepository {
 
@@ -18,7 +16,7 @@ interface IGameLobbyRepository {
 
     fun getAdminId(cb : (Int) -> Unit)
 
-    fun changePlayerReady(user: User)
+    fun changePlayerReady(uid : Int)
 
     fun setPlayerFaction(uid : Int, faction : PlayerParametersFragment.Faction)
 }

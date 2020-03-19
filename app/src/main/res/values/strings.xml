@@ -23,4 +23,5 @@
     <string name="prey_faction_name">Prey</string>
 
     <string name="title_activity_prey">PreyActivity</string>
+    <string name="admin_logo">Admin logo</string>
 </resources>

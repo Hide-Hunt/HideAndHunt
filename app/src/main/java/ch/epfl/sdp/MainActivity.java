@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import ch.epfl.sdp.databinding.ActivityMainBinding;
-import ch.epfl.sdp.lobby.LobbyActivity;
+import ch.epfl.sdp.lobby.game.GameLobbyActivity;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mainBinding;
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LobbyActivity.class);
+                Intent intent = new Intent(MainActivity.this, GameLobbyActivity.class);
                 startActivity(intent);
             }
         });

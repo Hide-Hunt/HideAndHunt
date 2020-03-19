@@ -1,5 +1,6 @@
 package ch.epfl.sdp.lobby.game
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,8 @@ import ch.epfl.sdp.lobby.PlayerParametersFragment
 import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
 
 class GameLobbyAdapter(
-        private var players : List<Participation>) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
+        private var players : List<Participation>,
+        private var playerId : Int, private var adminId: Int) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameLobbyViewHolder {
@@ -26,7 +28,9 @@ class GameLobbyAdapter(
 
     override fun onBindViewHolder(holder: GameLobbyViewHolder, position: Int) {
         val player = players[position]
-        holder.display(player.user.name, factionToString(player.faction), isReadyToString(player.ready))
+        val pid = player.user.uid
+        holder.display(player.user.name, factionToString(player.faction), isReadyToString(player.ready),
+                pid == adminId, pid == playerId)
     }
 
     private  fun  isReadyToString(isReady : Boolean) : String {
@@ -41,28 +45,17 @@ class GameLobbyAdapter(
 
     class GameLobbyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun display(name : String, faction : String, isReady : String)  {
-
-                /*try {
-                    val activity = factionLayout.context as AppCompatActivity
-                    val tag = "CHOSE_FACTION"
-
-                    val fragment: Fragment? = activity.supportFragmentManager.findFragmentByTag(tag)
-                    if (fragment != null) activity.supportFragmentManager.beginTransaction().remove(fragment).commit()
-
-                    activity.supportFragmentManager.beginTransaction().add(
-                            factionLayout.id, PlayerParametersFragment(),tag
-                    ).commit()
-                }
-                catch (e : ClassCastException ) {
-                    Log.d(TAG, "Can't get the fragment manager with this")
-                }
-            }
-            else {*/
+        fun display(name : String, faction : String, isReady : String,
+                    displayAdminLogo : Boolean, changePlayerColor : Boolean)  {
 
             itemView.player_faction.text = faction
             itemView.player_name.text = name
             itemView.player_is_ready.text = isReady
+            if (displayAdminLogo) itemView.admin_logo.setImageResource(R.drawable.star_icon)
+            else itemView.admin_logo.setImageResource(0)
+            if (changePlayerColor)itemView.setBackgroundColor(Color.GRAY)
+            else itemView.setBackgroundColor(Color.LTGRAY)
+
         }
 
     }

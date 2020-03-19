@@ -46,9 +46,9 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         cb(players[1].user.uid)
     }
 
-    override fun changePlayerReady(user : User) {
+    override fun changePlayerReady(uid : Int) {
         for (player in players) {
-            if (player.user.uid == user.uid) player.ready = !player.ready
+            if (player.user.uid == uid) player.ready = !player.ready
         }
     }
 
