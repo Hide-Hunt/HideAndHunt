@@ -20,7 +20,7 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
 
     //player id is hardcoded for now
     companion object {
-        @JvmField val PLAYER_ID = 23
+        const val PLAYER_ID = 23
     }
 
     private lateinit var mSwipeRefreshLayout : SwipeRefreshLayout

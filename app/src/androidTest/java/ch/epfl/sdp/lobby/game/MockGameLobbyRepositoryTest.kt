@@ -16,30 +16,35 @@ class MockGameLobbyRepositoryTest {
     fun getGameIdCallbackIsCalled() {
         var called = false
         glr.getGameId { called = true }
+        assertTrue(called)
     }
 
     @Test
     fun getGameNameCallbackIsCalled() {
         var called = false
         glr.getGameName { called = true }
+        assertTrue(called)
     }
 
     @Test
     fun getGameDurationCallbackIsCalled() {
         var called = false
         glr.getGameDuration { called = true }
+        assertTrue(called)
     }
 
     @Test
     fun getPlayersCallbackIsCalled() {
         var called = false
         glr.getPlayers { called = true }
+        assertTrue(called)
     }
 
     @Test
     fun getAdminIdCallbackIsCalled() {
         var called = false
         glr.getAdminId { called = true }
+        assertTrue(called)
     }
 
     @Test
