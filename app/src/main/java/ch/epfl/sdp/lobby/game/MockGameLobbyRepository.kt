@@ -36,6 +36,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun getPlayers(cb: (List<Participation>) -> Unit) {
+        //add players to show refreshing works
         if (counter != 0) players.add(Participation(User("Player$counter",10 + counter),
                 false,"0ABC",PlayerParametersFragment.Faction.PREY))
         ++counter
