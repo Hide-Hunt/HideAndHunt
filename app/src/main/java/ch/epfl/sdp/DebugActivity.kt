@@ -15,7 +15,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import ch.epfl.sdp.databinding.ActivityDebugBinding
-import ch.epfl.sdp.databinding.ActivityPreyBinding
 import ch.epfl.sdp.game.comm.LocationSynchronizer
 import ch.epfl.sdp.game.comm.MQTTRealTimePubSub
 import ch.epfl.sdp.game.comm.RealTimePubSub
@@ -52,14 +51,7 @@ class DebugActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityDebugBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        pubSub = MQTTRealTimePubSub(this, null)
-        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
+    private fun initializeTracking() {
         if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             binding.GPSDisabledLabel.visibility = View.INVISIBLE
         } else {
@@ -74,6 +66,17 @@ class DebugActivity : AppCompatActivity() {
                 disableRequestUpdates()
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityDebugBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        pubSub = MQTTRealTimePubSub(this, null)
+        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        initializeTracking()
         binding.playerID.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
