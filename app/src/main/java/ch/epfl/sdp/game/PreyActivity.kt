@@ -24,7 +24,6 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
 
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
 
-    private var initialTime: Long = 0L
     private val players: HashMap<Int, Player> = HashMap()
 
     private lateinit var locationHandler: LocationHandler
@@ -48,7 +47,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
         val fm = supportFragmentManager
         val fragmentTransaction = fm.beginTransaction()
 
-        gameTimerFragment = GameTimerFragment.create(initialTime)
+        gameTimerFragment = GameTimerFragment.create(gameData.initialTime)
         fragmentTransaction.add(binding.frmTimerPrey.id, gameTimerFragment)
 
         preyFragment = PreyFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
