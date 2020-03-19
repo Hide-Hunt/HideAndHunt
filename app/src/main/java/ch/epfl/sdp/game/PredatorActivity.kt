@@ -31,9 +31,8 @@ import kotlinx.android.synthetic.main.activity_debug.*
 class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocationListener {
     private lateinit var binding: ActivityPredatorBinding
 
-    private var gameID = -1
-    private var playerID = -1
-    private var targetID = -1
+    private lateinit var gameData: GameIntentUnpacker.GameIntentData
+    private var targetID: Int = TargetSelectionFragment.NO_TARGET
 
     private val lastKnownLocation: Location = Location(0.0, 0.0)
     private var players = HashMap<Int, Player>()
@@ -52,37 +51,22 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         binding = ActivityPredatorBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Get game information
+        gameData = GameIntentUnpacker.unpack(intent)
+        if(gameData.gameID < 0 || gameData.playerID < 0 ||gameData.initialTime < 0) {
+            finish()
+            return
+        }
         if (savedInstanceState == null) { // First load
-            if(!loadIntentPayload(intent)) {
-                finish()
-                return
-            }
-        }
-        locationHandler = LocationHandler(this, this, gameID, playerID, intent.getStringExtra("mqttURI"))
-        loadFragments()
-    }
-    private fun loadIntentPayload(intent: Intent) : Boolean {
-        gameID = intent.getIntExtra("gameID", -1)
-        playerID = intent.getIntExtra("playerID", -1)
-
-        if (gameID < 0 || playerID < 0) {
-            return false
-        }
-
-        @Suppress("UNCHECKED_CAST")
-        try {
-            val playerList = intent.getSerializableExtra("players") as ArrayList<Player>
-            for (p in playerList) {
+            for (p in gameData.playerList) {
                 players[p.id] = p
                 if (p is Prey) {
                     preys[p.NFCTag] = p.id
                 }
             }
-        } catch (e: NullPointerException) {
-            return false
         }
 
-        return true
+        locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
+        loadFragments()
     }
 
     private fun loadFragments() { // create a FragmentManager
@@ -166,7 +150,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
 
     override fun onDestroy() {
         super.onDestroy()
-        if (gameID >= 0 && playerID >= 0) {
+        if (gameData.gameID >= 0 && gameData.playerID >= 0) {
             locationHandler.stop()
         }
     }
