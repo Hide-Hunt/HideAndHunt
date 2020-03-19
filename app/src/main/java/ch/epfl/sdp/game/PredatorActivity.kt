@@ -34,7 +34,6 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
     private var targetID: Int = TargetSelectionFragment.NO_TARGET
 
-    private val lastKnownLocation: Location = Location(0.0, 0.0)
     private var players = HashMap<Int, Player>()
     private var preys = HashMap<String, Int>()
 
@@ -158,7 +157,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     override fun onLocationChanged(newLocation: Location) {
         if (targetID != TargetSelectionFragment.NO_TARGET) {
             targetDistanceFragment.distance =
-                    players[targetID]?.lastKnownLocation?.distanceTo(lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
+                    players[targetID]?.lastKnownLocation?.distanceTo(newLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
         }
     }
 
@@ -181,7 +180,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
             players[playerID]!!.lastKnownLocation = location
             if (playerID == targetID) {
                 targetDistanceFragment.distance =
-                        players[targetID]?.lastKnownLocation?.distanceTo(lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
+                        players[targetID]?.lastKnownLocation?.distanceTo(locationHandler.lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
             }
         }
     }
