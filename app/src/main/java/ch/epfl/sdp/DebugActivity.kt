@@ -68,15 +68,21 @@ class DebugActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityDebugBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    private fun initializeLastLocationOnClickListener() {
+        binding.repeatLastLocation.setOnClickListener(View.OnClickListener {
+            if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return@OnClickListener
+            }
+            val last = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (last != null) {
+                locationSynchronizer.updateOwnLocation(ch.epfl.sdp.game.data.Location(last.latitude, last.longitude))
+            } else {
+                Toast.makeText(applicationContext, "No last known location", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
-        pubSub = MQTTRealTimePubSub(this, null)
-        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        initializeTracking()
+    private fun initializePlayerIDTextChangedListener() {
         binding.playerID.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
@@ -89,17 +95,19 @@ class DebugActivity : AppCompatActivity() {
                 }
             }
         })
-        binding.repeatLastLocation.setOnClickListener(View.OnClickListener {
-            if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return@OnClickListener
-            }
-            val last = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            if (last != null) {
-                locationSynchronizer.updateOwnLocation(ch.epfl.sdp.game.data.Location(last.latitude, last.longitude))
-            } else {
-                Toast.makeText(applicationContext, "No last known location", Toast.LENGTH_SHORT).show()
-            }
-        })
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityDebugBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        pubSub = MQTTRealTimePubSub(this, null)
+        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        initializeTracking()
+        initializePlayerIDTextChangedListener();
+        initializeLastLocationOnClickListener();
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
