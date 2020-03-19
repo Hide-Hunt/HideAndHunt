@@ -3,12 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".lobby.global.GlobalLobbyActivity"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    tools:context=".lobby.global.GlobalLobbyActivity" >
+
+    <TextView
+        android:id="@+id/txt_prey_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You are a prey, Hide !"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="24sp" />
 
     <FrameLayout
+        android:id="@+id/frm_timer_prey"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+    </FrameLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/container" />
+        android:orientation="horizontal">
 
+        <FrameLayout
+            android:id="@+id/frm_predator_radar"
+            android:layout_width="297dp"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frm_prey_remaining"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+    </LinearLayout>
 </LinearLayout>
