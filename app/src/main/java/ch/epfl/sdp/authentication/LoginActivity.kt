@@ -25,12 +25,12 @@ class LoginActivity : AppCompatActivity() {
             signIn(userNameLogin.text, userPasswordLogin.text, connector)
         }
         binding.registerSubmitButton.setOnClickListener {
-            register(userNameLogin.text, userPasswordLogin.text, connector)
+            register(userNameLogin.text, userPasswordLogin.text, userPseudoLogin.text, connector)
         }
     }
 
-    private fun register(email:Editable, password:Editable, connector:IUserConnector) {
-        connector.register(email.toString(), password.toString(), "TestPseudo")
+    private fun register(email:Editable, password:Editable, pseudo:Editable, connector:IUserConnector) {
+        connector.register(email.toString(), password.toString(), pseudo.toString())
         if(User.connected)
             changeDummyText("Account created and logged in as " + User.pseudo)
         else
@@ -46,6 +46,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun changeDummyText(text:String) {
-        binding.loginTextResult.text = text;
+        binding.loginTextResult.text = text
     }
 }
