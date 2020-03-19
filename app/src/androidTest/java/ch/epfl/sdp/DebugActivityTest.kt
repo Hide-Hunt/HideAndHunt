@@ -1,4 +1,4 @@
-package ch.epfl.sdp.game
+package ch.epfl.sdp
 
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
@@ -6,18 +6,18 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
-import ch.epfl.sdp.R
+import ch.epfl.sdp.game.PreyActivity
 import org.hamcrest.Matchers.*
 import org.junit.Rule
 import org.junit.Test
 
-class PreyActivityTest{
+class DebugActivityTest{
     @get:Rule
     var grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
 
     @Test
     fun dummyLiveTest() {
-        launchActivity<PreyActivity>()
+        launchActivity<DebugActivity>()
 
         onView(withId(R.id.playerID)).perform(typeText("1")).perform(closeSoftKeyboard())
         onView(withId(R.id.tracking)).perform(click())
@@ -35,7 +35,7 @@ class PreyActivityTest{
 
     @Test
     fun trackingShouldBeDisabledIfNoPlayerID() {
-        launchActivity<PreyActivity>()
+        launchActivity<DebugActivity>()
         onView(withId(R.id.tracking)).check(matches(not(isEnabled())))
 
         onView(withId(R.id.playerID)).perform(typeText("1")).perform(closeSoftKeyboard())
@@ -47,7 +47,7 @@ class PreyActivityTest{
 
     @Test
     fun playerIDShouldBeDisabledWhenTrackingIsEnabled() {
-        launchActivity<PreyActivity>()
+        launchActivity<DebugActivity>()
         onView(withId(R.id.playerID)).check(matches(isEnabled()))
 
         onView(withId(R.id.playerID)).perform(typeText("1")).perform(closeSoftKeyboard())
@@ -62,7 +62,7 @@ class PreyActivityTest{
 
     @Test
     fun initialNumberOfUpdatesShouldBeZero() {
-        launchActivity<PreyActivity>()
+        launchActivity<DebugActivity>()
         onView(withId(R.id.updateNb)).check(matches(withText("0")))
     }
 }
