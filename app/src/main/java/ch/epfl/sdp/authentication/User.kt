@@ -1,6 +1,6 @@
 package ch.epfl.sdp.authentication
 
-object user {
+object User {
     var pseudo: String = ""
     var email: String = ""
     var uid: String = ""

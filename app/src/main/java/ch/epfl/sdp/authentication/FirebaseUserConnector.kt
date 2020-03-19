@@ -13,31 +13,31 @@ class FirebaseUserConnector : IUserConnector {
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val authed = auth.currentUser
-                user.email = email
-                user.uid = authed!!.uid
-                user.connected = true
+                User.email = email
+                User.uid = authed!!.uid
+                User.connected = true
             } else {
-                user.connected = false
+                User.connected = false
             }
         }
-        db.collection("user").document(user.uid).get()
+        db.collection("user").document(User.uid).get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        user.pseudo = document.data!!["pseudo"].toString()
+                        User.pseudo = document.data!!["pseudo"].toString()
                     } else {
-                        user.connected = false
+                        User.connected = false
                     }
                 }
                 .addOnFailureListener { _ ->
-                    user.connected = false
+                    User.connected = false
                 }
 
-        return user.connected
+        return User.connected
     }
 
     override fun disconnect(): Boolean {
         auth.signOut()
-        user.connected = false
+        User.connected = false
         return true
     }
 
@@ -46,18 +46,18 @@ class FirebaseUserConnector : IUserConnector {
         .addOnCompleteListener { task ->
             if (task.isSuccessful){
                 val authed = auth.currentUser
-                user.connected = true
-                user.email = email
-                user.uid = authed!!.uid
-                user.pseudo = pseudo
+                User.connected = true
+                User.email = email
+                User.uid = authed!!.uid
+                User.pseudo = pseudo
             } else {
-                user.connected = false
+                User.connected = false
             }
         }
 
         val dataToAdd = hashMapOf(
                 "pseudo" to pseudo,
-                "uid" to user.uid
+                "uid" to User.uid
         )
         db.collection("user")
                 .add(dataToAdd)
@@ -68,7 +68,7 @@ class FirebaseUserConnector : IUserConnector {
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error adding document", e)
                 }*/
-        return user.connected
+        return User.connected
     }
 
 }

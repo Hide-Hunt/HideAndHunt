@@ -93,18 +93,15 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:core-ktx:1.2.0'
-
-    implementation "androidx.core:core-ktx:1.2.0"
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
+    androidTestImplementation 'androidx.test:runner:1.2.0'
     implementation 'com.google.firebase:firebase-analytics:17.2.3'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:21.4.1'
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.1.0"
     androidTestImplementation "com.android.support.test:runner:1.0.2"
     debugImplementation 'androidx.fragment:fragment-testing:1.2.2'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
@@ -143,7 +140,7 @@ repositories {
     }
 }
 
-sourceSets{
+sourceSets {
     main {
         java.srcDirs += "${protobuf.generatedFilesBaseDir}/main/javalite"
     }

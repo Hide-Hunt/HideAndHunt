@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 class MockUserTest {
     @Before
     fun forceDisconnect() {
-        user.connected = false
+        User.connected = false
     }
 
     @Test
@@ -18,11 +18,11 @@ class MockUserTest {
         val mock = MockUserConnector()
         for (i in 0..5) {
             Assert.assertTrue(mock.connect("test$i@test.com", "password$i"))
-            Assert.assertEquals("test$i@test.com", user.username)
-            Assert.assertEquals(i.toString(), user.uid)
-            Assert.assertTrue(user.connected)
+            Assert.assertEquals("test$i@test.com", User.username)
+            Assert.assertEquals(i.toString(), User.uid)
+            Assert.assertTrue(User.connected)
             Assert.assertTrue(mock.disconnect())
-            Assert.assertFalse(user.connected)
+            Assert.assertFalse(User.connected)
         }
     }
 
@@ -30,42 +30,42 @@ class MockUserTest {
     fun cantConnectIfAlreadyConnected() {
         val mock = MockUserConnector()
         Assert.assertTrue(mock.connect("test0@test.com", "password0"))
-        Assert.assertTrue(user.connected)
+        Assert.assertTrue(User.connected)
         Assert.assertFalse(mock.connect("test0@test.com", "password0"))
-        Assert.assertTrue(user.connected)
+        Assert.assertTrue(User.connected)
     }
 
     @Test
     fun connectionWithWrongEmailFails() {
         val mock = MockUserConnector()
         Assert.assertFalse(mock.connect("fewfwef@test.com", "password0"))
-        Assert.assertFalse(user.connected)
+        Assert.assertFalse(User.connected)
     }
 
     @Test
     fun connectionWithWrongPasswordFails() {
         val mock = MockUserConnector()
         Assert.assertFalse(mock.connect("test0@test.com", "its2AMrightnow"))
-        Assert.assertFalse(user.connected)
+        Assert.assertFalse(User.connected)
     }
 
     @Test
     fun canAddUserThenConnectToIt() {
         val mock = MockUserConnector()
         Assert.assertTrue(mock.register("testing", "C-C-C-CANDEAAAA"))
-        Assert.assertEquals("testing", user.username)
-        Assert.assertTrue(user.connected)
+        Assert.assertEquals("testing", User.username)
+        Assert.assertTrue(User.connected)
         Assert.assertTrue(mock.disconnect())
-        Assert.assertFalse(user.connected)
+        Assert.assertFalse(User.connected)
         Assert.assertTrue(mock.connect("testing", "C-C-C-CANDEAAAA"))
-        Assert.assertEquals("testing", user.username)
-        Assert.assertTrue(user.connected)
+        Assert.assertEquals("testing", User.username)
+        Assert.assertTrue(User.connected)
     }
 
     @Test
     fun addingAlreadyExistingUserFails() {
         val mock = MockUserConnector()
         Assert.assertFalse(mock.register("test0@test.com", "Covid-19"))
-        Assert.assertFalse(user.connected)
+        Assert.assertFalse(User.connected)
     }
 }
