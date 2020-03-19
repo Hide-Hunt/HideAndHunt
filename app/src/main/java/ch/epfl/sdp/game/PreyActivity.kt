@@ -1,6 +1,8 @@
 package ch.epfl.sdp.game
 
+import android.location.LocationListener
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityPreyBinding
 import ch.epfl.sdp.game.data.Player
@@ -15,6 +17,7 @@ class PreyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPreyBinding
     private lateinit var preyFragment: PreyFragment
     private lateinit var gameTimerFragment: GameTimerFragment
+    private lateinit var predatorRadarFragment: PredatorRadarFragment
 
     private var initialTime: Long = 0L
     private val players: HashMap<Int, Player> = HashMap()
@@ -44,6 +47,8 @@ class PreyActivity : AppCompatActivity() {
 
         preyFragment = PreyFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
         fragmentTransaction.add(binding.frmPreyRemaining.id, preyFragment)
+
+        predatorRadarFragment = PredatorRadarFragment.newInstance()
 
         fragmentTransaction.commit()
     }
