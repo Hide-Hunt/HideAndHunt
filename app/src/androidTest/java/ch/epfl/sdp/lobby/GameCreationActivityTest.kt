@@ -8,6 +8,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import ch.epfl.sdp.MainActivity
 import ch.epfl.sdp.lobby.LobbyActivity
 import ch.epfl.sdp.R
 import org.junit.Rule
@@ -26,5 +27,12 @@ class GameCreationActivityTest {
         launchActivity<GameCreationActivity>()
         Espresso.onView(ViewMatchers.withId(R.id.create_button)).perform(ViewActions.click())
         intended(IntentMatchers.hasComponent(LobbyActivity::class.java.name))
+    }
+
+    @Test
+    fun mainActivityCreateGameButtonLeadsToGameCreation() {
+        launchActivity<MainActivity>()
+        Espresso.onView(ViewMatchers.withId(R.id.newGame_button)).perform(ViewActions.click())
+        intended(IntentMatchers.hasComponent(GameCreationActivity::class.java.name))
     }
 }
