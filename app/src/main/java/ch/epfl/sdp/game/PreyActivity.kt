@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityPreyBinding
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Player
+import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.game.data.Prey
 import ch.epfl.sdp.game.location.ILocationListener
 import ch.epfl.sdp.game.location.LocationHandler
@@ -25,6 +26,9 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
 
     private val players: HashMap<Int, Player> = HashMap()
+    private val ranges: List<Int> = listOf(5, 10, 20, 50, Integer.MAX_VALUE)
+    private val rangePopulation: HashMap<Int, Int> = HashMap()
+    private var mostDangerousManDistance: Float = Float.MAX_VALUE
 
     private lateinit var locationHandler: LocationHandler
 
@@ -58,8 +62,32 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
         fragmentTransaction.commit()
     }
 
+    fun updateThreat() {
+        for(p in players.values) {
+            if(p is Predator && p.lastKnownLocation != null) {
+                val dist = p.lastKnownLocation!!.distanceTo(locationHandler.lastKnownLocation)
+                if(dist < mostDangerousManDistance) {
+                    mostDangerousManDistance = dist
+                }
+                for(i in ranges.indices) {
+                    if(dist <= ranges[i]) {
+                        rangePopulation[ranges[i]] = ((rangePopulation[ranges[i]]) ?: 0) + 1
+                        break
+                    }
+                }
+            }
+        }
+    }
+
     override fun onLocationChanged(newLocation: Location) {
-        TODO("Not yet implemented")
+        updateThreat()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (gameData.gameID >= 0 && gameData.playerID >= 0 && gameData.initialTime >= 0) {
+            locationHandler.stop()
+        }
     }
 
     override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
@@ -75,7 +103,8 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     }
 
     override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
-        TODO("Not yet implemented")
+        players[playerID]?.lastKnownLocation = location
+        updateThreat()
     }
 
     override fun onPreyCatches(predatorID: Int, preyID: Int) {

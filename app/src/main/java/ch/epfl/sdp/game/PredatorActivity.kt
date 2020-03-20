@@ -137,19 +137,15 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun disableRequestUpdates() {
-        locationHandler.removeUpdates()
-    }
-
     override fun onPause() {
         super.onPause()
-        disableRequestUpdates()
+        locationHandler.removeUpdates()
         NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (gameData.gameID >= 0 && gameData.playerID >= 0) {
+        if (gameData.gameID >= 0 && gameData.playerID >= 0 && gameData.initialTime >= 0) {
             locationHandler.stop()
         }
     }
