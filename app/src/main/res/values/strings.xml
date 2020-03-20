@@ -22,7 +22,12 @@
     <string name="gameCreation_title">New Game</string>
     <string name="gameCreation_game_name">Game Name</string>
     <string name="gameCreation_duration">Duration</string>
+    <string name="gameCreation_mode">Game mode</string>
     <string name="gameCreation_create">Create !</string>
+    <string-array name="gameCreation_gameModes">
+        <item>Normal</item>
+        <item>Battle Royal</item>
+    </string-array>
 
     <string name="crosshair_icon">crosshair_icon</string>
     <string name="no_target">No target</string>
