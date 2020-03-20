@@ -48,11 +48,11 @@ class MockGameLobbyRepositoryTest {
     }
 
     @Test
-    fun getPlayersAddsAPlayer() {
+    fun getParticipationsAddsAPlayer() {
         var nPlayers = 0
-        glr.getPlayers { players -> nPlayers = players.size }
+        glr.getParticipations { players -> nPlayers = players.size }
         var newNPlayers = 0
-        glr.getPlayers { players -> newNPlayers = players.size }
+        glr.getParticipations { players -> newNPlayers = players.size }
         assertEquals(nPlayers + 1, newNPlayers)
     }
 
