@@ -37,7 +37,7 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity android:name=".lobby.LobbyActivity" />
-
+        <activity android:name=".lobby.game.GameLobbyActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
