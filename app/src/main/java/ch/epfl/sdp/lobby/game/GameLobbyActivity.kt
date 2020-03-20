@@ -15,6 +15,7 @@ import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
 import ch.epfl.sdp.game.PredatorActivity
 import ch.epfl.sdp.game.PreyActivity
 import ch.epfl.sdp.lobby.PlayerParametersFragment
+import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 
 /**
  * Game Lobby Activity showing the list of players and game info
@@ -73,7 +74,7 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
         gameLobbyBinding.startButton.setBackgroundColor(Color.GREEN)
 
         gameLobbyBinding.leaveButton.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, GlobalLobbyActivity::class.java))
             startActivity(intent)
         }
         gameLobbyBinding.leaveButton.setBackgroundColor(Color.RED)
@@ -91,7 +92,6 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
     }
 
     private fun refreshPlayerList() {
-        mSwipeRefreshLayout.isRefreshing = true
         repository.getPlayers { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId)
             mSwipeRefreshLayout.isRefreshing = false
         }

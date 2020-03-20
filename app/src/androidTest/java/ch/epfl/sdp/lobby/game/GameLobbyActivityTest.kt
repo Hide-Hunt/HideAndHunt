@@ -11,7 +11,6 @@ import ch.epfl.sdp.R
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class GameLobbyActivityTest {
@@ -26,18 +25,19 @@ class GameLobbyActivityTest {
     fun swipeDownRefreshesData() {
         val scenario = launchActivity<GameLobbyActivity>()
 
-        var adapter = GameLobbyAdapter(Collections.emptyList(),0,0)
+        var size = -1
         scenario.onActivity { a ->
-            adapter = a.findViewById<RecyclerView>(R.id.player_list).adapter as GameLobbyAdapter
+            size = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
         }
+        assertEquals(10,size)
 
         onView(ViewMatchers.withId(R.id.faction_selection)).perform(click())
         onView(ViewMatchers.withId(R.id.player_list)).perform(swipeDown())
 
-        var newAdapter = GameLobbyAdapter(Collections.emptyList(),0,0)
+        var newSize = -1
         scenario.onActivity { a ->
-            newAdapter = a.findViewById<RecyclerView>(R.id.player_list).adapter as GameLobbyAdapter
+            newSize = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
         }
-        assertTrue(adapter != newAdapter)
+        assertEquals(11,newSize)
     }
 }
