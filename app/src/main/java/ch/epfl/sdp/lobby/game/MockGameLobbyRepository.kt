@@ -1,5 +1,6 @@
 package ch.epfl.sdp.lobby.game
 
+import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import ch.epfl.sdp.user.User
@@ -23,19 +24,19 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
 
 
-    override fun getGameId(cb: (Int) -> Unit) {
+    override fun getGameId(cb : Callback<Int>) {
         cb(gameId)
     }
 
-    override fun getGameName(cb: (String) -> Unit) {
+    override fun getGameName(cb : Callback<String>) {
         cb(gameName)
     }
 
-    override fun getGameDuration(cb: (Int) -> Unit) {
+    override fun getGameDuration(cb : Callback<Int>) {
         cb(gameDuration)
     }
 
-    override fun getPlayers(cb: (List<Participation>) -> Unit) {
+    override fun getPlayers(cb : Callback<List<Participation>>) {
         //add players to show refreshing works
         if (counter != 0) players.add(Participation(User("Player$counter",10 + counter),
                 false,"0ABC",PlayerParametersFragment.Faction.PREY))
@@ -43,7 +44,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         cb(players)
     }
 
-    override fun getAdminId(cb: (Int) -> Unit) {
+    override fun getAdminId(cb : Callback<Int>) {
         cb(players[1].user.uid)
     }
 
@@ -53,7 +54,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         }
     }
 
-    override fun setPlayerFaction(uid: Int, faction: PlayerParametersFragment.Faction) {
+    override fun  setPlayerFaction(uid : Int, faction : PlayerParametersFragment.Faction) {
         players.forEach { participation ->
             if(uid == participation.user.uid) participation.faction = faction }
     }

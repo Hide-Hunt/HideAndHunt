@@ -1,20 +1,21 @@
 package ch.epfl.sdp.lobby.game
 
+import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 
 interface IGameLobbyRepository {
 
 
-    fun getGameId(cb : (Int) -> Unit)
+    fun getGameId(cb : Callback<Int>)
 
-    fun getGameName(cb : (String) -> Unit)
+    fun getGameName(cb : Callback<String>)
 
-    fun getGameDuration(cb : (Int) -> Unit)
+    fun getGameDuration(cb : Callback<Int>)
 
-    fun getPlayers(cb : (List<Participation>) -> Unit)
+    fun getPlayers(cb : Callback<List<Participation>>)
 
-    fun getAdminId(cb : (Int) -> Unit)
+    fun getAdminId(cb : Callback<Int>)
 
     fun changePlayerReady(uid : Int)
 

@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ch.epfl.sdp.MainActivity
-import ch.epfl.sdp.PredatorActivity
-import ch.epfl.sdp.PreyActivity
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
+import ch.epfl.sdp.game.PredatorActivity
+import ch.epfl.sdp.game.PreyActivity
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 
 /**
@@ -92,7 +92,8 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
 
     private fun refreshPlayerList() {
         mSwipeRefreshLayout.isRefreshing = true
-        repository.getPlayers { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId) }
-        mSwipeRefreshLayout.isRefreshing = false
+        repository.getPlayers { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId)
+            mSwipeRefreshLayout.isRefreshing = false
+        }
     }
 }
