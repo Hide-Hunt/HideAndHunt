@@ -34,6 +34,13 @@ class MockGameLobbyRepositoryTest {
     }
 
     @Test
+    fun getParticipationsCallbackIsCalled() {
+        var called = false
+        glr.getParticipations { called = true }
+        assertTrue(called)
+    }
+
+    @Test
     fun getPlayersCallbackIsCalled() {
         var called = false
         glr.getPlayers { called = true }
