@@ -46,7 +46,8 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
         //repository interactions
         repository.setPlayerFaction(PLAYER_ID,PlayerParametersFragment.Faction.PREDATOR)
         repository.getAdminId { id -> adminId = id }
-        repository.getParticipations { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId) }
+        repository.getParticipations { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId)
+        }
 
         //set game info views
         val gameInfo = gameLobbyBinding.gameInfo
