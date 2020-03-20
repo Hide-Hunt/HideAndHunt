@@ -30,6 +30,22 @@ class PredatorRadarFragment : Fragment() {
         return binding.root
     }
 
+    fun updateInfos(mdm: Float, rangePopulation: HashMap<Int, Int>) {
+        binding.txtClosestPredator.text = getString(R.string.closest_predator).format(mdm)
+
+        var range = 0
+        var count = 0
+        for(v in ranges) {
+            if(v >= mdm) {
+                range = v
+                count = rangePopulation[v] ?: 0
+                break
+            }
+        }
+
+        binding.txtPredatorAround.text = getString(R.string.predator_around).format(range, count)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

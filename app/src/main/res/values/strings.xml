@@ -53,7 +53,7 @@
     <string name="player_in_lobby">Players in the lobby: %d</string>
     <string name="game_created_by">Created by: %s</string>
     <string name="available_games">Available Games</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="closest_predator">The closest predator is %f meters away</string>
+    <string name="predator_around">There are predators %d less than %d meters away</string>
+    <string name="you_are_a_prey">You are a prey, Hide !</string>
 </resources>

@@ -63,6 +63,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
         fragmentTransaction.add(binding.frmPreyRemaining.id, preyFragment)
 
         predatorRadarFragment = PredatorRadarFragment.newInstance(ArrayList(ranges))
+        fragmentTransaction.add(binding.frmPredatorRadar.id, predatorRadarFragment)
 
         fragmentTransaction.commit()
     }
@@ -82,6 +83,8 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
                 }
             }
         }
+
+        predatorRadarFragment.updateInfos(mostDangerousManDistance, rangePopulation)
     }
 
     override fun onLocationChanged(newLocation: Location) {

@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".game.PredatorRadarFragment">
+    android:orientation="vertical"
+    tools:context=".game.PredatorRadarFragment" >
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/txt_closest_predator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="@string/closest_predator"
+        android:textColor="#2196F3"
+        android:textSize="24sp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/txt_predator_around"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/predator_around"
+        android:textColor="#2196F3"
+        android:textSize="24sp" />
+</LinearLayout>
