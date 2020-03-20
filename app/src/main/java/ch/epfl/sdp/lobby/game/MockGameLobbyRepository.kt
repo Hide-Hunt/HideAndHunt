@@ -2,6 +2,9 @@ package ch.epfl.sdp.lobby.game
 
 import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.game.data.Participation
+import ch.epfl.sdp.game.data.Player
+import ch.epfl.sdp.game.data.Predator
+import ch.epfl.sdp.game.data.Prey
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import ch.epfl.sdp.user.User
 
@@ -36,12 +39,24 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         cb(gameDuration)
     }
 
-    override fun getPlayers(cb : Callback<List<Participation>>) {
+    override fun getParticipations(cb : Callback<List<Participation>>) {
         //add players to show refreshing works
         if (counter != 0) players.add(Participation(User("Player$counter",10 + counter),
                 false,"0ABC",PlayerParametersFragment.Faction.PREY))
         ++counter
         cb(players)
+    }
+
+    override fun getPlayers(cb : Callback<List<Player>>) {
+        //add players to show refreshing works
+        if (counter != 0) players.add(Participation(User("Player$counter",10 + counter),
+                false,"0ABC",PlayerParametersFragment.Faction.PREY))
+        ++counter
+        var mPlayers: List<Player> = ArrayList()
+        for(p in players) {
+            mPlayers = if(p.faction == PlayerParametersFragment.Faction.PREY) mPlayers + Prey(p.user.uid, p.tag) else mPlayers + Predator(p.user.uid)
+        }
+        cb(mPlayers)
     }
 
     override fun getAdminId(cb : Callback<Int>) {

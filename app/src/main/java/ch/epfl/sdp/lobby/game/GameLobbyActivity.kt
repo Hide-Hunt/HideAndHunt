@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ch.epfl.sdp.MainActivity
 import ch.epfl.sdp.R
+import ch.epfl.sdp.authentication.User
 import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
 import ch.epfl.sdp.game.PredatorActivity
 import ch.epfl.sdp.game.PreyActivity
@@ -39,43 +40,53 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
         gameLobbyBinding = ActivityGameLobbyBinding.inflate(layoutInflater)
         setContentView(gameLobbyBinding.root)
 
-        rv = findViewById(R.id.player_list)
+        rv = gameLobbyBinding.playerList
         rv.layoutManager = LinearLayoutManager(this)
 
         //repository interactions
         repository.setPlayerFaction(PLAYER_ID,PlayerParametersFragment.Faction.PREDATOR)
         repository.getAdminId { id -> adminId = id }
-        repository.getPlayers { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId) }
+        repository.getParticipations { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId) }
 
         //set game info views
-        val gameInfo = findViewById<LinearLayout>(R.id.game_info)
+        val gameInfo = gameLobbyBinding.gameInfo
         repository.getGameName { name ->
             val text = getText(R.string.game_name).toString() + " " + name
             (gameInfo.getChildAt(0) as TextView).text = text}
         repository.getGameDuration { game_duration ->
             val text = getText(R.string.game_duration).toString() + " " + game_duration + " minutes"
-            (gameInfo.getChildAt(1) as TextView).text = text}
+            (gameInfo.getChildAt(1) as TextView).text = text
 
-        supportFragmentManager.beginTransaction().add(R.id.faction_selection,PlayerParametersFragment()).commit()
+            supportFragmentManager.beginTransaction().add(R.id.faction_selection,PlayerParametersFragment()).commit()
 
-        //SwipeRefreshLayout
-        mSwipeRefreshLayout = findViewById(R.id.swipe_container)
-        mSwipeRefreshLayout.setOnRefreshListener(this)
+            //SwipeRefreshLayout
+            mSwipeRefreshLayout = gameLobbyBinding.swipeContainer
+            mSwipeRefreshLayout.setOnRefreshListener(this)
 
-        //add intents to the buttons
-        gameLobbyBinding.startButton.setOnClickListener {
-            val intent = if (myFaction == PlayerParametersFragment.Faction.PREDATOR) {
-                Intent(this, PredatorActivity::class.java)
-            } else {
-                Intent(this, PreyActivity::class.java)
+            //add intents to the buttons
+            gameLobbyBinding.startButton.setOnClickListener {
+                val intent = if (myFaction == PlayerParametersFragment.Faction.PREDATOR) {
+                    Intent(this, PredatorActivity::class.java)
+                } else {
+                    Intent(this, PreyActivity::class.java)
+                }
+
+                repository.getGameId { gid ->
+                    intent.putExtra("initialTime", game_duration.toLong())
+                    intent.putExtra("playerID", 0) //TODO: User.uid.toLong(10) but what if uid is "" ?
+                    intent.putExtra("gameID", gid)
+                    //TODO: Fetch MQTT URI from somewhere ? and add to the intent
+                    repository.getPlayers { pl ->
+                        intent.putExtra("players", ArrayList(pl))
+                        startActivity(intent)
+                    }
+                }
             }
-            startActivity(intent)
         }
         gameLobbyBinding.startButton.setBackgroundColor(Color.GREEN)
 
         gameLobbyBinding.leaveButton.setOnClickListener {
-            startActivity(Intent(this, GlobalLobbyActivity::class.java))
-            startActivity(intent)
+            finish() //Goes back to previous activity
         }
         gameLobbyBinding.leaveButton.setBackgroundColor(Color.RED)
 
@@ -92,7 +103,7 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
     }
 
     private fun refreshPlayerList() {
-        repository.getPlayers { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId)
+        repository.getParticipations { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId)
             mSwipeRefreshLayout.isRefreshing = false
         }
     }
