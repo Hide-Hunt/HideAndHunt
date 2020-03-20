@@ -48,10 +48,6 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun getPlayers(cb : Callback<List<Player>>) {
-        //add players to show refreshing works
-        if (counter != 0) players.add(Participation(User("Player$counter",10 + counter),
-                false,"0ABC",PlayerParametersFragment.Faction.PREY))
-        ++counter
         var mPlayers: List<Player> = ArrayList()
         for(p in players) {
             mPlayers = if(p.faction == PlayerParametersFragment.Faction.PREY) mPlayers + Prey(p.user.uid, p.tag) else mPlayers + Predator(p.user.uid)

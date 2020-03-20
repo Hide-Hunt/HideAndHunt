@@ -59,7 +59,7 @@ class MockGameLobbyRepositoryTest {
     @Test
     fun changePlayerReadyChangesReady() {
         var playerList = Collections.emptyList<Participation>()
-        glr.getPlayers {
+        glr.getParticipations {
             players -> playerList = players
         }
         val player1IsReady = playerList[3].ready
@@ -67,7 +67,7 @@ class MockGameLobbyRepositoryTest {
         glr.changePlayerReady(playerList[3].user.uid)
         glr.changePlayerReady(playerList[4].user.uid)
 
-        glr.getPlayers {
+        glr.getParticipations {
             players -> playerList = players
         }
 
@@ -82,18 +82,18 @@ class MockGameLobbyRepositoryTest {
     @Test
     fun setPlayerFactionSetsFaction() {
         var playerList = Collections.emptyList<Participation>()
-        glr.getPlayers {
+        glr.getParticipations {
             players -> playerList = players
         }
 
         glr.setPlayerFaction(playerList[1].user.uid, PlayerParametersFragment.Faction.PREDATOR)
-        glr.getPlayers {
+        glr.getParticipations {
             players -> playerList = players
         }
         assertEquals(playerList[1].faction,PlayerParametersFragment.Faction.PREDATOR)
 
         glr.setPlayerFaction(playerList[1].user.uid, PlayerParametersFragment.Faction.PREY)
-        glr.getPlayers {
+        glr.getParticipations {
             players -> playerList = players
         }
         assertEquals(playerList[1].faction,PlayerParametersFragment.Faction.PREY)
