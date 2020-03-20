@@ -32,6 +32,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     private lateinit var binding: ActivityPredatorBinding
 
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
+    private var validGame: Boolean = false
     private var targetID: Int = TargetSelectionFragment.NO_TARGET
 
     private var players = HashMap<Int, Player>()
@@ -50,11 +51,14 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         binding = ActivityPredatorBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Get game information
-        gameData = GameIntentUnpacker.unpack(intent)
-        if(gameData.gameID < 0 || gameData.playerID < 0 || gameData.initialTime < 0) {
+        val gameDataAndValidity = GameIntentUnpacker.unpack(intent)
+        validGame = gameDataAndValidity.second
+        if(!validGame) {
             finish()
             return
         }
+        gameData = gameDataAndValidity.first
+
         if (savedInstanceState == null) { // First load
             for (p in gameData.playerList) {
                 players[p.id] = p
@@ -145,7 +149,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
 
     override fun onDestroy() {
         super.onDestroy()
-        if (gameData.gameID >= 0 && gameData.playerID >= 0 && gameData.initialTime >= 0) {
+        if (validGame) {
             locationHandler.stop()
         }
     }
@@ -186,7 +190,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
             if (it is Prey && it.state == PreyState.ALIVE) {
                 it.state = PreyState.DEAD
                 preyFragment.setPreyState(preyID, PreyState.DEAD)
-                Toast.makeText(this@PredatorActivity, "Predator $predatorID catched prey $preyID", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@PredatorActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
             }
         }
     }

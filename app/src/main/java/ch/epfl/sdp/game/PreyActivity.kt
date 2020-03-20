@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityPreyBinding
-import ch.epfl.sdp.game.data.Location
-import ch.epfl.sdp.game.data.Player
-import ch.epfl.sdp.game.data.Predator
-import ch.epfl.sdp.game.data.Prey
+import ch.epfl.sdp.game.data.*
 import ch.epfl.sdp.game.location.ILocationListener
 import ch.epfl.sdp.game.location.LocationHandler
 
@@ -24,6 +21,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     private lateinit var predatorRadarFragment: PredatorRadarFragment
 
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
+    private var validGame: Boolean = false
 
     private val players: HashMap<Int, Player> = HashMap()
     private val ranges: List<Int> = listOf(5, 10, 20, 50, Integer.MAX_VALUE)
@@ -36,18 +34,24 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
         super.onCreate(savedInstanceState)
         binding = ActivityPreyBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        gameData = GameIntentUnpacker.unpack(intent)
+        val gameDataAndValidity = GameIntentUnpacker.unpack(intent)
+        validGame = gameDataAndValidity.second
+        if(!validGame) {
+            finish()
+            return
+        }
+        gameData = gameDataAndValidity.first
         loadPlayers(gameData.playerList)
         loadFragments()
     }
 
-    fun loadPlayers(lst: List<Player>) {
+    private fun loadPlayers(lst: List<Player>) {
         for (p: Player in lst) {
             players[p.id] = p
         }
     }
 
-    fun loadFragments() {
+    private fun loadFragments() {
         val fm = supportFragmentManager
         val fragmentTransaction = fm.beginTransaction()
 
@@ -62,7 +66,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
         fragmentTransaction.commit()
     }
 
-    fun updateThreat() {
+    private fun updateThreat() {
         for(p in players.values) {
             if(p is Predator && p.lastKnownLocation != null) {
                 val dist = p.lastKnownLocation!!.distanceTo(locationHandler.lastKnownLocation)
@@ -85,7 +89,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (gameData.gameID >= 0 && gameData.playerID >= 0 && gameData.initialTime >= 0) {
+        if (validGame) {
             locationHandler.stop()
         }
     }
@@ -108,7 +112,13 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     }
 
     override fun onPreyCatches(predatorID: Int, preyID: Int) {
-        TODO("Not yet implemented")
+        players[preyID]?.let {
+            if (it is Prey && it.state == PreyState.ALIVE) {
+                it.state = PreyState.DEAD
+                preyFragment.setPreyState(preyID, PreyState.DEAD)
+                Toast.makeText(this@PreyActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
 }
