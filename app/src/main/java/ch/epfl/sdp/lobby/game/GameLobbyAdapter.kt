@@ -10,6 +10,9 @@ import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
 
+/**
+ * Adapter for the game lobby recyclerView
+ */
 class GameLobbyAdapter(
         private var players : List<Participation>,
         private var playerId : Int, private var adminId: Int) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {

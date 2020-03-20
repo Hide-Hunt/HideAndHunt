@@ -16,6 +16,9 @@ import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 
+/**
+ * Game Lobby Activity showing the list of players and game info
+ */
 class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshListener, PlayerParametersFragment.OnFactionChangeListener{
 
     //player id is hardcoded for now
@@ -38,10 +41,12 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
         rv = findViewById(R.id.player_list)
         rv.layoutManager = LinearLayoutManager(this)
 
+        //repository interactions
         repository.setPlayerFaction(PLAYER_ID,PlayerParametersFragment.Faction.PREDATOR)
         repository.getAdminId { id -> adminId = id }
         repository.getPlayers { playerList -> rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID,adminId) }
 
+        //set game info views
         val gameInfo = findViewById<LinearLayout>(R.id.game_info)
         repository.getGameName { name ->
             val text = getText(R.string.game_name).toString() + " " + name
@@ -56,6 +61,7 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
         mSwipeRefreshLayout = findViewById(R.id.swipe_container)
         mSwipeRefreshLayout.setOnRefreshListener(this)
 
+        //add intents to the buttons
         gameLobbyBinding.startButton.setOnClickListener {
             val intent = if (myFaction == PlayerParametersFragment.Faction.PREDATOR) {
                 Intent(this, PredatorActivity::class.java)
