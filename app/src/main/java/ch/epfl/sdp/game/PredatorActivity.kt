@@ -51,7 +51,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         setContentView(binding.root)
         // Get game information
         gameData = GameIntentUnpacker.unpack(intent)
-        if(gameData.gameID < 0 || gameData.playerID < 0 ||gameData.initialTime < 0) {
+        if(gameData.gameID < 0 || gameData.playerID < 0 || gameData.initialTime < 0) {
             finish()
             return
         }
@@ -74,7 +74,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         val fragmentTransaction = fm.beginTransaction()
 
         // replace the FrameLayout with new Fragment
-        gameTimerFragment = GameTimerFragment.create(2*60*1000)
+        gameTimerFragment = GameTimerFragment.create(gameData.initialTime)
         fragmentTransaction.add(binding.gameTimerPlaceHolder.id, gameTimerFragment)
 
         targetSelectionFragment = TargetSelectionFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
