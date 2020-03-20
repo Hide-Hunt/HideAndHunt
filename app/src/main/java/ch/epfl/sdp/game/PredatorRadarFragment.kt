@@ -5,36 +5,42 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import ch.epfl.sdp.databinding.FragmentPredatorRadarBinding
 
 import ch.epfl.sdp.R
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_RANGES = "ranges"
 
 class PredatorRadarFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private var _binding: FragmentPredatorRadarBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var ranges: ArrayList<Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            ranges = ArrayList((it.getSerializable(ARG_RANGES) as ArrayList<*>).filterIsInstance<Int>())
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_predator_radar, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentPredatorRadarBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(ranges: ArrayList<Int>) =
                 PredatorRadarFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
+                        putSerializable(ARG_RANGES, ranges)
                     }
                 }
     }

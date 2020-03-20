@@ -61,7 +61,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
         preyFragment = PreyFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
         fragmentTransaction.add(binding.frmPreyRemaining.id, preyFragment)
 
-        predatorRadarFragment = PredatorRadarFragment.newInstance()
+        predatorRadarFragment = PredatorRadarFragment.newInstance(ArrayList(ranges))
 
         fragmentTransaction.commit()
     }
