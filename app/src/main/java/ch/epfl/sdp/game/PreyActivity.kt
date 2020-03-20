@@ -41,6 +41,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
             return
         }
         gameData = gameDataAndValidity.first
+        locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
         loadPlayers(gameData.playerList)
         loadFragments()
     }

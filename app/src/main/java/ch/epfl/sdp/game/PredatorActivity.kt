@@ -58,6 +58,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
             return
         }
         gameData = gameDataAndValidity.first
+        locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
 
         if (savedInstanceState == null) { // First load
             for (p in gameData.playerList) {
@@ -68,7 +69,6 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
             }
         }
 
-        locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
         loadFragments()
     }
 
