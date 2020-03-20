@@ -16,6 +16,28 @@ class AreaTest {
     }
 
     @Test
+    fun areaConstructionIsIndependentOfPointOrder() {
+        fun validateArea(area: Area) = area.let {
+            assertEquals(0.0, it.topRight.latitude, 1.0)
+            assertEquals(0.0, it.topRight.longitude, 1.0)
+            assertEquals(0.0, it.bottomLeft.latitude, 0.0)
+            assertEquals(0.0, it.bottomLeft.longitude, 0.0)
+        }
+
+        // TopRight + BottomLeft
+        validateArea(Area(Location(1.0,1.0), Location(0.0, 0.0)))
+
+        // TopLeft + BottomRight
+        validateArea(Area(Location(1.0,0.0), Location(0.0, 1.0)))
+
+        // BottomLeft + TopRight
+        validateArea(Area(Location(0.0,0.0), Location(1.0, 1.0)))
+
+        // BottomRight + TopLeft
+        validateArea(Area(Location(0.0,1.0), Location(1.0, 0.0)))
+    }
+
+    @Test
     fun centerOfAreaIsComputedCorrectly() {
         val area = Area(Location(2.0,0.0), Location(1.0, 2.0))
         assertEquals(1.5, area.center.latitude, 0.0)
