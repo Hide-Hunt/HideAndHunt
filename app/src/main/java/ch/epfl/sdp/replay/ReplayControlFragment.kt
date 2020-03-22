@@ -1,13 +1,16 @@
 package ch.epfl.sdp.replay
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import ch.epfl.sdp.databinding.FragmentReplayControlBinding
+import java.text.DateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -34,16 +37,18 @@ class ReplayControlFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentReplayControlBinding.inflate(inflater)
 
-        binding.timeSelectionBar.max = timeCodes.size - 1
-        binding.date.text = timeCodes.first().toString()
+        binding.timeSelectionBar.max = timeCodes.last() - timeCodes.first()
+        val dateFormat = DateFormat.getDateTimeInstance()
+        binding.date.text = dateFormat.format(Date(timeCodes.first().toLong() * 1000))
         binding.timeSelectionBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                binding.date.text = timeCodes[progress].toString()
-                viewModel.timeCursor.value = timeCodes[progress]
+                val timestamp = timeCodes.first() + progress
+                binding.date.text = dateFormat.format(Date(timestamp.toLong() * 1000))
+                viewModel.timeCursor.value = timestamp
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
         })
 
         binding.playButton.setOnClickListener { binding.speedSelection.progress = 1 }
@@ -55,8 +60,8 @@ class ReplayControlFragment : Fragment() {
                 binding.speedFactor.text = "x%d".format(playSpeed)
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
         })
 
         return binding.root
