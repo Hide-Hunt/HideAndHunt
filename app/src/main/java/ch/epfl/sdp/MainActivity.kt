@@ -2,6 +2,7 @@ package ch.epfl.sdp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.authentication.LoginActivity
@@ -15,6 +16,14 @@ class MainActivity : AppCompatActivity() {
     private val repositoryFactory = object : IRepoFactory {
         override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
             return MockGlobalLobbyRepository()
+        }
+    }
+
+    private fun buttonToActivity(button: Button, cls: Class<*>, intentFiller: (Intent) -> Unit = {}) {
+        button.setOnClickListener {
+            val intent = Intent(this@MainActivity, cls)
+            intentFiller(intent)
+            startActivity(intent)
         }
     }
 
