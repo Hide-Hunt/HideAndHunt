@@ -10,6 +10,7 @@ import ch.epfl.sdp.db.IRepoFactory
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
+import ch.epfl.sdp.replay.ReplayActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -31,14 +32,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.playButton.setOnClickListener {
-            val intent = Intent(this@MainActivity, GlobalLobbyActivity::class.java)
-            intent.putExtra("repoFactory", repositoryFactory)
-            startActivity(intent)
+
+        buttonToActivity(binding.playButton, GlobalLobbyActivity::class.java) {
+            it.putExtra("repoFactory", repositoryFactory)
         }
-        binding.loginButton.setOnClickListener{
-            val intent = Intent(this@MainActivity, LoginActivity::class.java)
-            startActivity(intent)
-        }
+
+        buttonToActivity(binding.replayButton, ReplayActivity::class.java)
+        buttonToActivity(binding.loginButton, LoginActivity::class.java)
     }
 }
