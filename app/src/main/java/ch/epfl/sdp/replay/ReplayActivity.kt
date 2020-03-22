@@ -6,6 +6,7 @@ import ch.epfl.sdp.databinding.ActivityReplayBinding
 import ch.epfl.sdp.game.data.*
 import ch.epfl.sdp.replay.game_event.CatchEvent
 import ch.epfl.sdp.replay.game_event.LocationEvent
+import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 
 class ReplayActivity : AppCompatActivity() {
     private lateinit var binding : ActivityReplayBinding
