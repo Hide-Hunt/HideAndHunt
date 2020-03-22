@@ -1,17 +1,23 @@
 package ch.epfl.sdp.replay
 
-class GameReplayController(private val history: List<ReplayStep>) {
-    private var timeCursor: Int = 0
+import ch.epfl.sdp.replay.steps.ReplayStep
+
+class GameReplayController(private val initialTimestamp: Int, private val history: List<ReplayStep>) {
+    private var timeCursor: Int = initialTimestamp
 
     fun goToTime(timeTarget: Int) {
-        // Forward
-        while (timeTarget > timeCursor) {
-            nextSecond()
-        }
+        maxOf(timeTarget, initialTimestamp).let {
+            // Forward
+            while (it > timeCursor) {
+                nextSecond()
+            }
 
-        // Backward
-        while (timeTarget < timeCursor) {
-            prevSecond()
+            // Backward
+            while (it < timeCursor) {
+                prevSecond()
+            }
+
+            history[timeCursor - initialTimestamp].execute()
         }
     }
 
@@ -19,12 +25,12 @@ class GameReplayController(private val history: List<ReplayStep>) {
      * Step one second forward by executing commands
      */
     fun nextSecond() {
-        history[timeCursor].execute()
+        history[timeCursor - initialTimestamp].execute()
         timeCursor++
     }
 
     fun prevSecond() {
-        history[timeCursor].undo()
+        history[timeCursor - initialTimestamp].undo()
         timeCursor--
     }
 }
