@@ -1,6 +1,8 @@
 package ch.epfl.sdp.game.data
 
-class Area(p1: Location, p2: Location) {
+import java.io.Serializable
+
+class Area(p1: Location, p2: Location) : Serializable {
     val bottomLeft = Location(
             if (p1.latitude < p2.latitude) p1.latitude else p2.latitude,
             if (p1.longitude < p2.longitude) p1.longitude else p2.longitude
