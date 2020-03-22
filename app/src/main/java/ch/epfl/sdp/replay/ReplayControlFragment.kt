@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import ch.epfl.sdp.databinding.FragmentReplayControlBinding
 import java.text.DateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
+import kotlin.properties.Delegates
 
 /**
  * A simple [Fragment] subclass.
@@ -22,13 +22,15 @@ class ReplayControlFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: ReplayViewModel by activityViewModels()
-    private lateinit var timeCodes: ArrayList<Int>
+    private var firstTimestamp by Delegates.notNull<Int>()
+    private var lastTimestamp by Delegates.notNull<Int>()
     private var playSpeed = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            timeCodes = it.getIntegerArrayList(ARG_TIME_CODES) as ArrayList<Int>
+            firstTimestamp = it.getInt(FIRST_TIMESTAMP)
+            lastTimestamp = it.getInt(LAST_TIMESTAMP)
         }
     }
 
@@ -37,12 +39,20 @@ class ReplayControlFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentReplayControlBinding.inflate(inflater)
 
-        binding.timeSelectionBar.max = timeCodes.last() - timeCodes.first()
+        timeSelectionAndDateDisplaySetup()
+        buttonsAndSpeedSelectionSetup()
+
+        return binding.root
+    }
+
+    private fun timeSelectionAndDateDisplaySetup() {
         val dateFormat = DateFormat.getDateTimeInstance()
-        binding.date.text = dateFormat.format(Date(timeCodes.first().toLong() * 1000))
+        binding.date.text = dateFormat.format(Date(firstTimestamp.toLong() * 1000))
+
+        binding.timeSelectionBar.max = lastTimestamp - firstTimestamp
         binding.timeSelectionBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val timestamp = timeCodes.first() + progress
+                val timestamp = firstTimestamp + progress
                 binding.date.text = dateFormat.format(Date(timestamp.toLong() * 1000))
                 viewModel.timeCursor.value = timestamp
             }
@@ -50,7 +60,9 @@ class ReplayControlFragment : Fragment() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
             override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
         })
+    }
 
+    private fun buttonsAndSpeedSelectionSetup() {
         binding.playButton.setOnClickListener { binding.speedSelection.progress = 1 }
         binding.stopButton.setOnClickListener { binding.speedSelection.progress = 0 }
 
@@ -63,26 +75,26 @@ class ReplayControlFragment : Fragment() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
             override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
         })
-
-        return binding.root
     }
 
     companion object {
-        private const val ARG_TIME_CODES = "time_codes"
+        private const val FIRST_TIMESTAMP = "first_timestamp"
+        private const val LAST_TIMESTAMP = "last_timestamp"
 
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param timeCodes Parameter 1.
+         * @param firstTimestamp First timestamp
+         * @param lastTimestamp Last timestamp
          * @return A new instance of fragment ReplayControlFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(timeCodes: ArrayList<Int>) =
+        fun newInstance(firstTimestamp: Int, lastTimestamp: Int) =
                 ReplayControlFragment().apply {
                     arguments = Bundle().apply {
-                        putIntegerArrayList(ARG_TIME_CODES, timeCodes)
+                        putInt(FIRST_TIMESTAMP, firstTimestamp)
+                        putInt(LAST_TIMESTAMP, lastTimestamp)
                     }
                 }
     }

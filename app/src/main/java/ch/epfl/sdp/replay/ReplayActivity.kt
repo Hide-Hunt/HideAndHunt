@@ -86,12 +86,8 @@ class ReplayActivity : AppCompatActivity() {
                 CatchEvent(1584826663, 1, 0)
         )
 
-        val p0 = Prey(0).also {
-            it.lastKnownLocation = (events.first {event -> event is LocationEvent && event.playerID == it.id } as LocationEvent).location
-        }
-        val p1 = Predator(1).also {
-            it.lastKnownLocation = (events.first {event -> event is LocationEvent && event.playerID == it.id } as LocationEvent).location
-        }
+        val players = listOf(Prey(0), Predator(1))
+        players.forEach { it.lastKnownLocation = (events.first {event -> event is LocationEvent && event.playerID == it.id } as LocationEvent).location }
 
         val firstLocation = (events.first { it is LocationEvent } as LocationEvent).location
         val gameArea = events.fold(Area(firstLocation, firstLocation), {tmpArea, event ->
@@ -104,16 +100,11 @@ class ReplayActivity : AppCompatActivity() {
             } else tmpArea
         })
 
-        val history = GameHistory(
-                0,
-                listOf(p0, p1),
-                gameArea,
-                events
-        )
-
+        val history = GameHistory(0, players, gameArea, events)
+        val (firstTimestamp, lastTimestamp) = events.map { it.timestamp }.let { Pair(it.min()!!, it.max()!!) }
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(binding.replayControl.id, ReplayControlFragment.newInstance(ArrayList(history.events.map { it.timestamp })))
+                    .replace(binding.replayControl.id, ReplayControlFragment.newInstance(firstTimestamp, lastTimestamp))
                     .replace(binding.replayMap.id, ReplayFragment.newInstance(history))
                     .commitNow()
         }

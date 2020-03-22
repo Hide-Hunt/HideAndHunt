@@ -50,6 +50,24 @@ class ReplayFragment : Fragment() {
     }
 
     private fun mapSetup() {
+        mapsforgeInit()
+
+        // Preparing icons
+        val predatorIcon = AndroidBitmap(requireContext().getDrawable(R.drawable.ic_eye_icon)!!.toBitmap())
+        val preyIcon = AndroidBitmap(requireContext().getDrawable(R.drawable.ic_target_icon)!!.toBitmap())
+        val caughtIcon = AndroidBitmap(requireContext().getDrawable(R.drawable.ic_skull_icon)!!.toBitmap())
+
+        val lastPos = HashMap<Int, Location>()
+        playersInit(lastPos, predatorIcon, preyIcon)
+
+        val steps = ArrayList<ReplayStep>()
+        replayStepsInit(steps, lastPos, caughtIcon)
+
+        val grc = GameReplayController(history.events.first().timestamp, steps)
+        viewModel.timeCursor.observe(viewLifecycleOwner, Observer { grc.goToTime(it) })
+    }
+
+    private fun mapsforgeInit() {
         try {
             val mapView = binding.map
             mapView.mapScaleBar.isVisible = true
@@ -76,13 +94,9 @@ class ReplayFragment : Fragment() {
             Toast.makeText(context, "Error while loading the map", Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
+    }
 
-        // Preparing icons
-        val predatorIcon = AndroidBitmap(requireContext().getDrawable(R.drawable.ic_eye_icon)!!.toBitmap())
-        val preyIcon = AndroidBitmap(requireContext().getDrawable(R.drawable.ic_target_icon)!!.toBitmap())
-        val caughtIcon = AndroidBitmap(requireContext().getDrawable(R.drawable.ic_skull_icon)!!.toBitmap())
-
-        val lastPos = HashMap<Int, Location>()
+    private fun playersInit(lastPos: HashMap<Int, Location>, predatorIcon: AndroidBitmap, preyIcon: AndroidBitmap) {
         for (player in history.players) {
             val loc = player.lastKnownLocation ?: history.bounds.center
             lastPos[player.id] = loc
@@ -91,21 +105,21 @@ class ReplayFragment : Fragment() {
                 binding.map.layerManager.layers.add(it)
             }
         }
+    }
 
-        val eventsByTimestamp = history.events.groupBy{event -> event.timestamp}.toSortedMap()
-
-        val commands = ArrayList<ReplayStep>()
+    private fun replayStepsInit(steps: ArrayList<ReplayStep>, lastPos: HashMap<Int, Location>, caughtIcon: AndroidBitmap) {
+        val eventsByTimestamp = history.events.groupBy { event -> event.timestamp }.toSortedMap()
         var lastStepTimestamp = eventsByTimestamp.keys.min()!!
         for ((timestamp, events) in eventsByTimestamp) {
             // Fill empty timestamps with NOP steps
             while (lastStepTimestamp < timestamp) {
-                commands.add(NOPStep())
+                steps.add(NOPStep())
                 lastStepTimestamp++
             }
             lastStepTimestamp++
 
             // Generate step
-            val step = events.map {event ->
+            val step = events.map { event ->
                 when (event) {
                     is LocationEvent ->
                         LocationStep(playerMarkers[event.playerID]!!, lastPos[event.playerID]!!, event.location)
@@ -116,11 +130,8 @@ class ReplayFragment : Fragment() {
                     else -> NOPStep()
                 }
             }
-            commands.add(BatchStep(step))
+            steps.add(BatchStep(step))
         }
-
-        val grc = GameReplayController(history.events.first().timestamp, commands)
-        viewModel.timeCursor.observe(viewLifecycleOwner, Observer { grc.goToTime(it) })
     }
 
     override fun onDestroy() {
