@@ -100,7 +100,7 @@ class ReplayActivity : AppCompatActivity() {
             } else tmpArea
         })
 
-        val history = GameHistory(0, players, gameArea, events)
+        val history = GameHistory(players, gameArea, events)
         val (firstTimestamp, lastTimestamp) = events.map { it.timestamp }.let { Pair(it.min()!!, it.max()!!) }
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
