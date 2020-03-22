@@ -71,7 +71,7 @@ class ReplayFragment : Fragment() {
                 history.players[playerID].lastKnownLocation
             } ?: history.bounds.center
             mapView.setCenter(center.toLatLong())
-            mapView.setZoomLevel(18.toByte())
+            mapView.setZoomLevel(17.toByte())
         } catch (e: Exception) {
             Toast.makeText(context, "Error while loading the map", Toast.LENGTH_LONG).show()
             e.printStackTrace()
