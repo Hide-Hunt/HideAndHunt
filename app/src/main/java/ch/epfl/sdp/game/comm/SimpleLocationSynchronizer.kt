@@ -31,17 +31,24 @@ class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerI
     }
 
     override fun updateOwnLocation(location: Location) {
-        val payload = LocationOuterClass.Location.newBuilder()
+        val loc = LocationOuterClass.Location.newBuilder()
                 .setLatitude(location.latitude)
                 .setLongitude(location.longitude)
+                .build()
+        val locEvent = LocationEventOuterClass.LocationEvent.newBuilder().setLocation(loc).build()
+        val payload = GameEventOuterClass.GameEvent.newBuilder()
+                .setLocationEvent(locEvent)
                 .build()
         pubSub.publish("$gameID/$ownPlayerID", payload.toByteArray())
     }
 
     override fun declareCatch(playerID: Int) {
-        val payload = CatchOuterClass.Catch.newBuilder()
+        val catchEvent = CatchEventOuterClass.CatchEvent.newBuilder()
                 .setPredatorID(ownPlayerID)
                 .setPreyID(playerID)
+                .build()
+        val payload = GameEventOuterClass.GameEvent.newBuilder()
+                .setCatchEvent(catchEvent)
                 .build()
         pubSub.publish("$gameID/catch", payload.toByteArray())
     }
