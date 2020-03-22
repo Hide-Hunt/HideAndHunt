@@ -9,4 +9,4 @@ data class GameHistory(
         val gameID: Int,
         val players: List<Player>,
         val bounds: Area,
-        val event: List<GameEvent>) : Serializable
+        val events: List<GameEvent>) : Serializable

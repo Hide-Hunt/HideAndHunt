@@ -112,7 +112,7 @@ class ReplayActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(binding.replayControl.id, ReplayControlFragment.newInstance(ArrayList(history.event.map { it.timestamp })))
+                    .replace(binding.replayControl.id, ReplayControlFragment.newInstance(ArrayList(history.events.map { it.timestamp })))
                     .replace(binding.replayMap.id, ReplayFragment.newInstance(history))
                     .commitNow()
         }
