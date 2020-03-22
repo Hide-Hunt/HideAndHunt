@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.R
 import ch.epfl.sdp.game.data.Game
-import ch.epfl.sdp.lobby.LobbyActivity
+import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyAdapter.*
 
 class GlobalLobbyAdapter(var data: List<Game>) :  RecyclerView.Adapter<MyViewHolder>() {
@@ -20,7 +20,7 @@ class GlobalLobbyAdapter(var data: List<Game>) :  RecyclerView.Adapter<MyViewHol
         override fun onClick(v: View?) {
             val game = data[layoutPosition]
             Toast.makeText(v?.context, game.name, Toast.LENGTH_SHORT).show()
-            val intent = Intent(v?.context, LobbyActivity::class.java) //TODO: Call with the game as param
+            val intent = Intent(v?.context, GameLobbyActivity::class.java) //TODO: Call with the game as param
             v?.context?.startActivity(intent)
         }
 

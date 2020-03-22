@@ -21,6 +21,12 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <string name="leave">Leave</string>
+    <string name="start">Start</string>
+
+    <string name="game_name">Game name : </string>
+    <string name="game_duration">Game duration : </string>
+
     <!-- Prey catching fragment -->
     <string name="prey_alive">Your prey is alive</string>
     <string name="prey_dead">Your prey is dead</string>
@@ -49,6 +55,7 @@
     <string name="gps_disabled">GPS Disabled</string>
     <string name="repeat_last_location">Repeat last location</string>
     <string name="prey_name">Prey %d</string>
+    <string name="admin_logo">Admin logo</string>
 
     <string name="player_in_lobby">Players in the lobby: %d</string>
     <string name="game_created_by">Created by: %s</string>
