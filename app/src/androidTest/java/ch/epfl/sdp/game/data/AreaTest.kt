@@ -4,7 +4,7 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class AreaTest {
-    val simpleArea = Area(Location(2.0, 0.0), Location(1.0, 2.0))
+    private val simpleArea = Area(Location(2.0, 0.0), Location(1.0, 2.0))
 
     @Test
     fun nullAreaIsNull() {
