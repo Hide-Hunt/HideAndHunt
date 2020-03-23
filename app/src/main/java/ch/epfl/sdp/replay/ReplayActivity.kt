@@ -38,7 +38,7 @@ class ReplayActivity : AppCompatActivity() {
     private fun setupFragments(firstTimestamp: Int, lastTimestamp: Int, gameHistory: GameHistory) {
         supportFragmentManager.beginTransaction()
                 .replace(binding.replayControl.id, ReplayControlFragment.newInstance(firstTimestamp, lastTimestamp))
-                .replace(binding.replayMap.id, ReplayFragment.newInstance(gameHistory))
+                .replace(binding.replayMap.id, ReplayMapFragment.newInstance(gameHistory))
                 .commitNow()
     }
 

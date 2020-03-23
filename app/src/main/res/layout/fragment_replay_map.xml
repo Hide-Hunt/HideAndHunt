@@ -4,7 +4,7 @@
     android:id="@+id/replay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".replay.ReplayFragment">
+    tools:context=".replay.ReplayMapFragment">
 
     <org.mapsforge.map.android.view.MapView
         android:id="@+id/map"

@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import ch.epfl.sdp.R
-import ch.epfl.sdp.databinding.FragmentReplayBinding
+import ch.epfl.sdp.databinding.FragmentReplayMapBinding
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.replay.game_event.CatchEvent
@@ -25,6 +25,7 @@ import org.mapsforge.core.util.LatLongUtils.zoomForBounds
 import org.mapsforge.map.android.graphics.AndroidBitmap
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import org.mapsforge.map.android.util.AndroidUtil
+import org.mapsforge.map.android.view.MapView
 import org.mapsforge.map.datastore.MapDataStore
 import org.mapsforge.map.layer.overlay.Marker
 import org.mapsforge.map.layer.overlay.Polyline
@@ -34,8 +35,8 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme
 import java.io.File
 
 
-class ReplayFragment : Fragment() {
-    private var _binding: FragmentReplayBinding? = null
+class ReplayMapFragment : Fragment() {
+    private var _binding: FragmentReplayMapBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: ReplayViewModel by activityViewModels()
@@ -45,7 +46,7 @@ class ReplayFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        _binding = FragmentReplayBinding.inflate(inflater)
+        _binding = FragmentReplayMapBinding.inflate(inflater)
 
         arguments?.let {
             history = it.getSerializable(ARG_HISTORY) as GameHistory
@@ -82,18 +83,7 @@ class ReplayFragment : Fragment() {
             val mapView = binding.map
             mapView.mapScaleBar.isVisible = true
             mapView.setBuiltInZoomControls(true)
-
-            val tileCache = AndroidUtil.createTileCache(context, "mapcache",
-                    mapView.model.displayModel.tileSize, 1f,
-                    mapView.model.frameBufferModel.overdrawFactor)
-
-            val mapFile = File(requireContext().getExternalFilesDir(null), MAP_FILE)
-            val mapDataStore: MapDataStore = MapFile(mapFile)
-            val tileRendererLayer = TileRendererLayer(tileCache, mapDataStore,
-                    mapView.model.mapViewPosition, AndroidGraphicFactory.INSTANCE)
-            tileRendererLayer.setXmlRenderTheme(InternalRenderTheme.DEFAULT)
-
-            mapView.layerManager.layers.add(tileRendererLayer)
+            mapView.layerManager.layers.add(setupTileLayer(mapView))
 
             val center = viewModel.trackedPlayer.value?.let { playerID ->
                 history.players[playerID].lastKnownLocation
@@ -107,6 +97,19 @@ class ReplayFragment : Fragment() {
             Toast.makeText(context, "Error while loading the map", Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
+    }
+
+    private fun setupTileLayer(mapView: MapView): TileRendererLayer {
+        val tileCache = AndroidUtil.createTileCache(context, "mapcache",
+                mapView.model.displayModel.tileSize, 1f,
+                mapView.model.frameBufferModel.overdrawFactor)
+
+        val mapFile = File(requireContext().getExternalFilesDir(null), MAP_FILE)
+        val mapDataStore: MapDataStore = MapFile(mapFile)
+        val tileRendererLayer = TileRendererLayer(tileCache, mapDataStore,
+                mapView.model.mapViewPosition, AndroidGraphicFactory.INSTANCE)
+        tileRendererLayer.setXmlRenderTheme(InternalRenderTheme.DEFAULT)
+        return tileRendererLayer
     }
 
     private fun createPaint(color: Int, strokeWidth: Int, style: Style?): Paint {
@@ -171,7 +174,7 @@ class ReplayFragment : Fragment() {
         private const val MAP_FILE = "cache.map"
 
         fun newInstance(history: GameHistory) =
-                ReplayFragment().apply {
+                ReplayMapFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(ARG_HISTORY, history)
                     }

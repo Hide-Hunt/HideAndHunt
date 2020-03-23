@@ -51,8 +51,7 @@ class ReplayControlFragment : Fragment() {
 
     private fun timeSelectionAndDateDisplaySetup() {
         val dateFormat = DateFormat.getDateTimeInstance()
-        binding.date.text = dateFormat.format(Date(firstTimestamp.toLong() * 1000))
-
+        binding.timeSelectionBar.progress = 1 // Set non-default value, so default will trigger listener
         binding.timeSelectionBar.max = lastTimestamp - firstTimestamp
         binding.timeSelectionBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -64,6 +63,7 @@ class ReplayControlFragment : Fragment() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
             override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
         })
+        binding.timeSelectionBar.progress = 0 //Real default value, will trigger listener
     }
 
     private fun buttonsAndSpeedSelectionSetup() {
