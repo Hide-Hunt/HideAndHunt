@@ -7,6 +7,7 @@ import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.ActivityReplayBinding
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import java.io.File
+import java.lang.Exception
 
 class ReplayActivity : AppCompatActivity() {
     private var replayPath: String? = null
@@ -23,14 +24,18 @@ class ReplayActivity : AppCompatActivity() {
                 else intent.getStringExtra(REPLAY_PATH_ARG)
 
         getReplayFile()?.let {file ->
-            val gameHistory = GameHistory.fromFile(file.inputStream())
-            title = "Replay: Game #${gameHistory.gameID} by ${gameHistory.adminID}"
+            try {
+                val gameHistory = GameHistory.fromFile(file.inputStream())
+                title = "Replay: Game #${gameHistory.gameID} by ${gameHistory.adminID}"
 
-            AndroidGraphicFactory.createInstance(application)
+                AndroidGraphicFactory.createInstance(application)
 
-            val (firstTimestamp, lastTimestamp) = gameHistory.events.map { it.timestamp }.let { Pair(it.min()!!, it.max()!!) }
-            if (savedInstanceState == null) {
-                setupFragments(firstTimestamp, lastTimestamp, gameHistory)
+                val (firstTimestamp, lastTimestamp) = gameHistory.events.map { it.timestamp }.let { Pair(it.min()!!, it.max()!!) }
+                if (savedInstanceState == null) {
+                    setupFragments(firstTimestamp, lastTimestamp, gameHistory)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
