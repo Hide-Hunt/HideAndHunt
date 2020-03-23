@@ -1,6 +1,7 @@
 package ch.epfl.sdp.replay
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import ch.epfl.sdp.databinding.FragmentReplayControlBinding
 import java.text.DateFormat
 import java.util.Date
+import kotlin.math.pow
 import kotlin.properties.Delegates
 
 /**
@@ -24,7 +26,9 @@ class ReplayControlFragment : Fragment() {
     private val viewModel: ReplayViewModel by activityViewModels()
     private var firstTimestamp by Delegates.notNull<Int>()
     private var lastTimestamp by Delegates.notNull<Int>()
-    private var playSpeed = 1
+    private val playHandler = Handler()
+    private val playRunnable = Runnable { onPlayTick() }
+    private var playSpeed: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,15 +70,29 @@ class ReplayControlFragment : Fragment() {
         binding.playButton.setOnClickListener { binding.speedSelection.progress = 1 }
         binding.stopButton.setOnClickListener { binding.speedSelection.progress = 0 }
 
+        binding.speedSelection.progress = 1 // Set non-default value, so default will trigger listener
+
         binding.speedSelection.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                playSpeed = progress
+                playSpeed = if (progress > 0) 2.0.pow(progress - 1.0).toInt() else 0
                 binding.speedFactor.text = "x%d".format(playSpeed)
+                onPlayTick()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
             override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
         })
+
+        binding.speedSelection.progress = 0 //Real default value, will trigger listener
+    }
+
+    private fun onPlayTick() {
+        if (playSpeed != 0) {
+            binding.timeSelectionBar.progress++
+
+            playHandler.removeCallbacks(playRunnable)
+            playHandler.postDelayed(playRunnable, (1000.0 / playSpeed).toLong())
+        }
     }
 
     companion object {

@@ -6,53 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".replay.ReplayControlFragment">
 
-    <TextView
-        android:id="@+id/replayTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Replay"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/playButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/playButtonText"
+        android:text="@string/play_button_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/replayTitle" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/stopButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stop"
+        android:text="@string/stop_button_text"
         app:layout_constraintStart_toEndOf="@+id/playButton"
-        app:layout_constraintTop_toBottomOf="@+id/replayTitle" />
-
-    <SeekBar
-        android:id="@+id/timeSelectionBar"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:max="0"
-        android:progress="3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stopButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="233dp"
         android:layout_height="46dp"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
         android:layout_marginBottom="1dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/timeSelectionBar"
         app:layout_constraintStart_toEndOf="@+id/stopButton"
-        app:layout_constraintTop_toBottomOf="@+id/replayTitle">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,7 +41,7 @@
                 android:id="@+id/speedLabel"
                 android:layout_width="48sp"
                 android:layout_height="wrap_content"
-                android:text="Speed" />
+                android:text="@string/speed_label" />
 
             <SeekBar
                 android:id="@+id/speedSelection"
@@ -71,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:max="4"
-                android:progress="1" />
+                android:progress="0" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,7 +62,6 @@
                 android:id="@+id/speedFactor"
                 android:layout_width="48sp"
                 android:layout_height="wrap_content"
-                android:text="x1"
                 android:textAlignment="center" />
 
             <TextView
@@ -95,5 +72,16 @@
                 android:textAlignment="center" />
         </LinearLayout>
     </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/timeSelectionBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:max="0"
+        android:progress="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stopButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
