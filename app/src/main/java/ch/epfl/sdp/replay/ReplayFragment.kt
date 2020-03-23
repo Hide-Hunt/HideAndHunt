@@ -70,7 +70,10 @@ class ReplayFragment : Fragment() {
         val steps = ArrayList<ReplayStep>()
         replayStepsInit(steps, lastPos, caughtIcon)
 
-        val grc = GameReplayController(history.events.first().timestamp, steps)
+        val grc = GameReplayController(
+                history.events.first().timestamp,
+                history.events.last().timestamp,
+                steps)
         viewModel.timeCursor.observe(viewLifecycleOwner, Observer { grc.goToTime(it) })
     }
 
