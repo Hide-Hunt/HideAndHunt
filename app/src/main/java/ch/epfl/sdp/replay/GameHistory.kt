@@ -12,6 +12,8 @@ import java.lang.Exception
 import java.util.*
 
 data class GameHistory(
+        val gameID: Int,
+        val adminID: Int,
         val players: List<Player>,
         val bounds: Area,
         val events: List<GameEvent>) : Serializable {
@@ -34,7 +36,7 @@ data class GameHistory(
                 if (event is LocationEvent) tmpArea.increase(event.location) else tmpArea
             })
 
-            return GameHistory(players, gameArea, events)
+            return GameHistory(game.id, game.adminID, players, gameArea, events)
         }
     }
 }

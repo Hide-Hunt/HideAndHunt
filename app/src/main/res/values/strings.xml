@@ -66,4 +66,7 @@
     <string name="replay_button_text">Replay</string>
     <string name="stop_button_text">Stop</string>
     <string name="speed_label">Speed</string>
+    <string name="replay_loading_error">Replay loading error</string>
+    <string name="missing_replay_path_parameter">Missing replay path parameter</string>
+    <string name="file_not_found">File not found %s</string>
 </resources>

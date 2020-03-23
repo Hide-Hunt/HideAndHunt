@@ -37,7 +37,9 @@ class MainActivity : AppCompatActivity() {
             it.putExtra("repoFactory", repositoryFactory)
         }
 
-        buttonToActivity(binding.replayButton, ReplayActivity::class.java)
+        buttonToActivity(binding.replayButton, ReplayActivity::class.java) {
+            it.putExtra(ReplayActivity.REPLAY_PATH_ARG, "0.game")
+        }
         buttonToActivity(binding.loginButton, LoginActivity::class.java)
     }
 }
