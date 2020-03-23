@@ -16,7 +16,9 @@ import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.replay.game_event.CatchEvent
 import ch.epfl.sdp.replay.game_event.LocationEvent
 import ch.epfl.sdp.replay.steps.*
-import ch.epfl.sdp.toLatLong
+import ch.epfl.sdp.utils.toBoundingBox
+import ch.epfl.sdp.utils.toLatLong
+import org.mapsforge.core.util.LatLongUtils.zoomForBounds
 import org.mapsforge.map.android.graphics.AndroidBitmap
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import org.mapsforge.map.android.util.AndroidUtil
@@ -88,8 +90,11 @@ class ReplayFragment : Fragment() {
             val center = viewModel.trackedPlayer.value?.let { playerID ->
                 history.players[playerID].lastKnownLocation
             } ?: history.bounds.center
+
             mapView.setCenter(center.toLatLong())
-            mapView.setZoomLevel(17.toByte())
+            binding.root.post {
+                mapView.setZoomLevel(zoomForBounds(mapView.dimension, history.bounds.toBoundingBox(), mapView.model.displayModel.tileSize))
+            }
         } catch (e: Exception) {
             Toast.makeText(context, "Error while loading the map", Toast.LENGTH_LONG).show()
             e.printStackTrace()

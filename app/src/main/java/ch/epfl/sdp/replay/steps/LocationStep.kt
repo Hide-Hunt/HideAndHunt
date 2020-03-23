@@ -1,7 +1,7 @@
 package ch.epfl.sdp.replay.steps
 
 import ch.epfl.sdp.game.data.Location
-import ch.epfl.sdp.toLatLong
+import ch.epfl.sdp.utils.toLatLong
 import org.mapsforge.map.layer.overlay.Marker
 
 class LocationStep(private val overlay: Marker, private val prevLoc: Location, private val nextLoc: Location) : ReplayStep {
