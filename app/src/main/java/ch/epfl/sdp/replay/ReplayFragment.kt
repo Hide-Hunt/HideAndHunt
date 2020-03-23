@@ -18,12 +18,16 @@ import ch.epfl.sdp.replay.game_event.LocationEvent
 import ch.epfl.sdp.replay.steps.*
 import ch.epfl.sdp.utils.toBoundingBox
 import ch.epfl.sdp.utils.toLatLong
+import org.mapsforge.core.graphics.Color
+import org.mapsforge.core.graphics.Paint
+import org.mapsforge.core.graphics.Style
 import org.mapsforge.core.util.LatLongUtils.zoomForBounds
 import org.mapsforge.map.android.graphics.AndroidBitmap
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import org.mapsforge.map.android.util.AndroidUtil
 import org.mapsforge.map.datastore.MapDataStore
 import org.mapsforge.map.layer.overlay.Marker
+import org.mapsforge.map.layer.overlay.Polyline
 import org.mapsforge.map.layer.renderer.TileRendererLayer
 import org.mapsforge.map.reader.MapFile
 import org.mapsforge.map.rendertheme.InternalRenderTheme
@@ -37,6 +41,7 @@ class ReplayFragment : Fragment() {
     private val viewModel: ReplayViewModel by activityViewModels()
     private lateinit var history: GameHistory
     private val playerMarkers = HashMap<Int, Marker>()
+    private val playerPaths = HashMap<Int, Polyline>() // TODO merge this with playerMarkers
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -101,12 +106,26 @@ class ReplayFragment : Fragment() {
         }
     }
 
+    private fun createPaint(color: Int, strokeWidth: Int, style: Style?): Paint {
+        val paint: Paint = AndroidGraphicFactory.INSTANCE.createPaint()
+        paint.color = color
+        paint.strokeWidth = strokeWidth.toFloat()
+        paint.setStyle(style)
+        return paint
+    }
+
     private fun playersInit(lastPos: HashMap<Int, Location>, predatorIcon: AndroidBitmap, preyIcon: AndroidBitmap) {
         for (player in history.players) {
             val loc = player.lastKnownLocation ?: history.bounds.center
             lastPos[player.id] = loc
             val icon = if (player is Predator) predatorIcon else preyIcon
             playerMarkers[player.id] = Marker(loc.toLatLong(), icon, 0, 0).also {
+                binding.map.layerManager.layers.add(it)
+            }
+            playerPaths[player.id] = Polyline(createPaint(
+                    AndroidGraphicFactory.INSTANCE.createColor(Color.BLUE),
+                    (8 * binding.map.model.displayModel.scaleFactor).toInt(),
+                    Style.STROKE), AndroidGraphicFactory.INSTANCE).also {
                 binding.map.layerManager.layers.add(it)
             }
         }
@@ -127,7 +146,7 @@ class ReplayFragment : Fragment() {
             val step = events.map { event ->
                 when (event) {
                     is LocationEvent ->
-                        LocationStep(playerMarkers[event.playerID]!!, lastPos[event.playerID]!!, event.location)
+                        LocationStep(playerMarkers[event.playerID]!!, playerPaths[event.playerID]!!, lastPos[event.playerID]!!, event.location)
                                 .also { lastPos[event.playerID] = event.location }
 
                     is CatchEvent -> SetBitmapStep(playerMarkers[event.preyID]!!, caughtIcon)

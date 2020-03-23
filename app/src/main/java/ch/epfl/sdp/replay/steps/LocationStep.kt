@@ -3,15 +3,24 @@ package ch.epfl.sdp.replay.steps
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.utils.toLatLong
 import org.mapsforge.map.layer.overlay.Marker
+import org.mapsforge.map.layer.overlay.Polyline
 
-class LocationStep(private val overlay: Marker, private val prevLoc: Location, private val nextLoc: Location) : ReplayStep {
+class LocationStep(
+        private val marker: Marker,
+        private val path: Polyline,
+        private val prevLoc: Location,
+        private val nextLoc: Location) : ReplayStep {
     override fun execute() {
-        overlay.latLong = nextLoc.toLatLong()
-        overlay.requestRedraw()
+        marker.latLong = nextLoc.toLatLong()
+        marker.requestRedraw()
+        path.addPoint(marker.latLong)
+        path.requestRedraw()
     }
 
     override fun undo() {
-        overlay.latLong = prevLoc.toLatLong()
-        overlay.requestRedraw()
+        marker.latLong = prevLoc.toLatLong()
+        marker.requestRedraw()
+        path.latLongs.removeAt(path.latLongs.size-1)
+        path.requestRedraw()
     }
 }

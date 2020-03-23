@@ -8,16 +8,19 @@ class GameReplayController(private val initialTimestamp: Int, private val histor
     fun goToTime(timeTarget: Int) {
         maxOf(timeTarget, initialTimestamp).let {
             // Forward
-            while (it > timeCursor) {
-                nextSecond()
-            }
+            if (it > timeCursor) {
+                while (it > timeCursor) {
+                    nextSecond()
+                }
+                history[timeCursor - initialTimestamp].execute()
+            } else {
+                // Backward
+                while (it < timeCursor) {
+                    prevSecond()
+                }
 
-            // Backward
-            while (it < timeCursor) {
-                prevSecond()
+                history[timeCursor - initialTimestamp].undo()
             }
-
-            history[timeCursor - initialTimestamp].execute()
         }
     }
 
