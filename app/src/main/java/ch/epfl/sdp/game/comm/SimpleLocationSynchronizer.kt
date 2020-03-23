@@ -17,7 +17,7 @@ class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerI
             override fun onPublish(topic: String, payload: ByteArray) {
                 val channel = topic.substring(topicOffset)
                 if (channel == "catch") {
-                    val catch = CatchOuterClass.Catch.parseFrom(payload)
+                    val catch = CatchEventOuterClass.CatchEvent.parseFrom(payload)
                     listener?.onPreyCatches(catch.predatorID, catch.preyID)
                 } else {
                     try {
@@ -31,24 +31,17 @@ class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerI
     }
 
     override fun updateOwnLocation(location: Location) {
-        val loc = LocationOuterClass.Location.newBuilder()
+        val payload = LocationOuterClass.Location.newBuilder()
                 .setLatitude(location.latitude)
                 .setLongitude(location.longitude)
-                .build()
-        val locEvent = LocationEventOuterClass.LocationEvent.newBuilder().setLocation(loc).build()
-        val payload = GameEventOuterClass.GameEvent.newBuilder()
-                .setLocationEvent(locEvent)
                 .build()
         pubSub.publish("$gameID/$ownPlayerID", payload.toByteArray())
     }
 
     override fun declareCatch(playerID: Int) {
-        val catchEvent = CatchEventOuterClass.CatchEvent.newBuilder()
+        val payload = CatchEventOuterClass.CatchEvent.newBuilder()
                 .setPredatorID(ownPlayerID)
                 .setPreyID(playerID)
-                .build()
-        val payload = GameEventOuterClass.GameEvent.newBuilder()
-                .setCatchEvent(catchEvent)
                 .build()
         pubSub.publish("$gameID/catch", payload.toByteArray())
     }
