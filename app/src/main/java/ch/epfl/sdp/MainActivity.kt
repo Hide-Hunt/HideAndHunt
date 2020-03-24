@@ -10,13 +10,19 @@ import ch.epfl.sdp.db.IRepoFactory
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
-import ch.epfl.sdp.replay.ReplayActivity
+import ch.epfl.sdp.replay.IReplayRepository
+import ch.epfl.sdp.replay.ManageReplaysActivity
+import ch.epfl.sdp.replay.viewer.ReplayActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val repositoryFactory = object : IRepoFactory {
         override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
             return MockGlobalLobbyRepository()
+        }
+
+        override fun makeReplyRepository(): IReplayRepository {
+            TODO("Not yet implemented")
         }
     }
 
@@ -37,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             it.putExtra("repoFactory", repositoryFactory)
         }
 
-        buttonToActivity(binding.replayButton, ReplayActivity::class.java) {
+        buttonToActivity(binding.replayButton, ManageReplaysActivity::class.java) {
             it.putExtra(ReplayActivity.REPLAY_PATH_ARG, "0.game")
         }
         buttonToActivity(binding.loginButton, LoginActivity::class.java)

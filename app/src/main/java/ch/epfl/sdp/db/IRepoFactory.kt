@@ -1,6 +1,7 @@
 package ch.epfl.sdp.db
 
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
+import ch.epfl.sdp.replay.IReplayRepository
 import java.io.Serializable
 
 /**
@@ -10,5 +11,6 @@ import java.io.Serializable
 interface IRepoFactory : Serializable {
 
     fun makeGlobalLobbyRepository(): IGlobalLobbyRepository
+    fun makeReplyRepository(): IReplayRepository
 
 }
