@@ -1,4 +1,4 @@
-package ch.epfl.sdp.replay
+package ch.epfl.sdp.replay.viewer
 
 import ch.epfl.sdp.replay.steps.ReplayStep
 

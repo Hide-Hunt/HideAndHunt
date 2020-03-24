@@ -1,4 +1,4 @@
-package ch.epfl.sdp.replay
+package ch.epfl.sdp.replay.viewer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,8 +13,9 @@ import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.FragmentReplayMapBinding
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Predator
-import ch.epfl.sdp.replay.game_event.CatchEvent
-import ch.epfl.sdp.replay.game_event.LocationEvent
+import ch.epfl.sdp.replay.game_history.GameHistory
+import ch.epfl.sdp.replay.game_history.CatchEvent
+import ch.epfl.sdp.replay.game_history.LocationEvent
 import ch.epfl.sdp.replay.steps.*
 import ch.epfl.sdp.utils.toBoundingBox
 import ch.epfl.sdp.utils.toLatLong

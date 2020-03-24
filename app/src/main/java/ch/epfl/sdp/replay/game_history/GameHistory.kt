@@ -1,15 +1,12 @@
-package ch.epfl.sdp.replay
+package ch.epfl.sdp.replay.game_history
 
 import ch.epfl.sdp.game.comm.GameOuterClass
 import ch.epfl.sdp.game.data.*
-import ch.epfl.sdp.replay.game_event.GameEvent
-import ch.epfl.sdp.replay.game_event.LocationEvent
 import ch.epfl.sdp.utils.protoToGameEvent
 import ch.epfl.sdp.utils.protoToPlayer
 import java.io.InputStream
 import java.io.Serializable
 import java.lang.Exception
-import java.util.*
 
 data class GameHistory(
         val gameID: Int,

@@ -4,7 +4,7 @@ import ch.epfl.sdp.game.comm.GameEventOuterClass
 import ch.epfl.sdp.game.comm.GameOuterClass
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.*
-import ch.epfl.sdp.replay.game_event.*
+import ch.epfl.sdp.replay.game_history.*
 
 
 fun GameEventOuterClass.GameEvent.protoToGameEvent() : GameEvent {

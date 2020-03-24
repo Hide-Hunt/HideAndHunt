@@ -1,10 +1,11 @@
-package ch.epfl.sdp.replay
+package ch.epfl.sdp.replay.viewer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.ActivityReplayBinding
+import ch.epfl.sdp.replay.game_history.GameHistory
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import java.io.File
 import java.lang.Exception
