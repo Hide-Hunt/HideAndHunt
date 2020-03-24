@@ -5,6 +5,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.epfl.sdp.R
+import ch.epfl.sdp.game.PlayerFaction
 import org.junit.Test
 
 class PlayerParametersFragmentTest {
@@ -13,10 +14,10 @@ class PlayerParametersFragmentTest {
     fun testFactionListen() {
         val scenario = launchFragmentInContainer<PlayerParametersFragment>()
         var callbackCalled = false
-        val defaultValue = PlayerParametersFragment.Faction.PREDATOR
+        val defaultValue = PlayerFaction.PREDATOR
         var isValueCorrect = false
         val listener = object : PlayerParametersFragment.OnFactionChangeListener {
-            override fun onFactionChange(newFaction: PlayerParametersFragment.Faction) {
+            override fun onFactionChange(newFaction: PlayerFaction) {
                 callbackCalled = true
                 isValueCorrect = newFaction == defaultValue
             }
@@ -31,10 +32,10 @@ class PlayerParametersFragmentTest {
         val scenario = launchFragmentInContainer<PlayerParametersFragment>()
         var callbackCalled = false
         var callNb = 0
-        val defaultValue = PlayerParametersFragment.Faction.PREDATOR
+        val defaultValue = PlayerFaction.PREDATOR
         var isValueCorrect = false
         val listener = object : PlayerParametersFragment.OnFactionChangeListener {
-            override fun onFactionChange(newFaction: PlayerParametersFragment.Faction) {
+            override fun onFactionChange(newFaction: PlayerFaction) {
                 isValueCorrect = if (callNb == 0)
                     newFaction == defaultValue
                 else {

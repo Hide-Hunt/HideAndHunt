@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.R
+import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.data.Participation
-import ch.epfl.sdp.lobby.PlayerParametersFragment
 import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
 
 /**
@@ -21,7 +21,7 @@ class GameLobbyAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameLobbyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.game_lobby_player_cell,parent,false)
-        return GameLobbyViewHolder(view)
+        return GameLobbyViewHolder(view,playerId,adminId)
     }
 
 
@@ -31,34 +31,35 @@ class GameLobbyAdapter(
 
     override fun onBindViewHolder(holder: GameLobbyViewHolder, position: Int) {
         val player = players[position]
-        val pid = player.user.uid
-        holder.display(player.user.name, factionToString(player.faction), isReadyToString(player.ready),
-                pid == adminId, pid == playerId)
+        holder.display(player)
     }
 
-    private  fun  isReadyToString(isReady : Boolean) : String {
-        return if (isReady) "Ready"
-        else "Not Ready"
-    }
+    /**
+     * View holder for players in the game lobby
+     */
+    class GameLobbyViewHolder(itemView: View,
+                              private var playerId : Int, private var adminId: Int) : RecyclerView.ViewHolder(itemView) {
 
-    private  fun  factionToString(faction : PlayerParametersFragment.Faction) : String {
-        return if (faction == PlayerParametersFragment.Faction.PREY) "PREY"
-        else "PREDATOR"
-    }
+        fun display(participation: Participation)  {
 
-    class GameLobbyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun display(name : String, faction : String, isReady : String,
-                    displayAdminLogo : Boolean, changePlayerColor : Boolean)  {
-
-            itemView.player_faction.text = faction
-            itemView.player_name.text = name
-            itemView.player_is_ready.text = isReady
-            if (displayAdminLogo) itemView.admin_logo.setImageResource(R.drawable.star_icon)
+            itemView.player_faction.text = factionToString(participation.faction)
+            itemView.player_name.text = participation.user.name
+            itemView.player_is_ready.text = isReadyToString(participation.ready)
+            if (adminId == participation.user.uid) itemView.admin_logo.setImageResource(R.drawable.star_icon)
             else itemView.admin_logo.setImageResource(0)
-            if (changePlayerColor)itemView.setBackgroundColor(Color.GRAY)
+            if (playerId == participation.user.uid)itemView.setBackgroundColor(Color.GRAY)
             else itemView.setBackgroundColor(Color.LTGRAY)
 
+        }
+
+        private  fun  factionToString(faction : PlayerFaction) : String {
+            return if (faction == PlayerFaction.PREY) "PREY"
+            else "PREDATOR"
+        }
+
+        private  fun  isReadyToString(isReady : Boolean) : String {
+            return if (isReady) "Ready"
+            else "Not Ready"
         }
 
     }

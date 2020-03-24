@@ -1,6 +1,7 @@
 package ch.epfl.sdp.lobby.global
 
 import ch.epfl.sdp.db.Callback
+import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
@@ -10,11 +11,11 @@ import java.util.*
 
 class MockGlobalLobbyRepository : IGlobalLobbyRepository {
 
-    private val participation1 = listOf<Participation>(Participation(User("JeanMichel", 42), false, "FFCA", PlayerParametersFragment.Faction.PREY))
+    private val participation1 = listOf<Participation>(Participation(User("JeanMichel", 42), false, "FFCA", PlayerFaction.PREY))
     private val participation2 = listOf<Participation>(
-            Participation(User("George Kittle", 85), true, "CAFE", PlayerParametersFragment.Faction.PREY),
-            Participation(User("Nick Bosa", 97), true, "0A0A", PlayerParametersFragment.Faction.PREDATOR),
-            Participation(User("Richard Sherman", 25), true, "C0BA", PlayerParametersFragment.Faction.PREDATOR)
+            Participation(User("George Kittle", 85), true, "CAFE", PlayerFaction.PREY),
+            Participation(User("Nick Bosa", 97), true, "0A0A", PlayerFaction.PREDATOR),
+            Participation(User("Richard Sherman", 25), true, "C0BA", PlayerFaction.PREDATOR)
     )
     private var games = listOf<Game>(
             Game(1, "Classical Game in Geneva", "Alex",
