@@ -73,7 +73,7 @@ class GameLobbyActivity : AppCompatActivity() , SwipeRefreshLayout.OnRefreshList
                 }
 
                 repository.getGameId { gid ->
-                    intent.putExtra("initialTime", game_duration.toLong())
+                    intent.putExtra("initialTime", game_duration.toLong() * 1000L)
                     intent.putExtra("playerID", 0) //TODO: User.uid.toLong(10) but what if uid is "" ?
                     intent.putExtra("gameID", gid)
                     //TODO: Fetch MQTT URI from somewhere ? and add to the intent
