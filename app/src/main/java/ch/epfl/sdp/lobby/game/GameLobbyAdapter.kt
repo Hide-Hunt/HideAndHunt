@@ -12,9 +12,12 @@ import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
 
 /**
  * Adapter for the game lobby recyclerView
+ * @param participations list of player participations
+ * @param playerId current player's id
+ * @param adminId  game admin'is id
  */
 class GameLobbyAdapter(
-        private var players : List<Participation>,
+        private var participations : List<Participation>,
         private var playerId : Int, private var adminId: Int) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
 
 
@@ -26,16 +29,19 @@ class GameLobbyAdapter(
 
 
     override fun getItemCount(): Int {
-        return players.size
+        return participations.size
     }
 
     override fun onBindViewHolder(holder: GameLobbyViewHolder, position: Int) {
-        val player = players[position]
+        val player = participations[position]
         holder.display(player)
     }
 
     /**
      * View holder for players in the game lobby
+     * @param itemView viewHolder's view for the cell
+     * @param playerId current player's id
+     * @param adminId  game admin'is id
      */
     class GameLobbyViewHolder(itemView: View,
                               private var playerId : Int, private var adminId: Int) : RecyclerView.ViewHolder(itemView) {
