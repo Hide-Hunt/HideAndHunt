@@ -47,15 +47,16 @@ class GameLobbyAdapter(
                               private var playerId : Int, private var adminId: Int) : RecyclerView.ViewHolder(itemView) {
 
         fun display(participation: Participation)  {
-
+            //set text views
             itemView.player_faction.text = factionToString(participation.faction)
             itemView.player_name.text = participation.user.name
             itemView.player_is_ready.text = isReadyToString(participation.ready)
+            //set admin logo
             if (adminId == participation.user.uid) itemView.admin_logo.setImageResource(R.drawable.star_icon)
             else itemView.admin_logo.setImageResource(0)
+            //set cell background
             if (playerId == participation.user.uid)itemView.setBackgroundColor(Color.GRAY)
             else itemView.setBackgroundColor(Color.LTGRAY)
-
         }
 
         private  fun  factionToString(faction : PlayerFaction) : String {
