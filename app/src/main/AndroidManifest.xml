@@ -27,7 +27,6 @@
             android:label="@string/title_activity_prey"
             android:theme="@style/FullscreenNoTitle"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".authentication.LoginActivity" />
         <activity
             android:name=".game.PredatorActivity"
             android:label="@string/title_activity_predator"
@@ -38,6 +37,8 @@
 
         <activity android:name=".lobby.LobbyActivity" />
         <activity android:name=".lobby.game.GameLobbyActivity"/>
+        <activity android:name=".authentication.LoginActivity" />
+        <activity android:name=".user.ProfileActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

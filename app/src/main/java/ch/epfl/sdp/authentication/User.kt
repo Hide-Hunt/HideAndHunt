@@ -4,5 +4,5 @@ object User {
     var pseudo: String = ""
     var email: String = ""
     var uid: String = ""
-    var connected = false
+    @Volatile var connected = false
 }
