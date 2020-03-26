@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityLobbyBinding
+import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.PredatorActivity
 import ch.epfl.sdp.game.PreyActivity
 import ch.epfl.sdp.game.data.Player
@@ -13,7 +14,7 @@ import ch.epfl.sdp.game.data.PreyState
 
 class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionChangeListener {
     private lateinit var lobbyBinding: ActivityLobbyBinding
-    private var myFaction: PlayerParametersFragment.Faction = PlayerParametersFragment.Faction.PREDATOR
+    private var myFaction: PlayerFaction = PlayerFaction.PREDATOR
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +42,7 @@ class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionCha
 
         setContentView(lobbyBinding.root)
         lobbyBinding.startGameButton.setOnClickListener {
-            val intent = if (myFaction == PlayerParametersFragment.Faction.PREDATOR) {
+            val intent = if (myFaction == PlayerFaction.PREDATOR) {
                 Intent(this@LobbyActivity, PredatorActivity::class.java)
             } else {
                 Intent(this@LobbyActivity, PreyActivity::class.java)
@@ -56,7 +57,7 @@ class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionCha
         }
     }
 
-    override fun onFactionChange(newFaction: PlayerParametersFragment.Faction) {
+    override fun onFactionChange(newFaction: PlayerFaction) {
         myFaction = newFaction
     }
 }
