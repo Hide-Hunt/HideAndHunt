@@ -8,8 +8,7 @@ import androidx.test.rule.GrantPermissionRule
 import ch.epfl.sdp.DebugActivity
 import ch.epfl.sdp.game.data.Location
 import org.junit.*
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.runner.RunWith
 
 
@@ -40,9 +39,11 @@ class LocationHandlerTest {
         }
 
         override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
+            anyCalled("playerUpdate")
         }
 
         override fun onPreyCatches(predatorID: Int, preyID: Int) {
+            anyCalled("preyCatch")
         }
     }
 
@@ -108,5 +109,18 @@ class LocationHandlerTest {
         assertTrue(called)
     }
 
+    @Test
+    fun enableRequestIsApplied() {
+        val intent = Intent()
+        val listener = makeListener { Unit }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val activity = activityRule.launchActivity(intent)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
+        activity.runOnUiThread {
+            handler.enableRequestUpdates()
+            handler.onRequestPermissionsResult(10, arrayOf(""), IntArray(0))
+        }
+        assertFalse(activity.isDestroyed)
+    }
 
 }

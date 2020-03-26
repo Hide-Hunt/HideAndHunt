@@ -1,58 +1,55 @@
 package ch.epfl.sdp
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import ch.epfl.sdp.databinding.ActivityDebugBinding
-import ch.epfl.sdp.game.comm.LocationSynchronizer
-import ch.epfl.sdp.game.comm.MQTTRealTimePubSub
-import ch.epfl.sdp.game.comm.RealTimePubSub
-import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
+import ch.epfl.sdp.game.data.Location
+import ch.epfl.sdp.game.location.ILocationListener
+import ch.epfl.sdp.game.location.LocationHandler
 
-class DebugActivity : AppCompatActivity() {
+class DebugActivity : AppCompatActivity(), ILocationListener {
     private lateinit var binding: ActivityDebugBinding
 
-    private lateinit var mLocationManager: LocationManager
     private var mUpdateNb = 0
     private var mPlayerID = -1
 
-    private lateinit var pubSub: RealTimePubSub
-    private lateinit var locationSynchronizer: LocationSynchronizer
+    private lateinit var locationHandler: LocationHandler
 
-    private val mLocationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            mUpdateNb++
-            binding.updateNb.text = mUpdateNb.toString()
-            binding.location.text = String.format("%s,  %s", location.latitude, location.longitude)
-            locationSynchronizer.updateOwnLocation(ch.epfl.sdp.game.data.Location(location.latitude, location.longitude))
-        }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-            Toast.makeText(applicationContext, "onStatusChanged: $status", Toast.LENGTH_LONG).show()
-        }
-
-        override fun onProviderEnabled(provider: String) {
-            binding.GPSDisabledLabel.visibility = View.INVISIBLE
-        }
-
-        override fun onProviderDisabled(provider: String) {
-            binding.GPSDisabledLabel.visibility = View.VISIBLE
-        }
+    override fun onLocationChanged(newLocation: Location) {
+        mUpdateNb++
+        binding.updateNb.text = mUpdateNb.toString()
+        binding.location.text = String.format("%s,  %s", newLocation.latitude, newLocation.longitude)
     }
 
+    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+        Toast.makeText(applicationContext, "onStatusChanged: $status", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onProviderEnabled(provider: String) {
+        binding.GPSDisabledLabel.visibility = View.INVISIBLE
+    }
+
+    override fun onProviderDisabled(provider: String) {
+        binding.GPSDisabledLabel.visibility = View.VISIBLE
+    }
+
+    override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
+    }
+
+    override fun onPreyCatches(predatorID: Int, preyID: Int) {
+    }
+
+
     private fun initializeTracking() {
-        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (locationHandler.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             binding.GPSDisabledLabel.visibility = View.INVISIBLE
         } else {
             binding.GPSDisabledLabel.visibility = View.VISIBLE
@@ -60,10 +57,10 @@ class DebugActivity : AppCompatActivity() {
         binding.tracking.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.playerID.isEnabled = false
-                enableRequestUpdates()
+                locationHandler.enableRequestUpdates()
             } else {
                 binding.playerID.isEnabled = true
-                disableRequestUpdates()
+                locationHandler.removeUpdates()
             }
         }
     }
@@ -73,9 +70,9 @@ class DebugActivity : AppCompatActivity() {
             if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return@OnClickListener
             }
-            val last = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val last = locationHandler.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             if (last != null) {
-                locationSynchronizer.updateOwnLocation(ch.epfl.sdp.game.data.Location(last.latitude, last.longitude))
+                locationHandler.locationSynchronizer.updateOwnLocation(Location(last.latitude, last.longitude))
             } else {
                 Toast.makeText(applicationContext, "No last known location", Toast.LENGTH_SHORT).show()
             }
@@ -102,8 +99,7 @@ class DebugActivity : AppCompatActivity() {
         binding = ActivityDebugBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        pubSub = MQTTRealTimePubSub(this, null)
-        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationHandler = LocationHandler(this, this, 0, 0, null)
 
         initializeTracking()
         initializePlayerIDTextChangedListener()
@@ -111,30 +107,6 @@ class DebugActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
-            enableRequestUpdates()
-        }
-    }
-
-    private fun enableRequestUpdates() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
-                return
-            }
-        }
-        locationSynchronizer = SimpleLocationSynchronizer(0, mPlayerID, pubSub)
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME.toLong(), LOCATION_REFRESH_DISTANCE.toFloat(), mLocationListener)
-    }
-
-    private fun disableRequestUpdates() {
-        mLocationManager.removeUpdates(mLocationListener)
-    }
-
-    companion object {
-        private const val LOCATION_REFRESH_DISTANCE = 5
-        private const val LOCATION_REFRESH_TIME = 1000
-        private const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10
+        locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
