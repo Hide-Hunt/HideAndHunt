@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityGameCreationBinding
+import ch.epfl.sdp.lobby.game.IGameLobbyRepository
 import java.sql.Time
 import javax.inject.Inject
 
