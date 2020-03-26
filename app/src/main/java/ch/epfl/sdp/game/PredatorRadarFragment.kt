@@ -33,12 +33,12 @@ class PredatorRadarFragment : Fragment() {
     fun updateInfos(mdm: Float, rangePopulation: HashMap<Int, Int>) {
         binding.txtClosestPredator.text = getString(R.string.closest_predator).format(mdm)
         
-        var range = 0
+        var range = 100
         var count = 0
         for(r in 0 until ranges.size - 1) {
-            if(mdm > ranges[r] && mdm < ranges[r + 1]) {
-                range = r + 2
-                for(r2 in 0..(r + 2)) {
+            if(mdm < ranges[r]) {
+                range = r + 1
+                for(r2 in 0..(r + 1)) {
                     count += rangePopulation[ranges[r2]] ?: 0
                 }
                 break
@@ -46,7 +46,7 @@ class PredatorRadarFragment : Fragment() {
         }
 
         binding.imgPredatorDistance.setImageResource(
-                when(range - 2) {
+                when(range - 1) {
                     0 -> R.drawable.ic_predator_distance_0
                     1 -> R.drawable.ic_predator_distance_1
                     2 -> R.drawable.ic_predator_distance_2

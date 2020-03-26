@@ -26,48 +26,48 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation(User("Neymar Jr", 26), false, "C000", PlayerFaction.PREDATOR))
 
 
-
-    override fun getGameId(cb : Callback<Int>) {
+    override fun getGameId(cb: Callback<Int>) {
         cb(gameId)
     }
 
-    override fun getGameName(cb : Callback<String>) {
+    override fun getGameName(cb: Callback<String>) {
         cb(gameName)
     }
 
-    override fun getGameDuration(cb : Callback<Int>) {
+    override fun getGameDuration(cb: Callback<Int>) {
         cb(gameDuration)
     }
 
-    override fun getParticipations(cb : Callback<List<Participation>>) {
+    override fun getParticipations(cb: Callback<List<Participation>>) {
         //add players to show refreshing works
-        if (counter != 0) players.add(Participation(User("Player$counter",10 + counter),
-                false,"0ABC", PlayerFaction.PREY))
+        if (counter != 0) players.add(Participation(User("Player$counter", 10 + counter),
+                false, "0ABC", PlayerFaction.PREY))
         ++counter
         cb(players)
     }
 
-    override fun getPlayers(cb : Callback<List<Player>>) {
+    override fun getPlayers(cb: Callback<List<Player>>) {
         var mPlayers: List<Player> = ArrayList()
-        for(p in players) {
-            mPlayers = if(p.faction == PlayerFaction.PREY) mPlayers + Prey(p.user.uid, p.tag) else mPlayers + Predator(p.user.uid)
+        for (p in players) {
+            mPlayers = if (p.faction == PlayerFaction.PREY) mPlayers + Prey(p.user.uid, p.tag) else mPlayers + Predator(p.user.uid)
         }
         cb(mPlayers)
     }
 
-    override fun getAdminId(cb : Callback<Int>) {
+    override fun getAdminId(cb: Callback<Int>) {
         cb(players[1].user.uid)
     }
 
-    override fun changePlayerReady(uid : Int) {
+    override fun changePlayerReady(uid: Int) {
         for (player in players) {
             if (player.user.uid == uid) player.ready = !player.ready
         }
     }
 
-    override fun  setPlayerFaction(uid : Int, faction : PlayerFaction) {
+    override fun setPlayerFaction(uid: Int, faction: PlayerFaction) {
         players.forEach { participation ->
-            if(uid == participation.user.uid) participation.faction = faction }
+            if (uid == participation.user.uid) participation.faction = faction
+        }
     }
 
 }

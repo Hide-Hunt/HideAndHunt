@@ -24,7 +24,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     private var validGame: Boolean = false
 
     val players: HashMap<Int, Player> = HashMap()
-    val ranges: List<Int> = listOf(0, 5, 10, 20, 50, Integer.MAX_VALUE)
+    val ranges: List<Int> = listOf(5, 10, 20, 50, Integer.MAX_VALUE)
     val rangePopulation: HashMap<Int, Int> = HashMap()
     private var mostDangerousManDistance: Float = Float.MAX_VALUE
 
