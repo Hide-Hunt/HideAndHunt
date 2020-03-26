@@ -26,7 +26,7 @@ class LocationHandler(val activity: AppCompatActivity, val listener: ILocationLi
     val lastKnownLocation: Location = Location(0.0, 0.0)
     private val locationSynchronizer: LocationSynchronizer =  SimpleLocationSynchronizer(gameID, playerID, MQTTRealTimePubSub(context, URI))
     private val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    private val locationListener: LocationListener = object : LocationListener {
+    val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: android.location.Location) {
             lastKnownLocation.latitude = location.latitude
             lastKnownLocation.longitude = location.longitude
