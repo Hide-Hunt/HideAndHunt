@@ -37,8 +37,8 @@ class PredatorRadarFragment : Fragment() {
         var count = 0
         for(r in 0 until ranges.size - 1) {
             if(mdm > ranges[r] && mdm < ranges[r + 1]) {
-                range = r + 1
-                for(r2 in 0..(r+1)) {
+                range = r + 2
+                for(r2 in 0..(r + 2)) {
                     count += rangePopulation[ranges[r2]] ?: 0
                 }
                 break
@@ -46,7 +46,7 @@ class PredatorRadarFragment : Fragment() {
         }
 
         binding.imgPredatorDistance.setImageResource(
-                when(range) {
+                when(range - 2) {
                     0 -> R.drawable.ic_predator_distance_0
                     1 -> R.drawable.ic_predator_distance_1
                     2 -> R.drawable.ic_predator_distance_2

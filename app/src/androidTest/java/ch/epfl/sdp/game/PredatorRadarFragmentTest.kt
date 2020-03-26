@@ -17,7 +17,7 @@ class PredatorRadarFragmentTest {
 
     @Test
     fun closestPredatorDistanceIsCorrect() {
-        val fragmentArgs = Bundle().apply { putSerializable("ranges", ArrayList(listOf(5,10,20,50,Integer.MAX_VALUE))) }
+        val fragmentArgs = Bundle().apply { putSerializable("ranges", ArrayList(listOf(0,5,10,20,50,Integer.MAX_VALUE))) }
         val scenario = launchFragmentInContainer<PredatorRadarFragment>(fragmentArgs)
         val rangePop = HashMap<Int, Int>()
         rangePop[5] = 1
@@ -32,7 +32,7 @@ class PredatorRadarFragmentTest {
 
     @Test
     fun predatorsAroundAreCorrect() {
-        val fragmentArgs = Bundle().apply { putSerializable("ranges", ArrayList(listOf(5,10,20,50,Integer.MAX_VALUE))) }
+        val fragmentArgs = Bundle().apply { putSerializable("ranges", ArrayList(listOf(0,5,10,20,50,Integer.MAX_VALUE))) }
         val scenario = launchFragmentInContainer<PredatorRadarFragment>(fragmentArgs)
         val rangePop = HashMap<Int, Int>()
         rangePop[5] = 1
@@ -47,7 +47,7 @@ class PredatorRadarFragmentTest {
 
     @Test
     fun correctDistanceLogoIsDisplayed() {
-        val fragmentArgs = Bundle().apply { putSerializable("ranges", ArrayList(listOf(5,10,20,50,Integer.MAX_VALUE))) }
+        val fragmentArgs = Bundle().apply { putSerializable("ranges", ArrayList(listOf(0,5,10,20,50,Integer.MAX_VALUE))) }
         val scenario = launchFragmentInContainer<PredatorRadarFragment>(fragmentArgs)
         val rangePop = HashMap<Int, Int>()
         scenario.onFragment { fragment ->
