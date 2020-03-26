@@ -11,7 +11,14 @@ import androidx.fragment.app.Fragment
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.FragmentGameTimerBinding
 
+/**
+ * Fragment handling the game timer
+ */
 class GameTimerFragment : Fragment() {
+
+    /**
+     * Listener for actions to perform when the timer's time is up
+     */
     interface GameTimeOutListener {
         fun onTimeOut()
     }
@@ -32,6 +39,7 @@ class GameTimerFragment : Fragment() {
         arguments?.let {
             object : CountDownTimer(it.getLong(ARG_TIME), COUNTDOWN_INTERVAL.toLong()) {
                 override fun onTick(millisUntilFinished: Long) {
+                    //update displayed time
                     textView.text = TimerHelper.millisToTimeString(millisUntilFinished)
                 }
 

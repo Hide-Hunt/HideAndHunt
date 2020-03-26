@@ -1,5 +1,8 @@
 package ch.epfl.sdp.game
 
+/**
+ * Static helper for the GameTimerFragment
+ */
 object TimerHelper {
     @JvmStatic
     fun millisToTimeString(millis: Long): String {

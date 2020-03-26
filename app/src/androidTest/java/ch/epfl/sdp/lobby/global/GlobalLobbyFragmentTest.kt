@@ -23,7 +23,7 @@ import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.db.IRepoFactory
 import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.game.data.GameState
-import ch.epfl.sdp.lobby.LobbyActivity
+import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import org.junit.*
 import org.junit.runner.RunWith
 import java.util.*
@@ -102,6 +102,6 @@ class GlobalLobbyFragmentTest {
         launchFragmentInContainer<GlobalLobbyFragment>(baseBundle)
         val recyclerView: ViewInteraction = onView(withId(R.id.global_lobby_recycler))
         recyclerView.perform(actionOnItemAtPosition<GlobalLobbyAdapter.MyViewHolder>(0, click()))
-        intended(IntentMatchers.hasComponent(LobbyActivity::class.java.name))
+        intended(IntentMatchers.hasComponent(GameLobbyActivity::class.java.name))
     }
 }
