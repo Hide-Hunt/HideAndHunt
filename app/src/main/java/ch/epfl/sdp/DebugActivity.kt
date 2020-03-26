@@ -106,8 +106,8 @@ class DebugActivity : AppCompatActivity() {
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         initializeTracking()
-        initializePlayerIDTextChangedListener();
-        initializeLastLocationOnClickListener();
+        initializePlayerIDTextChangedListener()
+        initializeLastLocationOnClickListener()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {

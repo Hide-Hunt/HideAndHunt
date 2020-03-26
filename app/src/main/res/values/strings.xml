@@ -63,4 +63,5 @@
     <string name="closest_predator">The closest predator is %.2g meters away</string>
     <string name="predator_around">There are %d predators less than %d meters away</string>
     <string name="you_are_a_prey">You are a prey, Hide !</string>
+    <string name="distance">distance</string>
 </resources>

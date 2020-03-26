@@ -1,9 +1,7 @@
 package ch.epfl.sdp.game
 
-import android.app.Activity
 import android.content.Intent
 import ch.epfl.sdp.game.data.Player
-import java.lang.IllegalArgumentException
 
 class GameIntentUnpacker {
 

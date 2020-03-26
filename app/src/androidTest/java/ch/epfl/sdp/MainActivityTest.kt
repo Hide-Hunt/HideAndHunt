@@ -8,7 +8,6 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.epfl.sdp.authentication.LoginActivity
-import ch.epfl.sdp.lobby.LobbyActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import org.junit.After
 import org.junit.Before

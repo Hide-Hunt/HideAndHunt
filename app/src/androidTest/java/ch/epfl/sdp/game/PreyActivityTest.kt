@@ -8,9 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import ch.epfl.sdp.EspressoTestsMatchers.withDrawable
-import ch.epfl.sdp.NFCTestHelper
 import ch.epfl.sdp.R
-import ch.epfl.sdp.game.NFCTagHelper.byteArrayFromHexString
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.game.data.Prey

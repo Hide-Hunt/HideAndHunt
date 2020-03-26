@@ -27,5 +27,6 @@
         android:id="@+id/img_predator_distance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/distance"
         android:src="@drawable/ic_predator_distance_3" />
 </LinearLayout>

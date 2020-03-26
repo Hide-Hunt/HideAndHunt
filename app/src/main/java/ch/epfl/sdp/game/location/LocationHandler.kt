@@ -14,7 +14,7 @@ import ch.epfl.sdp.game.comm.MQTTRealTimePubSub
 import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
 import ch.epfl.sdp.game.data.Location
 
-class LocationHandler(val activity: AppCompatActivity, val listener: ILocationListener, val gameID: Int, val playerID: Int, val URI: String?) {
+class LocationHandler(val activity: AppCompatActivity, val listener: ILocationListener, val gameID: Int, val playerID: Int, private val URI: String?) {
 
     companion object {
         private const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10

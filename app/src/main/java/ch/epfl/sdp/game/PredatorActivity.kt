@@ -1,31 +1,20 @@
 package ch.epfl.sdp.game
 
-import android.Manifest
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.LocationListener
-import android.location.LocationManager
 import android.nfc.NfcAdapter
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import ch.epfl.sdp.databinding.ActivityPredatorBinding
 import ch.epfl.sdp.game.TargetSelectionFragment.OnTargetSelectedListener
-import ch.epfl.sdp.game.comm.LocationSynchronizer
-import ch.epfl.sdp.game.comm.MQTTRealTimePubSub
-import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Player
 import ch.epfl.sdp.game.data.Prey
 import ch.epfl.sdp.game.data.PreyState
 import ch.epfl.sdp.game.location.ILocationListener
 import ch.epfl.sdp.game.location.LocationHandler
-import kotlinx.android.synthetic.main.activity_debug.*
 
 
 class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocationListener {

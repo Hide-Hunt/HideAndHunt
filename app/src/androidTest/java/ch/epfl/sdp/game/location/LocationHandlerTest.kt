@@ -1,19 +1,15 @@
 package ch.epfl.sdp.game.location
 
 import android.content.Intent
-import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import ch.epfl.sdp.DebugActivity
-import ch.epfl.sdp.game.PredatorActivity
 import ch.epfl.sdp.game.data.Location
-import ch.epfl.sdp.game.data.Predator
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
 import org.junit.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.runner.RunWith
 
 
@@ -26,7 +22,7 @@ class LocationHandlerTest {
     @Rule @JvmField
     val activityRule = ActivityTestRule(DebugActivity::class.java, false, false)
 
-    fun makeListener(anyCalled: (String) -> Unit): ILocationListener = object : ILocationListener {
+    private fun makeListener(anyCalled: (String) -> Unit): ILocationListener = object : ILocationListener {
         override fun onLocationChanged(newLocation: Location) {
             anyCalled("location")
         }
@@ -50,17 +46,13 @@ class LocationHandlerTest {
         }
     }
 
-    fun createMockLocation(lat: Double, lon: Double): android.location.Location {
+    private fun createMockLocation(lat: Double, lon: Double): android.location.Location {
         val mockLocation = android.location.Location("mock_test_gps")
         mockLocation.latitude = lat
         mockLocation.longitude = lon
         mockLocation.altitude = 0.0
         mockLocation.time = System.currentTimeMillis()
         mockLocation.accuracy = 5f
-        mockLocation.verticalAccuracyMeters = 5f
-        mockLocation.bearing = 5f
-        mockLocation.bearingAccuracyDegrees = 1f
-        mockLocation.speedAccuracyMetersPerSecond = 1f
         mockLocation.elapsedRealtimeNanos = 1L
         return mockLocation
     }
@@ -76,7 +68,7 @@ class LocationHandlerTest {
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val activity = activityRule.launchActivity(intent)
-        val handler: LocationHandler = LocationHandler(activity, listener, 0, 0, null)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
         handler.locationListener.onLocationChanged(createMockLocation(10.0, 11.0))
         assertEquals(10.0, handler.lastKnownLocation.latitude, 0.1)
         assertEquals(11.0, handler.lastKnownLocation.longitude, 0.1)
@@ -94,7 +86,7 @@ class LocationHandlerTest {
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val activity = activityRule.launchActivity(intent)
-        val handler: LocationHandler = LocationHandler(activity, listener, 0, 0, null)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
         handler.locationListener.onProviderEnabled("")
         assertTrue(called)
 
@@ -111,7 +103,7 @@ class LocationHandlerTest {
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val activity = activityRule.launchActivity(intent)
-        val handler: LocationHandler = LocationHandler(activity, listener, 0, 0, null)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
         handler.locationListener.onProviderDisabled("")
         assertTrue(called)
     }

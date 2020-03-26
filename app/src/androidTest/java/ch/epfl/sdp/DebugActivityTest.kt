@@ -3,11 +3,10 @@ package ch.epfl.sdp
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
-import ch.epfl.sdp.game.PreyActivity
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.not
 import org.junit.Rule
 import org.junit.Test
 

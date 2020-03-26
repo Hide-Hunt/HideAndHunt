@@ -1,6 +1,5 @@
 package ch.epfl.sdp.game
 
-import android.location.LocationListener
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
