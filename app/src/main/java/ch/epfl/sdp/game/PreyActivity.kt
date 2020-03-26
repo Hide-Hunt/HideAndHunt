@@ -69,6 +69,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     }
 
     private fun updateThreat() {
+        resetRange()
         for(p in players.values) {
             if(p is Predator && p.lastKnownLocation != null) {
                 val dist = p.lastKnownLocation!!.distanceTo(locationHandler.lastKnownLocation)
@@ -94,7 +95,6 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     }
 
     override fun onLocationChanged(newLocation: Location) {
-        resetRange()
         updateThreat()
     }
 
