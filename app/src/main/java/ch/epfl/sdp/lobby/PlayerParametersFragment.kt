@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import ch.epfl.sdp.databinding.FragmentPlayerParametersBinding
+import ch.epfl.sdp.game.PlayerFaction
 
 /**
  * A simple [Fragment] subclass.
@@ -15,13 +16,8 @@ import ch.epfl.sdp.databinding.FragmentPlayerParametersBinding
  */
 class PlayerParametersFragment : Fragment() {
 
-    enum class Faction {
-        PREY,
-        PREDATOR,
-    }
-
     interface OnFactionChangeListener {
-        fun onFactionChange(newFaction: Faction)
+        fun onFactionChange(newFaction: PlayerFaction)
     }
 
     var listener: OnFactionChangeListener? = null
@@ -53,9 +49,9 @@ class PlayerParametersFragment : Fragment() {
 
         binding.switchFaction.setOnClickListener {
             if (binding.switchFaction.isChecked) {
-                listener?.onFactionChange(Faction.PREY)
+                listener?.onFactionChange(PlayerFaction.PREY)
             } else {
-                listener?.onFactionChange(Faction.PREDATOR)
+                listener?.onFactionChange(PlayerFaction.PREDATOR)
             }
         }
         return binding.root
