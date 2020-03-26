@@ -23,12 +23,12 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
     private var validGame: Boolean = false
 
-    private val players: HashMap<Int, Player> = HashMap()
-    private val ranges: List<Int> = listOf(5, 10, 20, 50, Integer.MAX_VALUE)
-    private val rangePopulation: HashMap<Int, Int> = HashMap()
+    val players: HashMap<Int, Player> = HashMap()
+    val ranges: List<Int> = listOf(5, 10, 20, 50, Integer.MAX_VALUE)
+    val rangePopulation: HashMap<Int, Int> = HashMap()
     private var mostDangerousManDistance: Float = Float.MAX_VALUE
 
-    private lateinit var locationHandler: LocationHandler
+    lateinit var locationHandler: LocationHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,13 +69,16 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     }
 
     private fun updateThreat() {
+        for(i in ranges.indices) {
+            rangePopulation[ranges[i]] = 0
+        }
         for(p in players.values) {
             if(p is Predator && p.lastKnownLocation != null) {
                 val dist = p.lastKnownLocation!!.distanceTo(locationHandler.lastKnownLocation)
                 if(dist < mostDangerousManDistance) {
                     mostDangerousManDistance = dist
                 }
-                for(i in ranges.indices) {
+                for(i in ranges.indices - 1) {
                     if(dist <= ranges[i]) {
                         rangePopulation[ranges[i]] = ((rangePopulation[ranges[i]]) ?: 0) + 1
                         break
