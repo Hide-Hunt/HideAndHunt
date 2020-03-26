@@ -69,9 +69,6 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     }
 
     private fun updateThreat() {
-        for(i in ranges.indices) {
-            rangePopulation[ranges[i]] = 0
-        }
         for(p in players.values) {
             if(p is Predator && p.lastKnownLocation != null) {
                 val dist = p.lastKnownLocation!!.distanceTo(locationHandler.lastKnownLocation)
@@ -90,7 +87,14 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
         predatorRadarFragment.updateInfos(mostDangerousManDistance, rangePopulation)
     }
 
+    private fun resetRange() {
+        for(i in ranges.indices) {
+            rangePopulation[ranges[i]] = 0
+        }
+    }
+
     override fun onLocationChanged(newLocation: Location) {
+        resetRange()
         updateThreat()
     }
 
