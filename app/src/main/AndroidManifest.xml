@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".lobby.GameCreationActivity" />
+        <activity android:name=".lobby.global.GlobalLobbyActivity" />
         <activity
             android:name=".game.PreyActivity"
             android:screenOrientation="sensorLandscape"
@@ -29,22 +30,24 @@
             android:label="@string/title_activity_prey"
             android:theme="@style/FullscreenNoTitle"
             tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".authentication.LoginActivity" />
         <activity
             android:name=".game.PredatorActivity"
+            android:label="@string/title_activity_predator"
             android:screenOrientation="sensorLandscape"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullscreenNoTitle"
             tools:ignore="LockedOrientationActivity" />
 
         <activity android:name=".lobby.LobbyActivity" />
-
+        <activity android:name=".lobby.game.GameLobbyActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <service android:name="org.eclipse.paho.android.service.MqttService" />
     </application>
 </manifest>

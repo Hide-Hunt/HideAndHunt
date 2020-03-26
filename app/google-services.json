@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "835559017131",
+    "firebase_url": "https://hidehunt-71e41.firebaseio.com",
+    "project_id": "hidehunt-71e41",
+    "storage_bucket": "hidehunt-71e41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835559017131:android:78dfea708ce5bea7a845ee",
+        "android_client_info": {
+          "package_name": "ch.epfl.sdp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835559017131-ul0vpdqdj5a6j2panmnspqlst4kjkssk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sdp",
+            "certificate_hash": "a4354fe39a744731dbc0b663acd78c103619f143"
+          }
+        },
+        {
+          "client_id": "835559017131-4u0278oleu1hiilg7p58ha79pgat7lbo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbur7NkxtISi51v_yxH9LCIWr-TZ-0dTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835559017131-4u0278oleu1hiilg7p58ha79pgat7lbo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
