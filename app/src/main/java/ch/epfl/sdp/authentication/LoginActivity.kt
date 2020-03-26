@@ -33,19 +33,19 @@ class LoginActivity : AppCompatActivity() {
 
     private fun register(email:Editable, password:Editable, pseudo:Editable, connector:IUserConnector) {
         connector.register(email.toString(), password.toString(), pseudo.toString())
-        Thread.sleep(2000)
-        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-        startActivity(intent)
+        testConnection()
     }
 
     private fun signIn(email:Editable, password:Editable, connector: IUserConnector) {
         connector.connect(email.toString(), password.toString())
-        Thread.sleep(2000)
-        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-        startActivity(intent)
+        testConnection()
     }
 
-    private fun changeDummyText(text:String) {
-        binding.loginTextResult.text = text
+    private fun testConnection() {
+        Thread.sleep(2000)
+        if(User.connected) {
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
