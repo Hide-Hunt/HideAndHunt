@@ -9,7 +9,7 @@ interface ApplicationComponent : IApplicationComponent {
     fun inject(activity: GameCreationActivity)
 }
 
-@Component(modules = [RepoModule::class])
+@Component(modules = [FakeRepoModule::class])
 interface TestApplicationComponent : IApplicationComponent {
     fun inject(activity: GameCreationActivity)
 }
