@@ -33,7 +33,7 @@ class PredatorRadarFragment : Fragment() {
     fun updateInfos(mdm: Float, rangePopulation: HashMap<Int, Int>) {
         binding.txtClosestPredator.text = getString(R.string.closest_predator).format(mdm)
         
-        var range = 100
+        var range = ranges.size - 1
         var count = 0
         for(r in 0 until ranges.size - 1) {
             if(mdm < ranges[r]) {

@@ -1,5 +1,8 @@
 package ch.epfl.sdp.game
 
+import android.app.PendingIntent
+import android.content.Intent
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -99,6 +102,21 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     override fun onLocationChanged(newLocation: Location) {
         updateThreat()
     }
+
+    override fun onResume() {
+        super.onResume()
+        locationHandler.enableRequestUpdates()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+        locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        locationHandler.removeUpdates()
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
