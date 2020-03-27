@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import ch.epfl.sdp.databinding.FragmentPredatorRadarBinding
 
 import ch.epfl.sdp.R
+import kotlin.math.min
 
 private const val ARG_RANGES = "ranges"
 
@@ -37,8 +38,8 @@ class PredatorRadarFragment : Fragment() {
         var count = 0
         for(r in 0 until ranges.size) {
             if(mdm < ranges[r]) {
-                range = r + 1
-                for(r2 in 0..r) {
+                range = min(r + 1, ranges.size - 1)
+                for(r2 in 0..(r+1)) {
                     count += rangePopulation[ranges[r2]] ?: 0
                 }
                 break
@@ -54,7 +55,7 @@ class PredatorRadarFragment : Fragment() {
                 }
         )
 
-        binding.txtPredatorAround.text = getString(R.string.predator_around).format(count, ranges[range - 1])
+        binding.txtPredatorAround.text = getString(R.string.predator_around).format(count, ranges[range])
     }
 
     override fun onDestroyView() {

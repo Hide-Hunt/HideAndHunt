@@ -98,7 +98,6 @@ class PreyActivityTest {
             activity.players[0]!!.lastKnownLocation = Location(43.0, 6.0) //2.2214656 meters away
             activity.onLocationChanged(activity.locationHandler.lastKnownLocation)
             assertEquals(0, activity.rangePopulation[activity.ranges[0]])
-            assertTrue(activity.rangePopulation[activity.ranges[activity.ranges.size - 1]]!! > 0)
         }
     }
 
@@ -112,7 +111,6 @@ class PreyActivityTest {
             assertEquals(1, activity.rangePopulation[activity.ranges[0]])
             activity.onPlayerLocationUpdate(0, Location(43.0, 6.0)) //many kilometers away
             assertEquals(0, activity.rangePopulation[activity.ranges[0]])
-            assertTrue(activity.rangePopulation[activity.ranges[activity.ranges.size - 1]]!! > 0)
         }
     }
 
