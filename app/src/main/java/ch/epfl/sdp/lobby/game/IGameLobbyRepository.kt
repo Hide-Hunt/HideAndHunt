@@ -8,19 +8,19 @@ import ch.epfl.sdp.game.data.Player
 interface IGameLobbyRepository {
 
 
-    fun getGameId(cb : Callback<Int>)
+    fun getGameId(cb: Callback<Int>)
 
-    fun getGameName(cb : Callback<String>)
+    fun getGameName(cb: Callback<String>)
 
-    fun getGameDuration(cb : Callback<Int>)
+    fun getGameDuration(cb: Callback<Int>)
 
-    fun getPlayers(cb : Callback<List<Player>>)
+    fun getPlayers(cb: Callback<List<Player>>)
 
-    fun getParticipations(cb : Callback<List<Participation>>)
+    fun getParticipations(cb: Callback<List<Participation>>)
 
-    fun getAdminId(cb : Callback<Int>)
+    fun getAdminId(cb: Callback<Int>)
 
-    fun changePlayerReady(uid : Int)
+    fun changePlayerReady(uid: Int)
 
-    fun setPlayerFaction(uid : Int, faction : PlayerFaction)
+    fun setPlayerFaction(uid: Int, faction: PlayerFaction)
 }

@@ -31,5 +31,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
         }
+        binding.btnDebug.setOnClickListener {
+            startActivity(Intent(this@MainActivity, DebugActivity::class.java))
+        }
     }
 }

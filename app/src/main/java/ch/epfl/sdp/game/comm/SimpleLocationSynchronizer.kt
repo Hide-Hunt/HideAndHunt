@@ -3,7 +3,7 @@ package ch.epfl.sdp.game.comm
 import ch.epfl.sdp.game.data.Location
 
 class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerID: Int, private val pubSub: RealTimePubSub) : LocationSynchronizer {
-    private var listener : LocationSynchronizer.PlayerUpdateListener? = null
+    var listener : LocationSynchronizer.PlayerUpdateListener? = null
     private val topicOffset = gameID.toString().length + 1// gameID + char('/')
 
     init {

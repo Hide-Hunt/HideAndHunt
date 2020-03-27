@@ -6,7 +6,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.protobuf'
 
 jacoco {
-    toolVersion = "0.8.4"
+    toolVersion = "0.8.5"
 }
 android {
     compileSdkVersion 29
@@ -104,7 +104,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     androidTestImplementation "com.android.support.test.espresso:espresso-core:3.1.0"
     androidTestImplementation "com.android.support.test:runner:1.0.2"
-    debugImplementation 'androidx.fragment:fragment-testing:1.2.2'
+    debugImplementation 'androidx.fragment:fragment-testing:1.2.3'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }
 
