@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import ch.epfl.sdp.DebugActivity
+import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
 import ch.epfl.sdp.game.data.Location
 import org.junit.*
 import org.junit.Assert.*
@@ -97,6 +98,22 @@ class LocationHandlerTest {
     fun providerDisableIsApplied() {
         var called = false
         val listener = makeListener { func ->
+            if(func == "status") {
+                called = true
+            }
+        }
+        val intent = Intent()
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val activity = activityRule.launchActivity(intent)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
+        handler.locationListener.onStatusChanged("gps", 0, Bundle())
+        assertTrue(called)
+    }
+
+    @Test
+    fun statusChangeIsApplied() {
+        var called = false
+        val listener = makeListener { func ->
             if(func == "provDisabled") {
                 called = true
             }
@@ -121,6 +138,18 @@ class LocationHandlerTest {
             handler.onRequestPermissionsResult(10, arrayOf(""), IntArray(0))
         }
         assertFalse(activity.isDestroyed)
+    }
+
+    @Test
+    fun stopIsApplied() {
+        val intent = Intent()
+        val listener = makeListener { Unit }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val activity = activityRule.launchActivity(intent)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
+        assertNotEquals(null, (handler.locationSynchronizer as SimpleLocationSynchronizer).listener)
+        handler.stop()
+        assertEquals(null, (handler.locationSynchronizer as SimpleLocationSynchronizer).listener)
     }
 
 }

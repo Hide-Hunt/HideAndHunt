@@ -48,6 +48,9 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     private fun loadPlayers(lst: List<Player>) {
         for (p: Player in lst) {
             players[p.id] = p
+            if(p is Predator) {
+                locationHandler.subscribeToPlayer(p.id)
+            }
         }
     }
 
