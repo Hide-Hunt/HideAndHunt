@@ -15,7 +15,7 @@ class GameCreationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGameCreationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         binding.createButton.setOnClickListener {
             val intent = Intent(this@GameCreationActivity, GameLobbyActivity::class.java)
             startActivity(intent)

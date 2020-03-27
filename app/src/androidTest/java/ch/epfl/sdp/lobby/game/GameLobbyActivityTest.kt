@@ -29,7 +29,7 @@ class GameLobbyActivityTest {
         scenario.onActivity { a ->
             size = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
         }
-        assertEquals(10,size)
+        assertEquals(11,size)
 
         onView(ViewMatchers.withId(R.id.faction_selection)).perform(click())
         onView(ViewMatchers.withId(R.id.player_list)).perform(swipeDown())
