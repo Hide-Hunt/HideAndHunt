@@ -51,6 +51,7 @@ class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionCha
             intent.putExtra("gameID", 0)
             intent.putExtra("playerID", 0)
             intent.putExtra("players", players)
+            intent.putExtra("initialTime", 2 * 60 * 1000L)
 
             startActivity(intent)
         }

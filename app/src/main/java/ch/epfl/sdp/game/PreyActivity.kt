@@ -1,132 +1,153 @@
 package ch.epfl.sdp.game
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.os.Build
+import android.app.PendingIntent
+import android.content.Intent
+import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import ch.epfl.sdp.databinding.ActivityPreyBinding
-import ch.epfl.sdp.game.comm.LocationSynchronizer
-import ch.epfl.sdp.game.comm.MQTTRealTimePubSub
-import ch.epfl.sdp.game.comm.RealTimePubSub
-import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
+import ch.epfl.sdp.game.data.*
+import ch.epfl.sdp.game.location.ILocationListener
+import ch.epfl.sdp.game.location.LocationHandler
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-class PreyActivity : AppCompatActivity() {
+class PreyActivity : AppCompatActivity(), ILocationListener {
+
     private lateinit var binding: ActivityPreyBinding
+    private lateinit var preyFragment: PreyFragment
+    private lateinit var gameTimerFragment: GameTimerFragment
+    private lateinit var predatorRadarFragment: PredatorRadarFragment
 
-    private lateinit var mLocationManager: LocationManager
-    private var mUpdateNb = 0
-    private var mPlayerID = -1
+    private lateinit var gameData: GameIntentUnpacker.GameIntentData
+    private var validGame: Boolean = false
 
-    private lateinit var pubSub: RealTimePubSub
-    private lateinit var locationSynchronizer: LocationSynchronizer
+    val players: HashMap<Int, Player> = HashMap()
+    val ranges: List<Int> = listOf(10, 20, 50, 100, 100000)
+    val rangePopulation: HashMap<Int, Int> = HashMap()
+    private var mostDangerousManDistance: Float = 10e+9f
 
-    private val mLocationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            mUpdateNb++
-            binding.updateNb.text = mUpdateNb.toString()
-            binding.location.text = String.format("%s,  %s", location.latitude, location.longitude)
-            locationSynchronizer.updateOwnLocation(ch.epfl.sdp.game.data.Location(location.latitude, location.longitude))
-        }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-            Toast.makeText(applicationContext, "onStatusChanged: $status", Toast.LENGTH_LONG).show()
-        }
-
-        override fun onProviderEnabled(provider: String) {
-            binding.GPSDisabledLabel.visibility = View.INVISIBLE
-        }
-
-        override fun onProviderDisabled(provider: String) {
-            binding.GPSDisabledLabel.visibility = View.VISIBLE
-        }
-    }
+    lateinit var locationHandler: LocationHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPreyBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        pubSub = MQTTRealTimePubSub(this, null)
-        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            binding.GPSDisabledLabel.visibility = View.INVISIBLE
-        } else {
-            binding.GPSDisabledLabel.visibility = View.VISIBLE
+        val gameDataAndValidity = GameIntentUnpacker.unpack(intent)
+        validGame = gameDataAndValidity.second
+        if(!validGame) {
+            finish()
+            return
         }
-        binding.tracking.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                binding.playerID.isEnabled = false
-                enableRequestUpdates()
-            } else {
-                binding.playerID.isEnabled = true
-                disableRequestUpdates()
+        gameData = gameDataAndValidity.first
+        locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
+        loadPlayers(gameData.playerList)
+        loadFragments()
+    }
+
+    private fun loadPlayers(lst: List<Player>) {
+        for (p: Player in lst) {
+            players[p.id] = p
+            if(p is Predator) {
+                locationHandler.subscribeToPlayer(p.id)
             }
         }
-        binding.playerID.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                try {
-                    mPlayerID = s.toString().toInt()
-                    binding.tracking.isEnabled = s.isNotEmpty()
-                } catch (ignored: NumberFormatException) {
-                    binding.tracking.isEnabled = false
+    }
+
+    private fun loadFragments() {
+        val fm = supportFragmentManager
+        val fragmentTransaction = fm.beginTransaction()
+
+        gameTimerFragment = GameTimerFragment.create(gameData.initialTime)
+        fragmentTransaction.add(binding.frmTimerPrey.id, gameTimerFragment)
+
+        preyFragment = PreyFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
+        fragmentTransaction.add(binding.frmPreyRemaining.id, preyFragment)
+
+        predatorRadarFragment = PredatorRadarFragment.newInstance(ArrayList(ranges))
+        fragmentTransaction.add(binding.frmPredatorRadar.id, predatorRadarFragment)
+
+        fragmentTransaction.commit()
+    }
+
+    private fun updateThreat() {
+        resetRange()
+        for(p in players.values) {
+            if(p is Predator && p.lastKnownLocation != null) {
+                val dist = p.lastKnownLocation!!.distanceTo(locationHandler.lastKnownLocation)
+                if(dist < mostDangerousManDistance) {
+                    mostDangerousManDistance = dist
+                }
+                for(i in ranges.indices) {
+                    if(dist <= ranges[i]) {
+                        rangePopulation[ranges[i]] = ((rangePopulation[ranges[i]]) ?: 0) + 1
+                        break
+                    }
                 }
             }
-        })
-        binding.repeatLastLocation.setOnClickListener(View.OnClickListener {
-            if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return@OnClickListener
-            }
-            val last = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            if (last != null) {
-                locationSynchronizer.updateOwnLocation(ch.epfl.sdp.game.data.Location(last.latitude, last.longitude))
-            } else {
-                Toast.makeText(applicationContext, "No last known location", Toast.LENGTH_SHORT).show()
-            }
-        })
+        }
+
+        predatorRadarFragment.updateInfos(mostDangerousManDistance, rangePopulation)
+    }
+
+    private fun resetRange() {
+        mostDangerousManDistance = 10e+9f
+        for(i in ranges.indices) {
+            rangePopulation[ranges[i]] = 0
+        }
+    }
+
+    override fun onLocationChanged(newLocation: Location) {
+        updateThreat()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        locationHandler.enableRequestUpdates()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
-            enableRequestUpdates()
+        locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        locationHandler.removeUpdates()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (validGame) {
+            locationHandler.stop()
         }
     }
 
-    private fun enableRequestUpdates() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
-                return
+    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+    }
+
+    override fun onProviderEnabled(provider: String) {
+    }
+
+    override fun onProviderDisabled(provider: String) {
+    }
+
+    override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
+        players[playerID]?.lastKnownLocation = location
+        updateThreat()
+    }
+
+    override fun onPreyCatches(predatorID: Int, preyID: Int) {
+        players[preyID]?.let {
+            if (it is Prey && it.state == PreyState.ALIVE) {
+                it.state = PreyState.DEAD
+                preyFragment.setPreyState(preyID, PreyState.DEAD)
+                Toast.makeText(this@PreyActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
             }
         }
-        locationSynchronizer = SimpleLocationSynchronizer(0, mPlayerID, pubSub)
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME.toLong(), LOCATION_REFRESH_DISTANCE.toFloat(), mLocationListener)
     }
 
-    private fun disableRequestUpdates() {
-        mLocationManager.removeUpdates(mLocationListener)
-    }
-
-    companion object {
-        private const val LOCATION_REFRESH_DISTANCE = 5
-        private const val LOCATION_REFRESH_TIME = 1000
-        private const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10
-    }
 }

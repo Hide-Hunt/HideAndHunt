@@ -8,6 +8,7 @@ import org.eclipse.paho.client.mqttv3.*
 class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : RealTimePubSub {
     private var listener: RealTimePubSub.OnPublishListener? = null
     private val mqttAndroidClient: MqttAndroidClient
+    private val pendingSub = ArrayList<String>()
 
     init {
         mqttAndroidClient = MqttAndroidClient(context, uri ?: SERVER_URI, CLIENT_ID)
@@ -49,6 +50,9 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
                     disconnectedBufferOptions.isPersistBuffer = false
                     disconnectedBufferOptions.isDeleteOldestMessages = false
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions)
+                    for(s in pendingSub) {
+                        subscribe(s)
+                    }
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
@@ -77,8 +81,8 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
     }
 
     override fun subscribe(topic: String) {
-        if (!mqttAndroidClient.isConnected) return
-        mqttAndroidClient.subscribe(topic, 0)
+        if (!mqttAndroidClient.isConnected) pendingSub.add(topic)
+        else mqttAndroidClient.subscribe(topic, 0)
     }
 
     override fun unsubscribe(topic: String) {
