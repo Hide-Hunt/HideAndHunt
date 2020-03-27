@@ -13,7 +13,7 @@
     <uses-feature android:name="android.hardware.nfc" />
 
     <application
-        android:name=".lobby.MyApplication"
+        android:name=".dagger.MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"

@@ -1,6 +1,8 @@
-package ch.epfl.sdp.lobby
+package ch.epfl.sdp.dagger
 
 import android.app.Application
+import ch.epfl.sdp.dagger.DaggerApplicationComponent
+import ch.epfl.sdp.dagger.DaggerTestApplicationComponent
 
 //The application Component must have the same lifecycle than the application
 open class MyApplication: Application(){
@@ -14,7 +16,7 @@ open class MyApplication: Application(){
 
 //The application Component must have the same lifecycle than the application
 class MyTestApplication: MyApplication(){
-    override fun initializeComponent(): TestApplicationComponent {
+    override fun initializeComponent(): ApplicationComponent {
         return DaggerTestApplicationComponent.create()!!
     }
 }

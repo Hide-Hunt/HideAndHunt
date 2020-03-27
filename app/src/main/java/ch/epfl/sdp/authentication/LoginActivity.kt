@@ -3,19 +3,19 @@ package ch.epfl.sdp.authentication
 import android.os.Bundle
 import android.text.Editable
 import androidx.appcompat.app.AppCompatActivity
+import ch.epfl.sdp.dagger.MyApplication
 import ch.epfl.sdp.databinding.ActivityLoginBinding
 import kotlinx.android.synthetic.main.activity_login.*
+import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private var connector:IUserConnector = FirebaseUserConnector()
-
-    fun setOtherConnector(con: IUserConnector) {
-        connector = con
-    }
+    @Inject lateinit var connector:IUserConnector
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // We have to handle the dependency injection before the call to super.onCreate
+        (applicationContext as MyApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)

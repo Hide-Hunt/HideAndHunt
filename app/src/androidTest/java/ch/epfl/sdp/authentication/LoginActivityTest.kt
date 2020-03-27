@@ -27,13 +27,13 @@ class LoginActivityTest {
 
     @Test
     fun canCreateActivityWithoutCrash() {
-        launchActivity<LoginActivity>().onActivity {activity -> activity.setOtherConnector(mockConnector)}
+        launchActivity<LoginActivity>()
         //onView(withId(R.id.loginSubmitButton)).perform(click())
     }
 
     @Test
     fun registeringNewUserWorksAndConnectsIt() {
-        launchActivity<LoginActivity>().onActivity {activity -> activity.setOtherConnector(mockConnector)}
+        launchActivity<LoginActivity>()
         onView(withId(R.id.userNameLogin)).perform(typeText("testNew@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("passwordNew"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.registerSubmitButton)).perform(click())
@@ -43,7 +43,7 @@ class LoginActivityTest {
 
     @Test
     fun registeringExistingUserFails() {
-        launchActivity<LoginActivity>().onActivity {activity -> activity.setOtherConnector(mockConnector)}
+        launchActivity<LoginActivity>()
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("password0"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.registerSubmitButton)).perform(click())
@@ -53,7 +53,7 @@ class LoginActivityTest {
 
     @Test
     fun rightLoginCredentialsAreAccepted() {
-        launchActivity<LoginActivity>().onActivity {activity -> activity.setOtherConnector(mockConnector)}
+        launchActivity<LoginActivity>()
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("password0"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.loginSubmitButton)).perform(click())
@@ -63,7 +63,7 @@ class LoginActivityTest {
 
     @Test
     fun wrongLoginCredentialsAreRejected() {
-        launchActivity<LoginActivity>().onActivity {activity -> activity.setOtherConnector(mockConnector)}
+        launchActivity<LoginActivity>()
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("fewewfwe"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.loginSubmitButton)).perform(click())
