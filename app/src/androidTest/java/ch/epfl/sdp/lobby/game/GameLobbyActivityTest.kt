@@ -38,6 +38,6 @@ class GameLobbyActivityTest {
         scenario.onActivity { a ->
             newSize = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
         }
-        assertEquals(11,newSize)
+        assertEquals(12,newSize)
     }
 }
