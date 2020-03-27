@@ -16,7 +16,6 @@ class GameCreationActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         binding.createButton.setOnClickListener {
-            //val lobbyRepo = LobbyRepo(binding.gameName.text, binding.gameDuration.text)
             val intent = Intent(this@GameCreationActivity, LobbyActivity::class.java)
             startActivity(intent)
         }
