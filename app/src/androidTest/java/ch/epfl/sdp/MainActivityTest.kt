@@ -12,4 +12,10 @@ class MainActivityTest {
         launchActivity<MainActivity>()
         onView(withId(R.id.playButton)).perform(click())
     }
+
+    @Test
+    fun loginActivityCanBeClicked() {
+        launchActivity<MainActivity>()
+        onView(withId(R.id.loginButton)).perform(click())
+    }
 }
