@@ -44,6 +44,8 @@
     <string name="gameCreation_duration">Duration</string>
     <string name="gameCreation_mode">Game mode</string>
     <string name="gameCreation_create">Create !</string>
+    <string name="gameCreation_placeholderName">Name</string>
+    <string name="gameCreation_placeholderDuration">120</string>
     <string-array name="gameCreation_gameModes">
         <item>Normal</item>
         <item>Battle Royal</item>

@@ -11,6 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.MainActivity
 import ch.epfl.sdp.lobby.LobbyActivity
 import ch.epfl.sdp.R
+import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,7 +27,7 @@ class GameCreationActivityTest {
     fun testFillFormAndSend() {
         launchActivity<GameCreationActivity>()
         Espresso.onView(ViewMatchers.withId(R.id.create_button)).perform(ViewActions.click())
-        intended(IntentMatchers.hasComponent(LobbyActivity::class.java.name))
+        intended(IntentMatchers.hasComponent(GameLobbyActivity::class.java.name))
     }
 
     @Test

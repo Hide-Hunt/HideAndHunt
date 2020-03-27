@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.databinding.ActivityGameCreationBinding
+import ch.epfl.sdp.lobby.game.GameLobbyActivity
 
 class GameCreationActivity : AppCompatActivity() {
 
@@ -16,7 +17,7 @@ class GameCreationActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         binding.createButton.setOnClickListener {
-            val intent = Intent(this@GameCreationActivity, LobbyActivity::class.java)
+            val intent = Intent(this@GameCreationActivity, GameLobbyActivity::class.java)
             startActivity(intent)
         }
     }
