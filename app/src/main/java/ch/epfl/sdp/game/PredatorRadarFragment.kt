@@ -35,10 +35,10 @@ class PredatorRadarFragment : Fragment() {
         
         var range = ranges.size - 1
         var count = 0
-        for(r in 0 until ranges.size - 1) {
+        for(r in 0 until ranges.size) {
             if(mdm < ranges[r]) {
                 range = r + 1
-                for(r2 in 0..(r + 1)) {
+                for(r2 in 0..r) {
                     count += rangePopulation[ranges[r2]] ?: 0
                 }
                 break
@@ -54,7 +54,7 @@ class PredatorRadarFragment : Fragment() {
                 }
         )
 
-        binding.txtPredatorAround.text = getString(R.string.predator_around).format(count, ranges[range])
+        binding.txtPredatorAround.text = getString(R.string.predator_around).format(count, ranges[range - 1])
     }
 
     override fun onDestroyView() {

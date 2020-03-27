@@ -26,9 +26,9 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     private var validGame: Boolean = false
 
     val players: HashMap<Int, Player> = HashMap()
-    val ranges: List<Int> = listOf(5, 10, 20, 50, Integer.MAX_VALUE)
+    val ranges: List<Int> = listOf(10, 20, 50, 100, 100000)
     val rangePopulation: HashMap<Int, Int> = HashMap()
-    private var mostDangerousManDistance: Float = Float.MAX_VALUE
+    private var mostDangerousManDistance: Float = 10e+9f
 
     lateinit var locationHandler: LocationHandler
 
@@ -81,7 +81,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
                 if(dist < mostDangerousManDistance) {
                     mostDangerousManDistance = dist
                 }
-                for(i in ranges.indices - 1) {
+                for(i in ranges.indices) {
                     if(dist <= ranges[i]) {
                         rangePopulation[ranges[i]] = ((rangePopulation[ranges[i]]) ?: 0) + 1
                         break
@@ -94,6 +94,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     }
 
     private fun resetRange() {
+        mostDangerousManDistance = 10e+9f
         for(i in ranges.indices) {
             rangePopulation[ranges[i]] = 0
         }
