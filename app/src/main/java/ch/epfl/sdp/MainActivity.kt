@@ -46,6 +46,9 @@ class MainActivity : AppCompatActivity() {
         buttonToActivity(binding.replayButton, ManageReplaysActivity::class.java) {
             it.putExtra(ReplayActivity.REPLAY_PATH_ARG, "0.game")
         }
+
+        buttonToActivity(binding.btnDebug, DebugActivity::class.java)
+
         buttonToActivity(binding.loginButton, LoginActivity::class.java)
     }
 }

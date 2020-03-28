@@ -1,8 +1,8 @@
 package ch.epfl.sdp.lobby.game
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.data.Participation
-import ch.epfl.sdp.lobby.PlayerParametersFragment
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -93,16 +93,16 @@ class MockGameLobbyRepositoryTest {
             players -> playerList = players
         }
 
-        glr.setPlayerFaction(playerList[1].user.uid, PlayerParametersFragment.Faction.PREDATOR)
+        glr.setPlayerFaction(playerList[1].user.uid, PlayerFaction.PREDATOR)
         glr.getParticipations {
             players -> playerList = players
         }
-        assertEquals(playerList[1].faction,PlayerParametersFragment.Faction.PREDATOR)
+        assertEquals(playerList[1].faction, PlayerFaction.PREDATOR)
 
-        glr.setPlayerFaction(playerList[1].user.uid, PlayerParametersFragment.Faction.PREY)
+        glr.setPlayerFaction(playerList[1].user.uid, PlayerFaction.PREY)
         glr.getParticipations {
             players -> playerList = players
         }
-        assertEquals(playerList[1].faction,PlayerParametersFragment.Faction.PREY)
+        assertEquals(playerList[1].faction, PlayerFaction.PREY)
     }
 }
