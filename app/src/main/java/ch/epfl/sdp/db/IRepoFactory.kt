@@ -11,6 +11,6 @@ import java.io.Serializable
 interface IRepoFactory : Serializable {
 
     fun makeGlobalLobbyRepository(): IGlobalLobbyRepository
-    fun makeReplyRepository(): IReplayRepository
+    fun makeReplayRepository(): IReplayRepository
 
 }

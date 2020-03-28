@@ -130,8 +130,8 @@ class ReplayMapFragment : Fragment() {
                 binding.map.layerManager.layers.add(it)
             }
             playerPaths[player.id] = Polyline(createPaint(
-                    AndroidGraphicFactory.INSTANCE.createColor(Color.BLUE),
-                    (8 * binding.map.model.displayModel.scaleFactor).toInt(),
+                    AndroidGraphicFactory.INSTANCE.createColor(Color.values().random()),
+                    (4 * binding.map.model.displayModel.scaleFactor).toInt(),
                     Style.STROKE), AndroidGraphicFactory.INSTANCE).also {
                 binding.map.layerManager.layers.add(it)
             }
@@ -167,6 +167,11 @@ class ReplayMapFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        binding.map.layerManager.layers.forEach {
+            if (it is TileRendererLayer) {
+                it.tileCache.purge()
+            }
+        }
         binding.map.destroyAll()
     }
 

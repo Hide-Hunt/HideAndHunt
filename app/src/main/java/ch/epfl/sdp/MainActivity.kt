@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             return MockGlobalLobbyRepository()
         }
 
-        override fun makeReplyRepository(): IReplayRepository {
+        override fun makeReplayRepository(): IReplayRepository {
             TODO("Not yet implemented")
         }
     }

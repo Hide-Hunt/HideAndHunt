@@ -68,6 +68,11 @@ class ReplayActivity : AppCompatActivity() {
         outState.putString(REPLAY_PATH_ARG, replayPath)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        AndroidGraphicFactory.clearResourceMemoryCache()
+    }
+
     companion object {
         const val REPLAY_PATH_ARG = "replay_path"
     }
