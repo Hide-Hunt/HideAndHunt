@@ -6,5 +6,4 @@ import java.io.File
 
 interface IReplayRepository {
     fun getAllGames(cb: Callback<List<ReplayInfo>>)
-    fun downloadReplay(gameID: Int, cb: Callback<File>)
 }

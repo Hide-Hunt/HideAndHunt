@@ -53,6 +53,7 @@ class ReplayInfoRecyclerViewAdapter(
             }
 
             holder.mView.date.text = DateFormat.getDateInstance().format(it.startTimestamp*1000)
+            holder.mView.replayStatus.setImageResource(if (it.localCopy) R.drawable.ic_saved else R.drawable.ic_download)
         }
 
         with(holder.mView) {

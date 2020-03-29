@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.databinding.FragmentReplayInfoListBinding
 import ch.epfl.sdp.db.IRepoFactory
 
@@ -21,7 +20,6 @@ class ReplayInfoListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewAdapter: ReplayInfoRecyclerViewAdapter
-    private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var repo: IReplayRepository
     var listener: OnListFragmentInteractionListener? = null
 
@@ -78,6 +76,14 @@ class ReplayInfoListFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         fun onListFragmentInteraction(game: ReplayInfo)
+    }
+
+    fun setDownloadedGame(gameID: Int) {
+        val index = viewAdapter.mValues.indexOfFirst { it.gameID == gameID }
+        if (index != -1) {
+            viewAdapter.mValues[index].localCopy = true
+            viewAdapter.notifyItemChanged(index)
+        }
     }
 
     companion object {

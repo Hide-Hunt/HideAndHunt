@@ -7,4 +7,5 @@ data class ReplayInfo(
         val startTimestamp: Long,
         val endTimestamp: Long,
         val winningFaction: Faction,
-        val localReplayPath: String?)
+        var localCopy: Boolean
+)
