@@ -37,6 +37,8 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/FullscreenNoTitle"
             tools:ignore="LockedOrientationActivity" />
+
+        <activity android:name=".lobby.GameCreationActivity"/>
         <activity android:name=".lobby.LobbyActivity" />
         <activity android:name=".lobby.game.GameLobbyActivity"/>
         <activity android:name=".MainActivity">
