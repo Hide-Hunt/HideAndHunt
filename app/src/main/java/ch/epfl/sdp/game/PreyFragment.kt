@@ -14,7 +14,7 @@ import ch.epfl.sdp.game.data.PreyState
 /**
  * A fragment representing a list of Items.
  */
-class PreyFragment : Fragment() {
+class  PreyFragment : Fragment() {
     // TODO use a ViewModel / Model to share this state with activity and other models
     private lateinit var preys: ArrayList<Prey>
     private lateinit var viewAdapter: PreyRecyclerViewAdapter

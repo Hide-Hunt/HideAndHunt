@@ -8,6 +8,7 @@ import ch.epfl.sdp.databinding.ActivityGameCreationBinding
 import ch.epfl.sdp.lobby.game.IGameLobbyRepository
 import java.sql.Time
 import javax.inject.Inject
+import ch.epfl.sdp.lobby.game.GameLobbyActivity
 
 class GameCreationActivity : AppCompatActivity() {
 
@@ -21,14 +22,13 @@ class GameCreationActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         binding = ActivityGameCreationBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
+
         binding.createButton.setOnClickListener {
-            //val lobbyRepo = LobbyRepo(binding.gameName.text, binding.gameDuration.text)
             val time = binding.gameDuration.text.toString()
             val timInMilliseconds: Long = time.toLong() * 60000
             val newGameID = lobbyRepo.createGame(binding.gameName.text.toString(), Time(timInMilliseconds))
-            val intent = Intent(this@GameCreationActivity, LobbyActivity::class.java)
+            val intent = Intent(this@GameCreationActivity, GameLobbyActivity::class.java)
             intent.putExtra("GameID", newGameID)
             startActivity(intent)
         }

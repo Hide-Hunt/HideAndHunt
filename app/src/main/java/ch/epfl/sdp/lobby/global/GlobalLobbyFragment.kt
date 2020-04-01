@@ -1,6 +1,5 @@
 package ch.epfl.sdp.lobby.global
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.databinding.FragmentGlobalLobbyBinding
 import ch.epfl.sdp.db.IRepoFactory
-import ch.epfl.sdp.game.data.Game
 
 class GlobalLobbyFragment : Fragment() {
 

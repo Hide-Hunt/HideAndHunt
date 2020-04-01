@@ -98,8 +98,9 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         gameLobbyBinding.leaveButton.setBackgroundColor(Color.RED)
     }
 
-    private fun setIntent(gameDuration : Long) {
+    private fun setIntent(gameDuration: Long) {
         gameLobbyBinding.startButton.setOnClickListener {
+            var pid = 23 //TODO: User.uid.toLong(10) but what if uid is "" ?
             val intent = if (myFaction == PlayerFaction.PREDATOR) {
                 Intent(this, PredatorActivity::class.java)
             } else {
@@ -107,8 +108,8 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             }
 
             repository.getGameId { gid ->
-                intent.putExtra("initialTime", gameDuration)
-                intent.putExtra("playerID", 0) //TODO: User.uid.toLong(10) but what if uid is "" ?
+                intent.putExtra("initialTime", gameDuration * 1000L)
+                intent.putExtra("playerID", pid)
                 intent.putExtra("gameID", gid)
                 //TODO: Fetch MQTT URI from somewhere ? and add to the intent
                 repository.getPlayers { pl ->
@@ -118,5 +119,4 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             }
         }
     }
-
 }
