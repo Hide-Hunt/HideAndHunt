@@ -4,14 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.authentication.User
+import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.db.IRepoFactory
+import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
 import ch.epfl.sdp.user.ProfileActivity
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -37,6 +39,13 @@ class MainActivity : AppCompatActivity() {
         binding.profileButton.setOnClickListener{
             val intent = Intent(this@MainActivity, ProfileActivity::class.java)
             startActivity(intent)
+        }
+        binding.newGameButton.setOnClickListener{
+            val intent = Intent(this@MainActivity, GameCreationActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnDebug.setOnClickListener {
+            startActivity(Intent(this@MainActivity, DebugActivity::class.java))
         }
         activateProfile()
     }

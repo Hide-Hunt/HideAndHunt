@@ -17,14 +17,14 @@ import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
  * @param adminId  game admin'is id
  */
 class GameLobbyAdapter(
-        private var participations : List<Participation>,
-        private var playerId : Int, private var adminId: Int) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
+        private var participations: List<Participation>,
+        private var playerId: Int, private var adminId: Int) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameLobbyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.game_lobby_player_cell,parent,false)
-        return GameLobbyViewHolder(view,playerId,adminId)
+        val view = inflater.inflate(R.layout.game_lobby_player_cell, parent, false)
+        return GameLobbyViewHolder(view, playerId, adminId)
     }
 
 
@@ -44,9 +44,9 @@ class GameLobbyAdapter(
      * @param adminId  game admin'is id
      */
     class GameLobbyViewHolder(itemView: View,
-                              private var playerId : Int, private var adminId: Int) : RecyclerView.ViewHolder(itemView) {
+                              private var playerId: Int, private var adminId: Int) : RecyclerView.ViewHolder(itemView) {
 
-        fun display(participation: Participation)  {
+        fun display(participation: Participation) {
             //set text views
             itemView.player_faction.text = factionToString(participation.faction)
             itemView.player_name.text = participation.user.name
@@ -55,16 +55,16 @@ class GameLobbyAdapter(
             if (adminId == participation.user.uid) itemView.admin_logo.setImageResource(R.drawable.star_icon)
             else itemView.admin_logo.setImageResource(0)
             //set cell background
-            if (playerId == participation.user.uid)itemView.setBackgroundColor(Color.GRAY)
+            if (playerId == participation.user.uid) itemView.setBackgroundColor(Color.GRAY)
             else itemView.setBackgroundColor(Color.LTGRAY)
         }
 
-        private  fun  factionToString(faction : PlayerFaction) : String {
+        private fun factionToString(faction: PlayerFaction): String {
             return if (faction == PlayerFaction.PREY) "PREY"
             else "PREDATOR"
         }
 
-        private  fun  isReadyToString(isReady : Boolean) : String {
+        private fun isReadyToString(isReady: Boolean): String {
             return if (isReady) "Ready"
             else "Not Ready"
         }

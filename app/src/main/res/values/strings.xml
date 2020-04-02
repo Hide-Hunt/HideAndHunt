@@ -13,6 +13,7 @@
     <string name="registerButtonText">Register</string>
     <string name="titleText">Hide &amp; Hunt</string>
     <string name="play_button_text">Play</string>
+    <string name="new_game_text">New Game</string>
     <string name="start_game">Start game</string>
     <string name="game_over">GAME OVER !</string>
     <string name="no_timer">--:--</string>
@@ -41,6 +42,19 @@
 
     <string name="title_activity_prey">PreyActivity</string>
 
+    <!-- Game Creation Activity -->
+    <string name="gameCreation_title">New Game</string>
+    <string name="gameCreation_game_name">Game Name</string>
+    <string name="gameCreation_duration">Duration</string>
+    <string name="gameCreation_mode">Game mode</string>
+    <string name="gameCreation_create">Create !</string>
+    <string name="gameCreation_placeholderName">Name</string>
+    <string name="gameCreation_placeholderDuration">120</string>
+    <string-array name="gameCreation_gameModes">
+        <item>Normal</item>
+        <item>Battle Royal</item>
+    </string-array>
+
     <string name="crosshair_icon">crosshair_icon</string>
     <string name="no_target">No target</string>
     <string name="target_selection_dialog_title">Select a target</string>
@@ -64,4 +78,8 @@
     <string name="player_in_lobby">Players in the lobby: %d</string>
     <string name="game_created_by">Created by: %s</string>
     <string name="available_games">Available Games</string>
+    <string name="closest_predator">The closest predator is %6.2f meters away</string>
+    <string name="predator_around">There are %d predators less than %d meters away</string>
+    <string name="you_are_a_prey">You are a prey, Hide !</string>
+    <string name="distance">distance</string>
 </resources>
