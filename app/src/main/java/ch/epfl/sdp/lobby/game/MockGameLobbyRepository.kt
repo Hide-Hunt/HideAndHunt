@@ -17,7 +17,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation(User("George Kittle", 85), false, "CAFE", PlayerFaction.PREDATOR),
             Participation(User("Nick Bosa", 97), false, "0A0A", PlayerFaction.PREDATOR),
             Participation(User("Richard Sherman", 25), false, "C0BA", PlayerFaction.PREDATOR),
-            Participation(User("Dummy User", 23), false, "AB00", PlayerFaction.PREY),
+            Participation(User("Dummy User", 23), false, "AB00", PlayerFaction.PREDATOR),
             Participation(User("Hello World", 42), true, "C0B0", PlayerFaction.PREY),
             Participation(User("Morgan Freeman", 1), false, "0BBB", PlayerFaction.PREDATOR),
             Participation(User("Jack Sparrow", 7), true, "0AAC", PlayerFaction.PREY),
@@ -60,7 +60,19 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun changePlayerReady(uid: Int) {
         for (player in players) {
-            if (player.user.uid == uid) player.ready = !player.ready
+            if (player.user.uid == uid) {
+                player.ready = !player.ready
+                break
+            }
+        }
+    }
+
+    override fun setPlayerReady(uid: Int, ready: Boolean) {
+        for (player in players) {
+            if (player.user.uid == uid) {
+                player.ready = ready
+                break
+            }
         }
     }
 

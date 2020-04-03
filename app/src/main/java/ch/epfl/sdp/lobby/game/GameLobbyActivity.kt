@@ -28,9 +28,11 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
     private var adminId = 0
+    private var localPlayerID: Int = -1
     private val repository = MockGameLobbyRepository
     private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
     private var myFaction: PlayerFaction = PlayerFaction.PREDATOR
+    private var myTag: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,8 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
         rv = gameLobbyBinding.playerList
         rv.layoutManager = LinearLayoutManager(this)
+
+        localPlayerID = 23 //TODO: Get a game-relative ID
 
         //repository interactions
         repository.setPlayerFaction(PLAYER_ID, PlayerFaction.PREDATOR)
@@ -60,6 +64,14 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         //player id is hardcoded for now
         repository.setPlayerFaction(PLAYER_ID, newFaction)
         myFaction = newFaction
+        if(newFaction == PlayerFaction.PREY && myTag == null) {
+            gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_not_ready)
+            repository.setPlayerReady(localPlayerID, false)
+        } else {
+            gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_ready)
+            repository.setPlayerReady(localPlayerID, true)
+        }
+        refreshPlayerList()
     }
 
     private fun refreshPlayerList() {
