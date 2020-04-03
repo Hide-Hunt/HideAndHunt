@@ -42,10 +42,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun testConnection() {
-        Thread.sleep(2000)
+        Thread.sleep(100)
         if(User.connected) {
-            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-            startActivity(intent)
+            finish()
         }
     }
 }

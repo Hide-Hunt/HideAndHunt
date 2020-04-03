@@ -8,7 +8,8 @@
     <string name="loginPlaceholderPassword">Password</string>
 
     <string name="profileButtonText">Profile</string>
-    <string name="avatarPlaceholder">Avatar</string>
+    <string name="profilePicPlaceholder">Profile picture</string>
+    <string name="changeProfilePic">Change profile picture</string>
 
     <string name="registerButtonText">Register</string>
     <string name="titleText">Hide &amp; Hunt</string>
