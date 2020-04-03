@@ -22,22 +22,27 @@ class GameLobbyActivityTest {
     }
 
     @Test
-    fun swipeDownRefreshesData() {
+    fun swipeDownAndFactionChangeRefreshesData() {
         val scenario = launchActivity<GameLobbyActivity>()
 
         var size = -1
         scenario.onActivity { a ->
             size = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
         }
-        assertEquals(11,size)
+        assertEquals(10,size)
 
         onView(ViewMatchers.withId(R.id.faction_selection)).perform(click())
-        onView(ViewMatchers.withId(R.id.player_list)).perform(swipeDown())
-
         var newSize = -1
         scenario.onActivity { a ->
             newSize = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
         }
-        assertEquals(12,newSize)
+        assertEquals(11, newSize)
+
+        onView(ViewMatchers.withId(R.id.player_list)).perform(swipeDown())
+
+        scenario.onActivity { a ->
+            newSize = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
+        }
+        assertEquals(12, newSize)
     }
 }
