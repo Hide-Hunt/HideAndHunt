@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +58,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     }
 
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
     public override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
