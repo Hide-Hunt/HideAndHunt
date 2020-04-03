@@ -1,7 +1,9 @@
 package ch.epfl.sdp.lobby.game
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
+import ch.epfl.sdp.game.NFCTagHelper
 import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.PredatorActivity
 import ch.epfl.sdp.game.PreyActivity
@@ -56,6 +59,31 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     }
 
+    public override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
+            NFCTagHelper.intentToNFCTag(intent)?.let {
+                myTag = it
+                repository.setPlayerReady(localPlayerID, true)
+                repository.setPlayerTag(localPlayerID, it)
+                updateLocalPlayerState()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val adapter = NfcAdapter.getDefaultAdapter(this)
+        adapter?.enableForegroundDispatch(this, pendingIntent, null, null)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
+    }
+
     override fun onRefresh() {
         refreshPlayerList()
     }
@@ -64,7 +92,11 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         //player id is hardcoded for now
         repository.setPlayerFaction(PLAYER_ID, newFaction)
         myFaction = newFaction
-        if(newFaction == PlayerFaction.PREY && myTag == null) {
+        updateLocalPlayerState()
+    }
+
+    private fun updateLocalPlayerState() {
+        if(myFaction == PlayerFaction.PREY && myTag == null) {
             gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_not_ready)
             repository.setPlayerReady(localPlayerID, false)
         } else {

@@ -103,8 +103,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         }
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-    public override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {

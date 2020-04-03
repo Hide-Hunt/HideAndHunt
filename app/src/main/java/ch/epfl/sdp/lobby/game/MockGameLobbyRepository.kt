@@ -82,4 +82,13 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         }
     }
 
+    override fun setPlayerTag(uid: Int, tag: String) {
+        players.forEach { player ->
+            if(uid == player.user.uid) {
+                player.tag = tag
+                return
+            }
+        }
+    }
+
 }
