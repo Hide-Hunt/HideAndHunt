@@ -31,7 +31,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
     private var adminId = 0
-    private var localPlayerID: Int = -1
     private val repository = MockGameLobbyRepository
     private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
     private var myFaction: PlayerFaction = PlayerFaction.PREDATOR
@@ -45,7 +44,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         rv = gameLobbyBinding.playerList
         rv.layoutManager = LinearLayoutManager(this)
 
-        localPlayerID = 23 //TODO: Get a game-relative ID
 
         //repository interactions
         repository.setPlayerFaction(PLAYER_ID, PlayerFaction.PREDATOR)
@@ -64,8 +62,8 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 myTag = it
-                repository.setPlayerReady(localPlayerID, true)
-                repository.setPlayerTag(localPlayerID, it)
+                repository.setPlayerReady(PLAYER_ID, true)
+                repository.setPlayerTag(PLAYER_ID, it)
                 updateLocalPlayerState()
             }
         }
@@ -98,10 +96,10 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private fun updateLocalPlayerState() {
         if(myFaction == PlayerFaction.PREY && myTag == null) {
             gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_not_ready)
-            repository.setPlayerReady(localPlayerID, false)
+            repository.setPlayerReady(PLAYER_ID, false)
         } else {
             gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_ready)
-            repository.setPlayerReady(localPlayerID, true)
+            repository.setPlayerReady(PLAYER_ID, true)
         }
         refreshPlayerList()
     }
@@ -140,7 +138,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     private fun setIntent(gameDuration: Long) {
         gameLobbyBinding.startButton.setOnClickListener {
-            var pid = 23 //TODO: User.uid.toLong(10) but what if uid is "" ?
             val intent = if (myFaction == PlayerFaction.PREDATOR) {
                 Intent(this, PredatorActivity::class.java)
             } else {
@@ -149,7 +146,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
             repository.getGameId { gid ->
                 intent.putExtra("initialTime", gameDuration * 1000L)
-                intent.putExtra("playerID", pid)
+                intent.putExtra("playerID", PLAYER_ID)
                 intent.putExtra("gameID", gid)
                 //TODO: Fetch MQTT URI from somewhere ? and add to the intent
                 repository.getPlayers { pl ->
