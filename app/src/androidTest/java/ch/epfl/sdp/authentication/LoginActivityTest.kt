@@ -28,7 +28,7 @@ class LoginActivityTest {
     @Test
     fun canCreateActivityWithoutCrash() {
         launchActivity<LoginActivity>()
-        //onView(withId(R.id.loginSubmitButton)).perform(click())
+        onView(withId(R.id.loginSubmitButton)).perform(click())
     }
 
     @Test
