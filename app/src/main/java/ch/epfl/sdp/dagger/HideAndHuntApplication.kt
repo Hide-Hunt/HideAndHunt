@@ -1,11 +1,9 @@
 package ch.epfl.sdp.dagger
 
 import android.app.Application
-import ch.epfl.sdp.dagger.DaggerApplicationComponent
-import ch.epfl.sdp.dagger.DaggerTestApplicationComponent
 
 //The application Component must have the same lifecycle than the application
-open class MyApplication: Application(){
+open class HideAndHuntApplication: Application(){
     val appComponent: ApplicationComponent by lazy {
         initializeComponent()
     }
@@ -15,7 +13,7 @@ open class MyApplication: Application(){
 }
 
 //The application Component must have the same lifecycle than the application
-class MyTestApplication: MyApplication(){
+class HideAndHuntTestApplication: HideAndHuntApplication(){
     override fun initializeComponent(): ApplicationComponent {
         return DaggerTestApplicationComponent.create()!!
     }

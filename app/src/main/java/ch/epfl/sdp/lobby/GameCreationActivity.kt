@@ -3,7 +3,7 @@ package ch.epfl.sdp.lobby
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import ch.epfl.sdp.dagger.MyApplication
+import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityGameCreationBinding
 import ch.epfl.sdp.lobby.game.IGameLobbyRepository
 import java.sql.Time
@@ -17,7 +17,7 @@ class GameCreationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // We have to handle the dependency injection before the call to super.onCreate
-        (applicationContext as MyApplication).appComponent.inject(this)
+        (applicationContext as HideAndHuntApplication).appComponent.inject(this)
 
 
         super.onCreate(savedInstanceState)
