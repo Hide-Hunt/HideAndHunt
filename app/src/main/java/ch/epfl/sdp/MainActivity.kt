@@ -33,10 +33,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
         }
-        binding.newGameButton.setOnClickListener{
-            val intent = Intent(this@MainActivity, GameCreationActivity::class.java)
-            startActivity(intent)
-        }
 
         binding.newGameButton.setOnClickListener{
             val intent = Intent(this@MainActivity, GameCreationActivity::class.java)
