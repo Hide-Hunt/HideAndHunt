@@ -105,4 +105,26 @@ class MockGameLobbyRepositoryTest {
         }
         assertEquals(playerList[1].faction, PlayerFaction.PREY)
     }
+
+    @Test
+    fun setPlayerReadyChangesReadyness() {
+        var playerList = Collections.emptyList<Participation>()
+        glr.getParticipations {
+            players -> playerList = players
+        }
+
+        glr.setPlayerReady(playerList[3].user.uid, false)
+        glr.setPlayerReady(playerList[4].user.uid, true)
+
+        glr.getParticipations {
+            players -> playerList = players
+        }
+
+        val newPlayer1IsReady = playerList[3].ready
+        val newPlayer2IsReady = playerList[4].ready
+
+
+        assertEquals(false, newPlayer1IsReady)
+        assertEquals(true, newPlayer2IsReady)
+    }
 }

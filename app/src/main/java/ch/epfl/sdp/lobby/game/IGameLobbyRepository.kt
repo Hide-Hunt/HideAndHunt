@@ -23,5 +23,9 @@ interface IGameLobbyRepository {
 
     fun changePlayerReady(uid: Int)
 
+    fun setPlayerReady(uid: Int, ready: Boolean)
+
     fun setPlayerFaction(uid: Int, faction: PlayerFaction)
+
+    fun setPlayerTag(uid: Int, tag: String)
 }
