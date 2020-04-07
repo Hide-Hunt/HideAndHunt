@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, GameCreationActivity::class.java)
             startActivity(intent)
         }
-      
+
         binding.btnDebug.setOnClickListener {
             startActivity(Intent(this@MainActivity, DebugActivity::class.java))
         }

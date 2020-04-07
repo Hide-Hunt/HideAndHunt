@@ -17,7 +17,9 @@ import ch.epfl.sdp.game.NFCTagHelper
 import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.PredatorActivity
 import ch.epfl.sdp.game.PreyActivity
+import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.lobby.PlayerParametersFragment
+import javax.inject.Inject
 
 /**
  * Game Lobby Activity showing the list of players and game info
@@ -32,12 +34,14 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
     private var adminId = 0
-    private val repository = MockGameLobbyRepository
+    @Inject lateinit var repository : IGameLobbyRepository;
     private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
     private var myFaction: PlayerFaction = PlayerFaction.PREDATOR
     private var myTag: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as HideAndHuntApplication).appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         gameLobbyBinding = ActivityGameLobbyBinding.inflate(layoutInflater)
         setContentView(gameLobbyBinding.root)
