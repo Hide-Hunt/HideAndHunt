@@ -7,6 +7,7 @@ import ch.epfl.sdp.game.data.Player
 import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.game.data.Prey
 import ch.epfl.sdp.user.User
+import java.sql.Time
 
 object MockGameLobbyRepository : IGameLobbyRepository {
     private var counter = 0
@@ -25,6 +26,9 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation(User("Spiderman", 25), false, "A0AA", PlayerFaction.PREDATOR),
             Participation(User("Neymar Jr", 26), false, "C000", PlayerFaction.PREDATOR))
 
+    override fun createGame(gameName: String, gameDuration: Time): Int {
+        return 42
+    }
 
     override fun getGameId(cb: Callback<Int>) {
         cb(gameId)
