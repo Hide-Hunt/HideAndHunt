@@ -7,6 +7,7 @@ import ch.epfl.sdp.game.data.Player
 import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.game.data.Prey
 import ch.epfl.sdp.user.User
+import java.sql.Time
 
 object MockGameLobbyRepository : IGameLobbyRepository {
     private var counter = 0
@@ -17,7 +18,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation(User("George Kittle", 85), false, "CAFE", PlayerFaction.PREDATOR),
             Participation(User("Nick Bosa", 97), false, "0A0A", PlayerFaction.PREDATOR),
             Participation(User("Richard Sherman", 25), false, "C0BA", PlayerFaction.PREDATOR),
-            Participation(User("Dummy User", 23), false, "AB00", PlayerFaction.PREY),
+            Participation(User("Dummy User", 23), false, "AB00", PlayerFaction.PREDATOR),
             Participation(User("Hello World", 42), true, "C0B0", PlayerFaction.PREY),
             Participation(User("Morgan Freeman", 1), false, "0BBB", PlayerFaction.PREDATOR),
             Participation(User("Jack Sparrow", 7), true, "0AAC", PlayerFaction.PREY),
@@ -25,6 +26,9 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation(User("Spiderman", 25), false, "A0AA", PlayerFaction.PREDATOR),
             Participation(User("Neymar Jr", 26), false, "C000", PlayerFaction.PREDATOR))
 
+    override fun createGame(gameName: String, gameDuration: Time): Int {
+        return 42
+    }
 
     override fun getGameId(cb: Callback<Int>) {
         cb(gameId)
@@ -60,13 +64,34 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun changePlayerReady(uid: Int) {
         for (player in players) {
-            if (player.user.uid == uid) player.ready = !player.ready
+            if (player.user.uid == uid) {
+                player.ready = !player.ready
+                break
+            }
+        }
+    }
+
+    override fun setPlayerReady(uid: Int, ready: Boolean) {
+        for (player in players) {
+            if (player.user.uid == uid) {
+                player.ready = ready
+                break
+            }
         }
     }
 
     override fun setPlayerFaction(uid: Int, faction: PlayerFaction) {
         players.forEach { participation ->
             if (uid == participation.user.uid) participation.faction = faction
+        }
+    }
+
+    override fun setPlayerTag(uid: Int, tag: String) {
+        players.forEach { player ->
+            if(uid == player.user.uid) {
+                player.tag = tag
+                return
+            }
         }
     }
 

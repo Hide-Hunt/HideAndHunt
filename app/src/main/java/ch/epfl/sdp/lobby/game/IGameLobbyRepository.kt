@@ -4,9 +4,10 @@ import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
+import java.sql.Time
 
 interface IGameLobbyRepository {
-
+    fun createGame(gameName: String, gameDuration: Time): Int
 
     fun getGameId(cb: Callback<Int>)
 
@@ -22,5 +23,9 @@ interface IGameLobbyRepository {
 
     fun changePlayerReady(uid: Int)
 
+    fun setPlayerReady(uid: Int, ready: Boolean)
+
     fun setPlayerFaction(uid: Int, faction: PlayerFaction)
+
+    fun setPlayerTag(uid: Int, tag: String)
 }

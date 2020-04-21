@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.protobuf'
+apply plugin: 'kotlin-kapt'
 
 jacoco {
     toolVersion = "0.8.5"
@@ -19,7 +20,8 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "ch.epfl.sdp.lobby.MyCustomTestRunner"
+        //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -88,6 +90,11 @@ dependencies {
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
     implementation 'com.google.protobuf:protobuf-lite:3.0.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'com.google.dagger:dagger:2.27'
+    kapt 'com.google.dagger:dagger-compiler:2.27'
+    kaptAndroidTest 'com.google.dagger:dagger-compiler:2.27'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:core-ktx:1.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
