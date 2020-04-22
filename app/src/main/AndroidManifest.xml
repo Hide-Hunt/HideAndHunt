@@ -21,6 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".game.EndGameActivity"></activity>
         <activity android:name=".DebugActivity" />
         <activity android:name=".lobby.global.GlobalLobbyActivity" />
         <activity
@@ -38,10 +39,9 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/FullscreenNoTitle"
             tools:ignore="LockedOrientationActivity" />
-
-        <activity android:name=".lobby.GameCreationActivity"/>
+        <activity android:name=".lobby.GameCreationActivity" />
         <activity android:name=".lobby.LobbyActivity" />
-        <activity android:name=".lobby.game.GameLobbyActivity"/>
+        <activity android:name=".lobby.game.GameLobbyActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,6 +49,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name="org.eclipse.paho.android.service.MqttService" />
     </application>
 
