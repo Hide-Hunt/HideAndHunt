@@ -78,4 +78,6 @@
     <string name="predator_around">There are %d predators less than %d meters away</string>
     <string name="you_are_a_prey">You are a prey, Hide !</string>
     <string name="distance">distance</string>
+    <string name="you_are_not_ready">You are not ready, scan your NFC tag</string>
+    <string name="you_are_ready">You are ready</string>
 </resources>
