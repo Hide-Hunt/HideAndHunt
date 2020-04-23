@@ -17,7 +17,7 @@ import ch.epfl.sdp.game.location.ILocationListener
 import ch.epfl.sdp.game.location.LocationHandler
 
 
-class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocationListener {
+class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocationListener, GameTimerFragment.GameTimeOutListener {
     private lateinit var binding: ActivityPredatorBinding
 
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
@@ -31,6 +31,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     private lateinit var targetSelectionFragment: TargetSelectionFragment
     private lateinit var targetDistanceFragment: TargetDistanceFragment
     private lateinit var preyFragment: PreyFragment
+    private var catchCount = 0
 
     private lateinit var locationHandler: LocationHandler
 
@@ -119,6 +120,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         players[preyID]?.let {
             if (it is Prey && it.state == PreyState.ALIVE) {
                 it.state = PreyState.DEAD
+                catchCount++
                 preyFragment.setPreyState(preyID, PreyState.DEAD)
                 Toast.makeText(this, "Caught a prey : id=" + players[preyID]?.id, Toast.LENGTH_LONG).show()
                 locationHandler.declareCatch(preyID)
@@ -182,5 +184,12 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
                 Toast.makeText(this@PredatorActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    override fun onTimeOut() {
+        val intent = Intent(this, EndGameActivity::class.java)
+        intent.putExtra("duration", gameData.initialTime)
+        intent.putExtra("catchcount", catchCount)
+        startActivity(intent)
     }
 }
