@@ -83,4 +83,5 @@
     <string name="duration">Duration</string>
     <string name="number_of_catches">Number of catches</string>
     <string name="back_to_main_screen">Back to Main Screen</string>
+    <string name="seconds_duration">%d seconds</string>
 </resources>

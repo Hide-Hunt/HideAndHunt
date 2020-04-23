@@ -21,5 +21,11 @@ class EndGameActivity : AppCompatActivity() {
             val backIntent = Intent(this, MainActivity::class.java)
             startActivity(backIntent);
         }
+
+        val durationInMs = intent.getLongExtra("duration", 0)
+        val catchCount = intent.getIntExtra("catchcount", 0)
+
+        binding.txtDurationGameover.text = getString(R.string.seconds_duration).format(durationInMs / 1000)
+        binding.txtNbCatchesGameover.text = catchCount.toString()
     }
 }
