@@ -137,6 +137,15 @@ class PreyActivityTest {
         Intents.intended(IntentMatchers.hasComponent(EndGameActivity::class.java.name))
     }
 
+    @Test
+    fun gettingCaughtStartsEndGameActivity() {
+        val activity = activityRule.launchActivity(activityIntent)
+        activityRule.runOnUiThread {
+            activity.onPreyCatches(2, 0)
+        }
+        Intents.intended(IntentMatchers.hasComponent(EndGameActivity::class.java.name))
+    }
+
     private fun checkAllPreyAlive() {
         onView(allOf(isDescendantOfA(withId(R.id.preyStateList)), withId(R.id.prey_name), withText("Prey 1")))
                 .check(matches(hasSibling(withDrawable(R.drawable.ic_running_icon))))

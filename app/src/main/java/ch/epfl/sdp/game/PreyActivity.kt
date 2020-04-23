@@ -149,7 +149,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
 
                 if(it.id == gameData.playerID) {
                     //I've been caught
-
+                    EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
                 }
             }
         }
