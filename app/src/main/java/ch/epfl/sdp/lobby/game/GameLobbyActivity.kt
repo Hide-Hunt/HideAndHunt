@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.nfc.NfcAdapter
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
@@ -140,23 +141,26 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     private fun setIntent(gameDuration: Long) {
-        gameLobbyBinding.startButton.setOnClickListener {
-            val intent = if (myFaction == PlayerFaction.PREDATOR) {
-                Intent(this, PredatorActivity::class.java)
-            } else {
-                Intent(this, PreyActivity::class.java)
-            }
+        if (adminId.equals(uid)) {
+            gameLobbyBinding.startButton.setOnClickListener {
+                val intent = if (myFaction == PlayerFaction.PREDATOR) {
+                    Intent(this, PredatorActivity::class.java)
+                } else {
+                    Intent(this, PreyActivity::class.java)
+                }
 
-            repository.getGameId { gid ->
-                intent.putExtra("initialTime", gameDuration * 1000L)
-                intent.putExtra("playerID", uid)
-                intent.putExtra("gameID", gid)
-                //TODO: Fetch MQTT URI from somewhere ? and add to the intent
-                repository.getPlayers { pl ->
-                    intent.putExtra("players", ArrayList(pl))
-                    startActivity(intent)
+                repository.getGameId { gid ->
+                    intent.putExtra("initialTime", gameDuration * 1000L)
+                    intent.putExtra("playerID", uid)
+                    intent.putExtra("gameID", gid)
+                    //TODO: Fetch MQTT URI from somewhere ? and add to the intent
+                    repository.getPlayers { pl ->
+                        intent.putExtra("players", ArrayList(pl))
+                        startActivity(intent)
+                    }
                 }
             }
         }
+        else gameLobbyBinding.startButton.visibility = View.GONE
     }
 }

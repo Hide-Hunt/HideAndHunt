@@ -14,6 +14,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     private const val gameId = 1
     private const val gameName = "My mock game"
     private const val gameDuration = 1200
+    private var adminId = "24"
     private val players = mutableListOf(
             Participation(User("George Kittle", "85"), false, "CAFE", PlayerFaction.PREDATOR),
             Participation(User("Nick Bosa", "97"), false, "0A0A", PlayerFaction.PREDATOR),
@@ -26,7 +27,8 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation(User("Spiderman", "25"), false, "A0AA", PlayerFaction.PREDATOR),
             Participation(User("Neymar Jr", "26"), false, "C000", PlayerFaction.PREDATOR))
 
-    override fun createGame(gameName: String, gameDuration: Time): Int {
+    override fun createGame(gameName: String, gameDuration: Time, adminId : String): Int {
+        this.adminId = adminId
         return 42
     }
 
@@ -59,7 +61,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun getAdminId(cb: Callback<String>) {
-        cb(players[1].user.uid)
+        cb(adminId)
     }
 
     override fun changePlayerReady(uid: String) {
