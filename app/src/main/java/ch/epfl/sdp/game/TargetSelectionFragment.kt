@@ -101,7 +101,7 @@ class TargetSelectionFragment : Fragment() {
         if (selectedTargetID == NO_TARGET) {
             binding.currentTarget.setText(R.string.no_target)
         } else {
-            binding.currentTarget.text = String.format(Locale.getDefault(), "Player %d", selectedTargetID)
+            binding.currentTarget.text = String.format(Locale.getDefault(), "Player %s", selectedTargetID)
         }
     }
 

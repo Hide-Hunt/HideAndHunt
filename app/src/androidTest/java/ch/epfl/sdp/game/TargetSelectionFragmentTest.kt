@@ -92,13 +92,12 @@ class TargetSelectionFragmentTest {
         val scenario = launchFragmentInContainer<TargetSelectionFragment>(fragmentArgs)
 
         val listener = object : TargetSelectionFragment.OnTargetSelectedListener {
-            var expectedTargetInCallback = "1"
+            var expectedTargetInCallback = 1
             override fun onTargetSelected(targetID: String) {
-                assertEquals(expectedTargetInCallback, targetID)
-                var expectedTargetInCallbackInt = expectedTargetInCallback.toInt()
-                expectedTargetInCallback = expectedTargetInCallbackInt++.toString()
-                if (expectedTargetInCallback == "4") {
-                    expectedTargetInCallback = TargetSelectionFragment.NO_TARGET
+                assertEquals(expectedTargetInCallback.toString(), targetID)
+                expectedTargetInCallback++
+                if (expectedTargetInCallback.toString() == "4") {
+                    expectedTargetInCallback = TargetSelectionFragment.NO_TARGET.toInt()
                 }
             }
         }
@@ -168,8 +167,8 @@ class TargetSelectionFragmentTest {
         val listener = object : TargetSelectionFragment.OnTargetSelectedListener {
             var expectedTargetInCallback = 1
             override fun onTargetSelected(targetID: String) {
-                assertEquals(expectedTargetInCallback, targetID)
-                Log.d("tested", "assertEquals(%s, %s)".format(expectedTargetInCallback, targetID))
+                assertEquals(expectedTargetInCallback.toString(), targetID)
+                Log.d("tested", "assertEquals(%s, %s)".format(expectedTargetInCallback.toString(), targetID))
                 expectedTargetInCallback++
             }
         }
