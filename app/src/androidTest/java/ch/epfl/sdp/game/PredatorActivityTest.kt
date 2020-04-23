@@ -23,7 +23,7 @@ class PredatorActivityTest {
             Predator("0"),
             Prey("1", "AAAA"),
             Predator("2"),
-            Prey("32", "BBBB"),
+            Prey("3", "BBBB"),
             Predator("4"),
             Prey("5", "CCCC")
     )
