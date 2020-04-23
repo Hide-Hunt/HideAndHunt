@@ -146,15 +146,19 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
                 it.state = PreyState.DEAD
                 preyFragment.setPreyState(preyID, PreyState.DEAD)
                 Toast.makeText(this@PreyActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
+
+                if(it.id == gameData.playerID) {
+                    //I've been caught
+
+                }
             }
         }
     }
 
     override fun onTimeOut() {
-        val intent = Intent(this, EndGameActivity::class.java)
-        intent.putExtra("duration", gameData.initialTime)
-        intent.putExtra("catchcount", 0)
-        startActivity(intent)
+        EndGameHelper.startEndGameActivity(this, gameData.initialTime, 0)
     }
+
+
 
 }

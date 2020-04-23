@@ -187,9 +187,6 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     }
 
     override fun onTimeOut() {
-        val intent = Intent(this, EndGameActivity::class.java)
-        intent.putExtra("duration", gameData.initialTime)
-        intent.putExtra("catchcount", catchCount)
-        startActivity(intent)
+        EndGameHelper.startEndGameActivity(this, gameData.initialTime, catchCount)
     }
 }
