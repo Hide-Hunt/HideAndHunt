@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ch.epfl.sdp.R
+import ch.epfl.sdp.authentication.User
 import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
 import ch.epfl.sdp.game.NFCTagHelper
 import ch.epfl.sdp.game.PlayerFaction
@@ -26,15 +27,11 @@ import javax.inject.Inject
  */
 class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, PlayerParametersFragment.OnFactionChangeListener {
 
-    //player id is hardcoded for now
-    companion object {
-        const val PLAYER_ID = 23
-    }
-
+    private val uid = User.uid
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
-    private var adminId = 0
-    @Inject lateinit var repository : IGameLobbyRepository;
+    private var adminId = ""
+    @Inject lateinit var repository : IGameLobbyRepository
     private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
     private var myFaction: PlayerFaction = PlayerFaction.PREDATOR
     private var myTag: String? = null
@@ -51,10 +48,10 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
 
         //repository interactions
-        repository.setPlayerFaction(PLAYER_ID, PlayerFaction.PREDATOR)
+        repository.setPlayerFaction(uid, PlayerFaction.PREDATOR)
         repository.getAdminId { id -> adminId = id }
         repository.getParticipations { playerList ->
-            rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID, adminId)
+            rv.adapter = GameLobbyAdapter(playerList, uid, adminId)
         }
 
         //set game info views
@@ -68,8 +65,8 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 myTag = it
-                repository.setPlayerReady(PLAYER_ID, true)
-                repository.setPlayerTag(PLAYER_ID, it)
+                repository.setPlayerReady(uid, true)
+                repository.setPlayerTag(uid, it)
                 updateLocalPlayerState()
             }
         }
@@ -94,7 +91,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     override fun onFactionChange(newFaction: PlayerFaction) {
         //player id is hardcoded for now
-        repository.setPlayerFaction(PLAYER_ID, newFaction)
+        repository.setPlayerFaction(uid, newFaction)
         myFaction = newFaction
         updateLocalPlayerState()
     }
@@ -102,17 +99,17 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private fun updateLocalPlayerState() {
         if(myFaction == PlayerFaction.PREY && myTag == null) {
             gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_not_ready)
-            repository.setPlayerReady(PLAYER_ID, false)
+            repository.setPlayerReady(uid, false)
         } else {
             gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_ready)
-            repository.setPlayerReady(PLAYER_ID, true)
+            repository.setPlayerReady(uid, true)
         }
         refreshPlayerList()
     }
 
     private fun refreshPlayerList() {
         repository.getParticipations { playerList ->
-            rv.adapter = GameLobbyAdapter(playerList, PLAYER_ID, adminId)
+            rv.adapter = GameLobbyAdapter(playerList, uid, adminId)
             mSwipeRefreshLayout.isRefreshing = false
         }
     }
@@ -152,7 +149,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
             repository.getGameId { gid ->
                 intent.putExtra("initialTime", gameDuration * 1000L)
-                intent.putExtra("playerID", PLAYER_ID)
+                intent.putExtra("playerID", uid)
                 intent.putExtra("gameID", gid)
                 //TODO: Fetch MQTT URI from somewhere ? and add to the intent
                 repository.getPlayers { pl ->

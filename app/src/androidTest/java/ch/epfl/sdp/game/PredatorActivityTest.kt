@@ -20,12 +20,12 @@ import org.junit.Test
 
 class PredatorActivityTest {
     private val players = arrayListOf(
-            Predator(0),
-            Prey(1, "AAAA"),
-            Predator(2),
-            Prey(3, "BBBB"),
-            Predator(4),
-            Prey(5, "CCCC")
+            Predator("0"),
+            Prey("1", "AAAA"),
+            Predator("2"),
+            Prey("32", "BBBB"),
+            Predator("4"),
+            Prey("5", "CCCC")
     )
 
     private val activityIntent = Intent()

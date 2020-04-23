@@ -9,10 +9,10 @@ class GameIntentUnpacker {
         fun unpack(intent: Intent): Pair<GameIntentData, Boolean> {
             var valid = true
             val gameID = intent.getIntExtra("gameID", -1)
-            val playerID = intent.getIntExtra("playerID", -1)
+            val playerID = intent.getStringExtra("playerID")
             val initialTime = intent.getLongExtra("initialTime", -1)
 
-            if(gameID < 0 || playerID < 0 || initialTime < 0) {
+            if(gameID < 0 || playerID.toInt() < 0 || initialTime < 0) {
                 valid = false
             }
 
@@ -23,6 +23,6 @@ class GameIntentUnpacker {
         }
     }
 
-    data class GameIntentData(val gameID: Int, val playerID: Int, val initialTime: Long, val playerList: List<Player>, val mqttURI: String?)
+    data class GameIntentData(val gameID: Int, val playerID: String, val initialTime: Long, val playerList: List<Player>, val mqttURI: String?)
 
 }

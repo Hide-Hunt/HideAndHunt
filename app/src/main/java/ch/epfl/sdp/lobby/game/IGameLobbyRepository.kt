@@ -19,13 +19,13 @@ interface IGameLobbyRepository {
 
     fun getParticipations(cb: Callback<List<Participation>>)
 
-    fun getAdminId(cb: Callback<Int>)
+    fun getAdminId(cb: Callback<String>)
 
-    fun changePlayerReady(uid: Int)
+    fun changePlayerReady(uid: String)
 
-    fun setPlayerReady(uid: Int, ready: Boolean)
+    fun setPlayerReady(uid:String, ready: Boolean)
 
-    fun setPlayerFaction(uid: Int, faction: PlayerFaction)
+    fun setPlayerFaction(uid: String, faction: PlayerFaction)
 
-    fun setPlayerTag(uid: Int, tag: String)
+    fun setPlayerTag(uid: String, tag: String)
 }

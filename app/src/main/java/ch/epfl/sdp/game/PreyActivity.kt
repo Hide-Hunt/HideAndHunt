@@ -25,7 +25,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
     private var validGame: Boolean = false
 
-    val players: HashMap<Int, Player> = HashMap()
+    val players: HashMap<String, Player> = HashMap()
     val ranges: List<Int> = listOf(10, 20, 50, 100, 100000)
     val rangePopulation: HashMap<Int, Int> = HashMap()
     private var mostDangerousManDistance: Float = 10e+9f
@@ -135,17 +135,17 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     override fun onProviderDisabled(provider: String) {
     }
 
-    override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
-        players[playerID]?.lastKnownLocation = location
+    override fun onPlayerLocationUpdate(playerId : String, location: Location) {
+        players[playerId]?.lastKnownLocation = location
         updateThreat()
     }
 
-    override fun onPreyCatches(predatorID: Int, preyID: Int) {
-        players[preyID]?.let {
+    override fun onPreyCatches(predatorId : String, preyId : String) {
+        players[preyId]?.let {
             if (it is Prey && it.state == PreyState.ALIVE) {
                 it.state = PreyState.DEAD
-                preyFragment.setPreyState(preyID, PreyState.DEAD)
-                Toast.makeText(this@PreyActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
+                preyFragment.setPreyState(preyId, PreyState.DEAD)
+                Toast.makeText(this@PreyActivity, "Predator $predatorId caught prey $preyId", Toast.LENGTH_LONG).show()
             }
         }
     }

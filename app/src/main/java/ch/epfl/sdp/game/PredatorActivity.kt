@@ -22,10 +22,10 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
 
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
     private var validGame: Boolean = false
-    private var targetID: Int = TargetSelectionFragment.NO_TARGET
+    private var targetID: String = TargetSelectionFragment.NO_TARGET
 
-    private var players = HashMap<Int, Player>()
-    private var preys = HashMap<String, Int>()
+    private var players = HashMap<String, Player>()
+    private var preys = HashMap<String, String>()
 
     private lateinit var gameTimerFragment: GameTimerFragment
     private lateinit var targetSelectionFragment: TargetSelectionFragment
@@ -91,7 +91,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         locationHandler.enableRequestUpdates()
     }
 
-    override fun onTargetSelected(targetID: Int) {
+    override fun onTargetSelected(targetID: String) {
         if (this.targetID != TargetSelectionFragment.NO_TARGET) {
             locationHandler.unsubscribeFromPlayer(this.targetID)
         }
@@ -115,7 +115,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         }
     }
 
-    private fun onPreyCatch(preyID: Int) {
+    private fun onPreyCatch(preyID: String) {
         players[preyID]?.let {
             if (it is Prey && it.state == PreyState.ALIVE) {
                 it.state = PreyState.DEAD
@@ -164,22 +164,22 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         targetDistanceFragment.distance = TargetDistanceFragment.DISABLED
     }
 
-    override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
-        if (players.containsKey(playerID)) {
-            players[playerID]!!.lastKnownLocation = location
-            if (playerID == targetID) {
+    override fun onPlayerLocationUpdate(playerId: String, location: Location) {
+        if (players.containsKey(playerId)) {
+            players[playerId]!!.lastKnownLocation = location
+            if (playerId == targetID) {
                 targetDistanceFragment.distance =
                         players[targetID]?.lastKnownLocation?.distanceTo(locationHandler.lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
             }
         }
     }
 
-    override fun onPreyCatches(predatorID: Int, preyID: Int) {
-        players[preyID]?.let {
+    override fun onPreyCatches(predatorId: String, preyId: String) {
+        players[preyId]?.let {
             if (it is Prey && it.state == PreyState.ALIVE) {
                 it.state = PreyState.DEAD
-                preyFragment.setPreyState(preyID, PreyState.DEAD)
-                Toast.makeText(this@PredatorActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
+                preyFragment.setPreyState(preyId, PreyState.DEAD)
+                Toast.makeText(this@PredatorActivity, "Predator $predatorId caught prey $preyId", Toast.LENGTH_LONG).show()
             }
         }
     }

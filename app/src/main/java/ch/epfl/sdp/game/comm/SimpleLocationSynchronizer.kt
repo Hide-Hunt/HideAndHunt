@@ -2,7 +2,7 @@ package ch.epfl.sdp.game.comm
 
 import ch.epfl.sdp.game.data.Location
 
-class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerID: Int, private val pubSub: RealTimePubSub) : LocationSynchronizer {
+class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerId: String, private val pubSub: RealTimePubSub) : LocationSynchronizer {
     var listener : LocationSynchronizer.PlayerUpdateListener? = null
     private val topicOffset = gameID.toString().length + 1// gameID + char('/')
 
@@ -21,9 +21,8 @@ class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerI
                     listener?.onPreyCatches(catch.predatorID, catch.preyID)
                 } else {
                     try {
-                        val playerID = channel.toInt()
                         val protoLoc = LocationOuterClass.Location.parseFrom(payload)
-                        listener?.onPlayerLocationUpdate(playerID, Location(protoLoc.latitude, protoLoc.longitude))
+                        listener?.onPlayerLocationUpdate(channel, Location(protoLoc.latitude, protoLoc.longitude))
                     } catch (_: NumberFormatException) {}
                 }
             }
@@ -35,23 +34,23 @@ class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerI
                 .setLatitude(location.latitude)
                 .setLongitude(location.longitude)
                 .build()
-        pubSub.publish("$gameID/$ownPlayerID", payload.toByteArray())
+        pubSub.publish("$gameID/$ownPlayerId", payload.toByteArray())
     }
 
-    override fun declareCatch(playerID: Int) {
+    override fun declareCatch(playerId: String) {
         val payload = CatchOuterClass.Catch.newBuilder()
-                .setPredatorID(ownPlayerID)
-                .setPreyID(playerID)
+                .setPredatorID(ownPlayerId)
+                .setPreyID(playerId)
                 .build()
         pubSub.publish("$gameID/catch", payload.toByteArray())
     }
 
-    override fun subscribeToPlayer(playerID: Int) {
-        pubSub.subscribe("$gameID/$playerID")
+    override fun subscribeToPlayer(playerId: String) {
+        pubSub.subscribe("$gameID/$playerId")
     }
 
-    override fun unsubscribeFromPlayer(playerID: Int) {
-        pubSub.unsubscribe("$gameID/$playerID")
+    override fun unsubscribeFromPlayer(playerId: String) {
+        pubSub.unsubscribe("$gameID/$playerId")
     }
 
     override fun setPlayerUpdateListener(listener: LocationSynchronizer.PlayerUpdateListener) {
