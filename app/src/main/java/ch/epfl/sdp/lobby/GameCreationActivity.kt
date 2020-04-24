@@ -10,6 +10,11 @@ import java.sql.Time
 import javax.inject.Inject
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
 
+/**
+ * This activity shows the game creation form.
+ * On validation it creates a new game and saves it to the database
+ * Then it loads the GameLobbyActivity and passes the new gameID
+ */
 class GameCreationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGameCreationBinding
@@ -26,8 +31,8 @@ class GameCreationActivity : AppCompatActivity() {
 
         binding.createButton.setOnClickListener {
             val time = binding.gameDuration.text.toString()
-            val timInMilliseconds: Long = time.toLong() * 60000
-            val newGameID = lobbyRepo.createGame(binding.gameName.text.toString(), Time(timInMilliseconds))
+            val timeInMilliseconds: Long = time.toLong() * 60000
+            val newGameID = lobbyRepo.createGame(binding.gameName.text.toString(), Time(timeInMilliseconds))
             val intent = Intent(this@GameCreationActivity, GameLobbyActivity::class.java)
             intent.putExtra("GameID", newGameID)
             startActivity(intent)

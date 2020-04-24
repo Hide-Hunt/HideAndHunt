@@ -1,8 +1,5 @@
 package ch.epfl.sdp.game
 
-import android.app.PendingIntent
-import android.content.Intent
-import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +22,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
     private var validGame: Boolean = false
 
-    val players: HashMap<Int, Player> = HashMap()
+    val players: HashMap<String, Player> = HashMap()
     val ranges: List<Int> = listOf(10, 20, 50, 100, 100000)
     val rangePopulation: HashMap<Int, Int> = HashMap()
     private var mostDangerousManDistance: Float = 10e+9f
@@ -43,7 +40,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
             return
         }
         gameData = gameDataAndValidity.first
-        locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
+        locationHandler = LocationHandler(this, this, gameData.gameID.toString(), gameData.playerID.toString(), gameData.mqttURI)
         loadPlayers(gameData.playerList)
         loadFragments()
     }
@@ -135,12 +132,12 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
     override fun onProviderDisabled(provider: String) {
     }
 
-    override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
+    override fun onPlayerLocationUpdate(playerID: String, location: Location) {
         players[playerID]?.lastKnownLocation = location
         updateThreat()
     }
 
-    override fun onPreyCatches(predatorID: Int, preyID: Int) {
+    override fun onPreyCatches(predatorID: String, preyID: String) {
         players[preyID]?.let {
             if (it is Prey && it.state == PreyState.ALIVE) {
                 it.state = PreyState.DEAD

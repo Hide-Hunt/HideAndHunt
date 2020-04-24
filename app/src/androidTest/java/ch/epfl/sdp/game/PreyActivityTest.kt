@@ -14,7 +14,6 @@ import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.game.data.Prey
 import org.hamcrest.Matchers.allOf
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 

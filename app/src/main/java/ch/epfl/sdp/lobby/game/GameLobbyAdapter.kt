@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
  */
 class GameLobbyAdapter(
         private var participations: List<Participation>,
-        private var playerId: Int, private var adminId: Int) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
+        private var playerId: String, private var adminId: String) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameLobbyViewHolder {
@@ -44,7 +44,7 @@ class GameLobbyAdapter(
      * @param adminId  game admin'is id
      */
     class GameLobbyViewHolder(itemView: View,
-                              private var playerId: Int, private var adminId: Int) : RecyclerView.ViewHolder(itemView) {
+                              private var playerId: String, private var adminId: String) : RecyclerView.ViewHolder(itemView) {
 
         fun display(participation: Participation) {
             //set text views

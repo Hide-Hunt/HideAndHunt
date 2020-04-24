@@ -10,6 +10,6 @@ interface ILocationListener {
     fun onProviderEnabled(provider: String)
     fun onProviderDisabled(provider: String)
 
-    fun onPlayerLocationUpdate(playerID: Int, location: Location)
-    fun onPreyCatches(predatorID: Int, preyID: Int)
+    fun onPlayerLocationUpdate(playerID: String, location: Location)
+    fun onPreyCatches(predatorID: String, preyID: String)
 }

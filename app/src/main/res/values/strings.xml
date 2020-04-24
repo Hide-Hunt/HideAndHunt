@@ -51,6 +51,12 @@
         <item>Battle Royal</item>
     </string-array>
 
+    <!-- Game Lobby -->
+    <string name="default_username">Current User</string>
+    <string name="you_are_not_ready">You are not ready, scan your NFC tag</string>
+    <string name="you_are_ready">You are ready</string>
+
+
     <string name="crosshair_icon">crosshair_icon</string>
     <string name="no_target">No target</string>
     <string name="target_selection_dialog_title">Select a target</string>
@@ -78,6 +84,4 @@
     <string name="predator_around">There are %d predators less than %d meters away</string>
     <string name="you_are_a_prey">You are a prey, Hide !</string>
     <string name="distance">distance</string>
-    <string name="you_are_not_ready">You are not ready, scan your NFC tag</string>
-    <string name="you_are_ready">You are ready</string>
 </resources>

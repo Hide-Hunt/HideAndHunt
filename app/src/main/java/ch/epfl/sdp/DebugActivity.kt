@@ -41,10 +41,10 @@ class DebugActivity : AppCompatActivity(), ILocationListener {
         binding.GPSDisabledLabel.visibility = View.VISIBLE
     }
 
-    override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
+    override fun onPlayerLocationUpdate(playerID: String, location: Location) {
     }
 
-    override fun onPreyCatches(predatorID: Int, preyID: Int) {
+    override fun onPreyCatches(predatorID: String, preyID: String) {
     }
 
 
@@ -99,7 +99,7 @@ class DebugActivity : AppCompatActivity(), ILocationListener {
         binding = ActivityDebugBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        locationHandler = LocationHandler(this, this, 0, 0, null)
+        locationHandler = LocationHandler(this, this, "", "", null)
 
         initializeTracking()
         initializePlayerIDTextChangedListener()

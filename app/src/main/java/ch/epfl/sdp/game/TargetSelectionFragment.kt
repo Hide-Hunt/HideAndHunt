@@ -20,7 +20,7 @@ import java.util.*
  */
 class TargetSelectionFragment : Fragment() {
     interface OnTargetSelectedListener {
-        fun onTargetSelected(targetID: Int)
+        fun onTargetSelected(targetID: String)
     }
 
     private var _binding: FragmentTargetSelectionBinding? = null
@@ -30,11 +30,11 @@ class TargetSelectionFragment : Fragment() {
     var listener: OnTargetSelectedListener? = null
 
     // TODO use a ViewModel / Model to share this state with activity and other models
-    private lateinit var targets: Map<Int, Player>
+    private lateinit var targets: Map<String, Player>
 
-    var selectedTargetID = 0
+    var selectedTargetID = ""
         set(value) {
-            if (value == NO_TARGET || targets.containsKey(value)) {
+            if (value == NO_TARGET.toString() || targets.containsKey(value)) {
                 field = value
                 updateTargetDisplay()
                 listener?.onTargetSelected(selectedTargetID)
@@ -69,7 +69,7 @@ class TargetSelectionFragment : Fragment() {
             targetSelectionDialog?.show()
         }
 
-        selectedTargetID = savedInstanceState?.getInt(ARG_SELECTED_TARGET_ID) ?: NO_TARGET
+        selectedTargetID = (savedInstanceState?.getInt(ARG_SELECTED_TARGET_ID) ?: NO_TARGET) as String
 
         return binding.root
     }
@@ -94,11 +94,11 @@ class TargetSelectionFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(ARG_SELECTED_TARGET_ID, selectedTargetID)
+        outState.putString(ARG_SELECTED_TARGET_ID, selectedTargetID)
     }
 
     private fun updateTargetDisplay() {
-        if (selectedTargetID == NO_TARGET) {
+        if (selectedTargetID == NO_TARGET.toString()) {
             binding.currentTarget.setText(R.string.no_target)
         } else {
             binding.currentTarget.text = String.format(Locale.getDefault(), "Player %d", selectedTargetID)
@@ -106,7 +106,7 @@ class TargetSelectionFragment : Fragment() {
     }
 
     companion object {
-        const val NO_TARGET = -1
+        const val NO_TARGET = ""
         private const val ARG_TARGETS = "targets"
         private const val ARG_SELECTED_TARGET_ID = "selectedTargetID"
         /**

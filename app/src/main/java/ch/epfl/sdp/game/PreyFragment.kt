@@ -55,7 +55,7 @@ class  PreyFragment : Fragment() {
         return view
     }
 
-    fun setPreyState(preyID: Int, state: PreyState) {
+    fun setPreyState(preyID: String, state: PreyState) {
         viewAdapter.mValues.first { it.id == preyID }.state = state
         viewAdapter.mValues.sortWith(comparator)
         viewAdapter.notifyDataSetChanged()

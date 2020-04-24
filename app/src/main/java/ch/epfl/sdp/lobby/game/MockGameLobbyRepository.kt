@@ -15,16 +15,16 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     private const val gameName = "My mock game"
     private const val gameDuration = 1200
     private val players = mutableListOf(
-            Participation(User("George Kittle", 85), false, "CAFE", PlayerFaction.PREDATOR),
-            Participation(User("Nick Bosa", 97), false, "0A0A", PlayerFaction.PREDATOR),
-            Participation(User("Richard Sherman", 25), false, "C0BA", PlayerFaction.PREDATOR),
-            Participation(User("Dummy User", 23), false, "AB00", PlayerFaction.PREDATOR),
-            Participation(User("Hello World", 42), true, "C0B0", PlayerFaction.PREY),
-            Participation(User("Morgan Freeman", 1), false, "0BBB", PlayerFaction.PREDATOR),
-            Participation(User("Jack Sparrow", 7), true, "0AAC", PlayerFaction.PREY),
-            Participation(User("Britney Spears", 24), false, "AC00", PlayerFaction.PREDATOR),
-            Participation(User("Spiderman", 25), false, "A0AA", PlayerFaction.PREDATOR),
-            Participation(User("Neymar Jr", 26), false, "C000", PlayerFaction.PREDATOR))
+            Participation(User("George Kittle", "85"), false, "CAFE", PlayerFaction.PREDATOR),
+            Participation(User("Nick Bosa", "97"), false, "0A0A", PlayerFaction.PREDATOR),
+            Participation(User("Richard Sherman", "25"), false, "C0BA", PlayerFaction.PREDATOR),
+            Participation(User("Dummy User", "23"), false, "AB00", PlayerFaction.PREDATOR),
+            Participation(User("Hello World", "42"), true, "C0B0", PlayerFaction.PREY),
+            Participation(User("Morgan Freeman", "1"), false, "0BBB", PlayerFaction.PREDATOR),
+            Participation(User("Jack Sparrow", "7"), true, "0AAC", PlayerFaction.PREY),
+            Participation(User("Britney Spears", "24"), false, "AC00", PlayerFaction.PREDATOR),
+            Participation(User("Spiderman", "25"), false, "A0AA", PlayerFaction.PREDATOR),
+            Participation(User("Neymar Jr", "26"), false, "C000", PlayerFaction.PREDATOR))
 
     override fun createGame(gameName: String, gameDuration: Time): Int {
         return 42
@@ -44,7 +44,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun getParticipations(cb: Callback<List<Participation>>) {
         //add players to show refreshing works
-        if (counter != 0) players.add(Participation(User("Player$counter", 10 + counter),
+        if (counter != 0) players.add(Participation(User("Player$counter", (10 + counter).toString() ),
                 false, "0ABC", PlayerFaction.PREY))
         ++counter
         cb(players)
@@ -58,11 +58,11 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         cb(mPlayers)
     }
 
-    override fun getAdminId(cb: Callback<Int>) {
+    override fun getAdminId(cb: Callback<String>) {
         cb(players[1].user.uid)
     }
 
-    override fun changePlayerReady(uid: Int) {
+    override fun changePlayerReady(uid: String) {
         for (player in players) {
             if (player.user.uid == uid) {
                 player.ready = !player.ready
@@ -71,7 +71,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         }
     }
 
-    override fun setPlayerReady(uid: Int, ready: Boolean) {
+    override fun setPlayerReady(uid: String, ready: Boolean) {
         for (player in players) {
             if (player.user.uid == uid) {
                 player.ready = ready
@@ -80,19 +80,30 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         }
     }
 
-    override fun setPlayerFaction(uid: Int, faction: PlayerFaction) {
+    override fun setPlayerFaction(uid: String, faction: PlayerFaction) {
         players.forEach { participation ->
             if (uid == participation.user.uid) participation.faction = faction
         }
     }
 
-    override fun setPlayerTag(uid: Int, tag: String) {
+    override fun setPlayerTag(uid: String, tag: String) {
         players.forEach { player ->
             if(uid == player.user.uid) {
                 player.tag = tag
                 return
             }
         }
+    }
+
+    override fun addPlayer(uid: String, username: String) : String{
+        players.add(Participation(User(username, uid), false, "", PlayerFaction.PREDATOR))
+        return uid
+    }
+
+    override fun createPlayer(username: String): String {
+        val uid : String = "0"
+        players.add(Participation(User(username, uid), false, "", PlayerFaction.PREDATOR))
+        return uid
     }
 
 }

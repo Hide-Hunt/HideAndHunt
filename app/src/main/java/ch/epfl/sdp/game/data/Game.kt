@@ -1,8 +1,9 @@
 package ch.epfl.sdp.game.data
 
+import java.io.Serializable
 import java.util.*
 
-data class Game (
+data class Game(
         var id: Int,
         var name: String,
         var admin: String,
@@ -13,4 +14,4 @@ data class Game (
         var startDate: Date,
         var endDate: Date,
         var creationDate: Date
-)
+): Serializable
