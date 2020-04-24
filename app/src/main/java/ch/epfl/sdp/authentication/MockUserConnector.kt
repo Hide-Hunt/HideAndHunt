@@ -1,5 +1,7 @@
 package ch.epfl.sdp.authentication
 
+import android.graphics.Bitmap
+
 class MockUserConnector : IUserConnector {
     private val pseudos = ArrayList<String>()
     private val emails = ArrayList<String>()
@@ -13,16 +15,15 @@ class MockUserConnector : IUserConnector {
         }
     }
 
-    override fun connect(email: String, password: String): Boolean {
+    override fun connect(email: String, password: String, successCallback: () -> Unit, errorCallback: () -> Unit) {
         if(User.connected)
-            return false
+            return
         val usrEmail = emails.withIndex().filter {(_, str) -> str == email}
         if(usrEmail.isEmpty()) {
             User.pseudo = ""
             User.email = ""
             User.uid = ""
             User.connected = false
-            return false
         }
         val (index, foundEmail) = usrEmail[0]
         val pswrd = passwords[index]
@@ -38,18 +39,19 @@ class MockUserConnector : IUserConnector {
             User.uid = ""
             User.connected = false
         }
-
-        return User.connected
     }
 
-    override fun disconnect(): Boolean {
+    override fun disconnect() {
         User.connected = false
-        return true
     }
 
-    override fun register(email: String, password: String, pseudo: String): Boolean {
+    override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun register(email: String, password: String, pseudo: String, successCallback: () -> Unit, errorCallback: () -> Unit) {
         if(emails.any {str -> str == email})
-            return false
+            return
         emails.add(email)
         passwords.add(password)
         pseudos.add(pseudo)
@@ -57,7 +59,6 @@ class MockUserConnector : IUserConnector {
         User.pseudo = pseudo
         User.uid = (emails.size - 1).toString()
         User.connected = true
-        return true
     }
 
 }
