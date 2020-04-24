@@ -80,4 +80,8 @@
     <string name="distance">distance</string>
     <string name="you_are_not_ready">You are not ready, scan your NFC tag</string>
     <string name="you_are_ready">You are ready</string>
+    <string name="duration">Duration</string>
+    <string name="number_of_catches">Number of catches</string>
+    <string name="back_to_main_screen">Back to Main Screen</string>
+    <string name="seconds_duration">%d seconds</string>
 </resources>

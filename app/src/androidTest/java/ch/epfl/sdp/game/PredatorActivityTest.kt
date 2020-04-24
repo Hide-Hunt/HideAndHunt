@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -14,6 +16,8 @@ import ch.epfl.sdp.game.NFCTagHelper.byteArrayFromHexString
 import ch.epfl.sdp.game.data.Predator
 import ch.epfl.sdp.game.data.Prey
 import org.hamcrest.Matchers.allOf
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -44,6 +48,16 @@ class PredatorActivityTest {
     var grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
     @get:Rule
     var grantPermissionRule2: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+    @After
+    fun clean() {
+        Intents.release()
+    }
+
+    @Before
+    fun setup() {
+        Intents.init()
+    }
 
     @Test
     fun activityWithoutStartIntentDoesntCrash() {
@@ -118,6 +132,15 @@ class PredatorActivityTest {
         onView(withId(R.id.preyStateList)).check(matches(hasChildCount(3)))
 
         checkAllPreyAlive()
+    }
+
+    @Test
+    fun timeOutStartsEndGameActivity() {
+        val activity = activityRule.launchActivity(activityIntent)
+        activityRule.runOnUiThread {
+            activity.onTimeOut()
+        }
+        Intents.intended(IntentMatchers.hasComponent(EndGameActivity::class.java.name))
     }
 
     private fun checkAllPreyAlive() {
