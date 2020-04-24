@@ -27,6 +27,7 @@ import javax.inject.Inject
 class ProfileActivity: AppCompatActivity(), Callback {
     private lateinit var binding: ActivityProfileBinding
     private var cache: UserCache = UserCache()
+    private var newProfilePic: Bitmap? = null
     @Inject lateinit var connector: IUserConnector
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,18 +63,18 @@ class ProfileActivity: AppCompatActivity(), Callback {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             val selectedImage = data.data!!
             val filePathColumn = Array(1) { MediaStore.Images.Media.DATA }
 
-            val cursor = contentResolver.query(selectedImage, filePathColumn, null, null, null);
+            val cursor = contentResolver.query(selectedImage, filePathColumn, null, null, null)
             cursor?.moveToFirst()
 
             val columnIndex = cursor?.getColumnIndex(filePathColumn[0])!!
-            val picturePath = cursor.getString(columnIndex);
-            cursor.close();
+            val picturePath = cursor.getString(columnIndex)
+            cursor.close()
             Picasso.with(this)
                     .load(File(picturePath))
                     .fit().centerCrop()
@@ -83,20 +84,25 @@ class ProfileActivity: AppCompatActivity(), Callback {
 
     private fun setInformations() {
         binding.pseudoText.text = Editable.Factory().newEditable(User.pseudo)
-        if(User.profilePic == null)
+        Log.d("CACHE", "TRYING TO SET PICTURE")
+        if(User.profilePic == null) {
+            Log.d("CACHE", "SETTING DEFAULT PICTURE")
             Picasso.with(this)
                     .load("https://cdn0.iconfinder.com/data/icons/seo-marketing-glyphs-vol-7/52/user__avatar__man__profile__Person__target__focus-512.png")
                     .into(binding.profilePictureView)
-        else
+        }
+        else {
+            Log.d("CACHE", "PICTURE READ FROM CACHE")
             binding.profilePictureView.setImageBitmap(User.profilePic)
+        }
     }
 
     private fun validateInformations() {
         val bmp = binding.profilePictureView.drawable.toBitmap()
-        var ps = binding.pseudoText.text.toString()
+        val ps = binding.pseudoText.text.toString()
         var pseudoModify: String? = null
         var picModify: Bitmap? = null
-        if(User.profilePic != bmp) {
+        if(User.profilePic == null || !User.profilePic!!.sameAs(newProfilePic)) {
             User.profilePic = bmp
             picModify = bmp
         }
@@ -115,14 +121,16 @@ class ProfileActivity: AppCompatActivity(), Callback {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setMessage("Successfully uploaded profile pic")
                 .setCancelable(false)
-                .setPositiveButton("OK",null);
+                .setPositiveButton("OK",null)
         val alert: AlertDialog = builder.create()
         alert.show()
         finish()
     }
 
     override fun onSuccess() {
-        User.profilePic = binding.profilePictureView.drawable.toBitmap()
+        Log.d("CACHE", "SUCCESS CALLED")
+        newProfilePic = binding.profilePictureView.drawable.toBitmap()
+        //User.profilePic = binding.profilePictureView.drawable.toBitmap()
     }
 
     override fun onError() {

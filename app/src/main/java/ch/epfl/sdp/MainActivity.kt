@@ -18,6 +18,7 @@ import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
 import ch.epfl.sdp.user.ProfileActivity
+import ch.epfl.sdp.user.UserCache
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,6 +53,8 @@ class MainActivity : AppCompatActivity() {
         binding.btnDebug.setOnClickListener {
             startActivity(Intent(this@MainActivity, DebugActivity::class.java))
         }
+        val cache = UserCache()
+        cache.get(this)
         activateProfile()
     }
 

@@ -30,7 +30,7 @@ class FirebaseUserConnector : IUserConnector {
                 User.email = email
                 User.uid = authed!!.uid
                 val maxSize: Long = 10 * 1024 * 1024
-                storage.reference.child("profilepics").child(User.uid + ".png").getBytes(maxSize)
+                storage.reference.child("profilePics").child(User.uid + ".png").getBytes(maxSize)
                 .addOnSuccessListener {
                     User.profilePic = BitmapFactory.decodeByteArray(it, 0, it.size)
                 }.addOnFailureListener {
@@ -62,6 +62,8 @@ class FirebaseUserConnector : IUserConnector {
 
     override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
         Log.d("CACHE", "MODIFYING")
+        Log.d("CACHE", "ProfilePic null ? " + (profilePic == null))
+        Log.d("CACHE", "MODIFYING")
         if(pseudo != null){
             Log.d("CACHE", "pseudo")
             val dataToAdd = hashMapOf("pseudo" to pseudo)
@@ -78,7 +80,7 @@ class FirebaseUserConnector : IUserConnector {
                 contentType = "image/png"
             }
 
-            val profilePics = storage.reference.child("profilepics")
+            val profilePics = storage.reference.child("profilePics")
             val stream = ByteArrayOutputStream()
             profilePic.compress(Bitmap.CompressFormat.PNG, 90,  stream)
             val uploadTask = profilePics.child(User.uid + ".png").putBytes(stream.toByteArray(), metadata)

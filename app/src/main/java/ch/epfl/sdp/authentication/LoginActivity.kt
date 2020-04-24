@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityLoginBinding
+import ch.epfl.sdp.user.UserCache
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
@@ -53,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun successfulLogin() {
+        UserCache().put(this)
         finish()
     }
 }
