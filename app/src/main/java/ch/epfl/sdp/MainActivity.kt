@@ -4,15 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.authentication.LoginActivity
+import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.db.IRepoFactory
+import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
 import ch.epfl.sdp.replay.IReplayRepository
 import ch.epfl.sdp.replay.ManageReplaysActivity
 import ch.epfl.sdp.replay.viewer.ReplayActivity
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -46,6 +48,12 @@ class MainActivity : AppCompatActivity() {
         buttonToActivity(binding.replayButton, ManageReplaysActivity::class.java) {
             it.putExtra(ReplayActivity.REPLAY_PATH_ARG, "0.game")
         }
+
+        binding.newGameButton.setOnClickListener{
+            val intent = Intent(this@MainActivity, GameCreationActivity::class.java)
+            startActivity(intent)
+        }
+
 
         buttonToActivity(binding.btnDebug, DebugActivity::class.java)
 

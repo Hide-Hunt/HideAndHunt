@@ -14,6 +14,7 @@
     <uses-feature android:name="android.hardware.nfc" />
 
     <application
+        android:name=".dagger.HideAndHuntApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,6 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".game.EndGameActivity"></activity>
         <activity android:name=".replay.viewer.ReplayActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +47,7 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/FullscreenNoTitle"
             tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".lobby.GameCreationActivity" />
         <activity android:name=".lobby.LobbyActivity" />
         <activity android:name=".lobby.game.GameLobbyActivity" />
         <activity android:name=".MainActivity">
@@ -54,6 +57,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name="org.eclipse.paho.android.service.MqttService" />
     </application>
 

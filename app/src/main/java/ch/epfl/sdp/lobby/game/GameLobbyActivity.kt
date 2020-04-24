@@ -1,19 +1,25 @@
 package ch.epfl.sdp.lobby.game
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
+import ch.epfl.sdp.game.NFCTagHelper
 import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.PredatorActivity
 import ch.epfl.sdp.game.PreyActivity
+import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.lobby.PlayerParametersFragment
+import javax.inject.Inject
 
 /**
  * Game Lobby Activity showing the list of players and game info
@@ -28,17 +34,21 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
     private var adminId = 0
-    private val repository = MockGameLobbyRepository
+    @Inject lateinit var repository : IGameLobbyRepository;
     private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
     private var myFaction: PlayerFaction = PlayerFaction.PREDATOR
+    private var myTag: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as HideAndHuntApplication).appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         gameLobbyBinding = ActivityGameLobbyBinding.inflate(layoutInflater)
         setContentView(gameLobbyBinding.root)
 
         rv = gameLobbyBinding.playerList
         rv.layoutManager = LinearLayoutManager(this)
+
 
         //repository interactions
         repository.setPlayerFaction(PLAYER_ID, PlayerFaction.PREDATOR)
@@ -52,6 +62,32 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     }
 
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+    public override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
+            NFCTagHelper.intentToNFCTag(intent)?.let {
+                myTag = it
+                repository.setPlayerReady(PLAYER_ID, true)
+                repository.setPlayerTag(PLAYER_ID, it)
+                updateLocalPlayerState()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val adapter = NfcAdapter.getDefaultAdapter(this)
+        adapter?.enableForegroundDispatch(this, pendingIntent, null, null)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
+    }
+
     override fun onRefresh() {
         refreshPlayerList()
     }
@@ -60,6 +96,18 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         //player id is hardcoded for now
         repository.setPlayerFaction(PLAYER_ID, newFaction)
         myFaction = newFaction
+        updateLocalPlayerState()
+    }
+
+    private fun updateLocalPlayerState() {
+        if(myFaction == PlayerFaction.PREY && myTag == null) {
+            gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_not_ready)
+            repository.setPlayerReady(PLAYER_ID, false)
+        } else {
+            gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_ready)
+            repository.setPlayerReady(PLAYER_ID, true)
+        }
+        refreshPlayerList()
     }
 
     private fun refreshPlayerList() {
@@ -96,7 +144,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     private fun setIntent(gameDuration: Long) {
         gameLobbyBinding.startButton.setOnClickListener {
-            var pid = 23 //TODO: User.uid.toLong(10) but what if uid is "" ?
             val intent = if (myFaction == PlayerFaction.PREDATOR) {
                 Intent(this, PredatorActivity::class.java)
             } else {
@@ -105,7 +152,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
             repository.getGameId { gid ->
                 intent.putExtra("initialTime", gameDuration * 1000L)
-                intent.putExtra("playerID", pid)
+                intent.putExtra("playerID", PLAYER_ID)
                 intent.putExtra("gameID", gid)
                 //TODO: Fetch MQTT URI from somewhere ? and add to the intent
                 repository.getPlayers { pl ->

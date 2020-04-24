@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".lobby.GameCreationActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/gameCreation_title" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="167dp"
+            android:layout_marginTop="32dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="139dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="50dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/gameNameLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="45dp"
+                    android:gravity="center_vertical|end"
+                    android:text="@string/gameCreation_game_name" />
+
+                <TextView
+                    android:id="@+id/gameDurationLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="45dp"
+                    android:gravity="center_vertical|end"
+                    android:text="@string/gameCreation_duration" />
+
+                <TextView
+                    android:id="@+id/gameModeLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical|end"
+                    tools:text="@string/gameCreation_mode" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="50dp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/gameName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="35dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/gameCreation_placeholderName"
+                    android:inputType="textPersonName"
+                    android:labelFor="@id/gameNameLabel"
+                    android:text="@string/gameCreation_placeholderName" />
+
+                <EditText
+                    android:id="@+id/gameDuration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/gameCreation_placeholderDuration"
+                    android:inputType="time"
+                    android:labelFor="@id/gameDurationLabel"
+                    android:text="@string/gameCreation_placeholderDuration" />
+
+                <Spinner
+                    android:id="@+id/gameMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:entries="@array/gameCreation_gameModes" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/create_button"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:text="@string/gameCreation_create" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
