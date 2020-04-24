@@ -28,6 +28,7 @@ class GameTimerFragment : Fragment() {
 
     private lateinit var textView: TextView
     var listener: GameTimeOutListener? = null
+    var remaining: Long = 0L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentGameTimerBinding.inflate(inflater, container, false)
@@ -41,6 +42,7 @@ class GameTimerFragment : Fragment() {
                 override fun onTick(millisUntilFinished: Long) {
                     //update displayed time
                     textView.text = TimerHelper.millisToTimeString(millisUntilFinished)
+                    remaining = millisUntilFinished
                 }
 
                 override fun onFinish() {
