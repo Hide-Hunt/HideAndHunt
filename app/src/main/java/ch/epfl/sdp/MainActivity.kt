@@ -49,10 +49,7 @@ class MainActivity : AppCompatActivity() {
             it.putExtra(ReplayActivity.REPLAY_PATH_ARG, "0.game")
         }
 
-        binding.newGameButton.setOnClickListener{
-            val intent = Intent(this@MainActivity, GameCreationActivity::class.java)
-            startActivity(intent)
-        }
+        buttonToActivity(binding.newGameButton, GameCreationActivity::class.java)
 
 
         buttonToActivity(binding.btnDebug, DebugActivity::class.java)
