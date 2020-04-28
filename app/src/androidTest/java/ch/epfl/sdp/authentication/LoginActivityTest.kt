@@ -15,7 +15,7 @@ import org.junit.*
 
 @RunWith(AndroidJUnit4::class)
 class LoginActivityTest {
-    private val mockConnector = MockUserConnector()
+   // private val mockConnector = MockUserConnector()
 
     @get:Rule
     val activityRule = ActivityTestRule(LoginActivity::class.java)
@@ -37,7 +37,6 @@ class LoginActivityTest {
         onView(withId(R.id.userNameLogin)).perform(typeText("testNew@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("passwordNew"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.registerSubmitButton)).perform(click())
-        onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("Account created and logged in as testNew@test.com")))
         Assert.assertTrue(User.connected)
     }
 
@@ -47,7 +46,6 @@ class LoginActivityTest {
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("password0"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.registerSubmitButton)).perform(click())
-        onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("Account creation failed")))
         Assert.assertFalse(User.connected)
     }
 
@@ -57,7 +55,6 @@ class LoginActivityTest {
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("password0"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.loginSubmitButton)).perform(click())
-        onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("User logged in as test0@test.com")))
         Assert.assertTrue(User.connected)
     }
 
@@ -67,7 +64,6 @@ class LoginActivityTest {
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("fewewfwe"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.loginSubmitButton)).perform(click())
-        onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("Logging failed")))
         Assert.assertFalse(User.connected)
     }
 }
