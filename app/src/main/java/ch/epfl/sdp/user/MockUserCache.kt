@@ -11,11 +11,14 @@ class MockUserCache : IUserCache {
     private var cacheExists = false
 
     override fun get(context: Context) {
-        if(!cacheExists)
+        if(!cacheExists) {
+            User.connected = false
             return
+        }
         User.pseudo = pseudo
         User.uid = uid
         User.profilePic = profilePic
+        User.connected = true
     }
 
     override fun put(context: Context) {
@@ -23,6 +26,10 @@ class MockUserCache : IUserCache {
         uid = User.uid
         profilePic = User.profilePic
         cacheExists = true
+    }
+
+    override fun toString(): String {
+        return User.pseudo + ":" + User.uid
     }
 
 }

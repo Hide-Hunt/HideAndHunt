@@ -1,6 +1,7 @@
 package ch.epfl.sdp.user
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -84,17 +85,13 @@ class ProfileActivity: AppCompatActivity(), Callback {
 
     private fun setInformations() {
         binding.pseudoText.text = Editable.Factory().newEditable(User.pseudo)
-        Log.d("CACHE", "TRYING TO SET PICTURE")
         if(User.profilePic == null) {
-            Log.d("CACHE", "SETTING DEFAULT PICTURE")
             Picasso.with(this)
                     .load("https://cdn0.iconfinder.com/data/icons/seo-marketing-glyphs-vol-7/52/user__avatar__man__profile__Person__target__focus-512.png")
                     .into(binding.profilePictureView)
         }
-        else {
-            Log.d("CACHE", "PICTURE READ FROM CACHE")
+        else
             binding.profilePictureView.setImageBitmap(User.profilePic)
-        }
     }
 
     private fun validateInformations() {
@@ -121,16 +118,14 @@ class ProfileActivity: AppCompatActivity(), Callback {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setMessage("Successfully uploaded profile pic")
                 .setCancelable(false)
-                .setPositiveButton("OK",null)
+                .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ -> finish()})
+                .setOnDismissListener {finish()}
         val alert: AlertDialog = builder.create()
         alert.show()
-        finish()
     }
 
     override fun onSuccess() {
-        Log.d("CACHE", "SUCCESS CALLED")
         newProfilePic = binding.profilePictureView.drawable.toBitmap()
-        //User.profilePic = binding.profilePictureView.drawable.toBitmap()
     }
 
     override fun onError() {
