@@ -43,11 +43,11 @@ class ProfileActivityTest {
         User.profilePic = null
         User.pseudo = ""
         launchActivity<ProfileActivity>()
-        Espresso.onView(withId(R.id.pseudoText)).perform(ViewActions.typeText("pseudo"))
+        Espresso.onView(withId(R.id.userPasswordLogin)).perform(ViewActions.typeText("pseudo"), ViewActions.closeSoftKeyboard())
         Thread.sleep(1000)
         Espresso.onView(withId(R.id.okButton)).perform(click())
         Espresso.onView(withText("Successfully uploaded profile pic")).check(matches(isDisplayed()))
-        Espresso.onView(withText("OK")).perform(click())
+        //Espresso.onView(withText("OK")).perform(click())
         Assert.assertNotNull(User.profilePic)
         Assert.assertEquals("pseudo", User.pseudo)
     }
@@ -55,7 +55,7 @@ class ProfileActivityTest {
     @Test
     fun createActivityWithProfilePicture() {
         val whiteBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
-        User.profilePic = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        User.profilePic = whiteBitmap
         User.pseudo = "pseudo"
         User.connected = true
         launchActivity<ProfileActivity>()

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.provider.MediaStore
 import android.text.Editable
 import android.util.Log
@@ -115,6 +116,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
     }
 
     private fun showSuccessAndKill() {
+        Looper.prepare()
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setMessage("Successfully uploaded profile pic")
                 .setCancelable(false)
@@ -129,6 +131,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
     }
 
     override fun onError() {
+        Looper.prepare()
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setMessage("Error")
                 .setCancelable(false)
