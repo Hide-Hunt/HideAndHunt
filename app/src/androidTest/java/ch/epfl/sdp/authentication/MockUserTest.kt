@@ -5,23 +5,40 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
 class MockUserTest {
+    val callbackLatch = CountDownLatch(1)
+    var correctCallback = false
+
     @Before
     fun forceDisconnect() {
         User.connected = false
     }
 
+    fun success() {
+        callbackLatch.countDown()
+        correctCallback = true
+    }
+
+    fun error() {
+        callbackLatch.countDown()
+        correctCallback = false
+    }
+
     @Test
     fun canConnectAndDisconnectAllBasicMockUsers() {
+        correctCallback = false
         val mock = MockUserConnector()
         for (i in 0..5) {
-            Assert.assertTrue(mock.connect("test$i@test.com", "password$i"))
-            Assert.assertEquals("test$i@test.com", User.username)
+            mock.connect("test$i@test.com", "password$i", {success()}, {error()})
+            callbackLatch.await()
+            Assert.assertTrue(correctCallback)
+            Assert.assertEquals("test$i@test.com", User.email)
             Assert.assertEquals(i.toString(), User.uid)
             Assert.assertTrue(User.connected)
-            Assert.assertTrue(mock.disconnect())
+            mock.disconnect()
             Assert.assertFalse(User.connected)
         }
     }
@@ -29,43 +46,59 @@ class MockUserTest {
     @Test
     fun cantConnectIfAlreadyConnected() {
         val mock = MockUserConnector()
-        Assert.assertTrue(mock.connect("test0@test.com", "password0"))
+        mock.connect("test0@test.com", "password0", {success()}, {error()})
+        callbackLatch.await()
+        Assert.assertTrue(correctCallback)
         Assert.assertTrue(User.connected)
-        Assert.assertFalse(mock.connect("test0@test.com", "password0"))
+        mock.connect("test0@test.com", "password0", {success()}, {error()})
+        callbackLatch.await()
+        Assert.assertFalse(correctCallback)
         Assert.assertTrue(User.connected)
     }
 
     @Test
     fun connectionWithWrongEmailFails() {
         val mock = MockUserConnector()
-        Assert.assertFalse(mock.connect("fewfwef@test.com", "password0"))
+        mock.connect("fewfwef@test.com", "password0", {success()}, {error()})
+        callbackLatch.await()
+        Assert.assertFalse(correctCallback)
         Assert.assertFalse(User.connected)
     }
 
     @Test
     fun connectionWithWrongPasswordFails() {
         val mock = MockUserConnector()
-        Assert.assertFalse(mock.connect("test0@test.com", "its2AMrightnow"))
+        mock.connect("test0@test.com", "its2AMrightnow", {success()}, {error()})
+        callbackLatch.await()
+        Assert.assertFalse(correctCallback)
         Assert.assertFalse(User.connected)
     }
 
     @Test
     fun canAddUserThenConnectToIt() {
         val mock = MockUserConnector()
-        Assert.assertTrue(mock.register("testing", "C-C-C-CANDEAAAA"))
-        Assert.assertEquals("testing", User.username)
+        mock.register("testing", "C-C-C-CANDEAAAA", "pseudo", {success()}, {error()})
+        callbackLatch.await()
+        Assert.assertTrue(correctCallback)
+        Assert.assertEquals("testing", User.email)
+        Assert.assertEquals("pseudo", User.pseudo)
         Assert.assertTrue(User.connected)
-        Assert.assertTrue(mock.disconnect())
+        mock.disconnect()
         Assert.assertFalse(User.connected)
-        Assert.assertTrue(mock.connect("testing", "C-C-C-CANDEAAAA"))
-        Assert.assertEquals("testing", User.username)
+        mock.connect("testing", "C-C-C-CANDEAAAA", {success()}, {error()})
+        callbackLatch.await()
+        Assert.assertTrue(correctCallback)
+        Assert.assertEquals("testing", User.email)
+        Assert.assertEquals("pseudo", User.pseudo)
         Assert.assertTrue(User.connected)
     }
 
     @Test
     fun addingAlreadyExistingUserFails() {
         val mock = MockUserConnector()
-        Assert.assertFalse(mock.register("test0@test.com", "Covid-19"))
+        mock.register("test0@test.com", "Covid-19", "pseudo", {success()}, {error()})
+        callbackLatch.await()
+        Assert.assertFalse(correctCallback)
         Assert.assertFalse(User.connected)
     }
 }
