@@ -52,7 +52,7 @@ class MockUserConnector : IUserConnector {
     }
 
     override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
-        TODO("Not yet implemented")
+        successCallback()
     }
 
     override fun register(email: String, password: String, pseudo: String, successCallback: () -> Unit, errorCallback: () -> Unit) {

@@ -23,10 +23,8 @@ import org.junit.*
 import java.util.concurrent.CountDownLatch
 
 class ProfileActivityTest {
-    private val callbackLatch = CountDownLatch(1)
-    var correctCallback = false
-    //@get:Rule
-    //val activityRule = IntentsTestRule(ProfileActivity::class.java)
+    @get:Rule
+    val activityRule = ActivityTestRule(ProfileActivity::class.java)
     @get:Rule
     var writeRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
@@ -65,5 +63,11 @@ class ProfileActivityTest {
         Assert.assertNotNull(User.profilePic)
         Assert.assertEquals(whiteBitmap, User.profilePic)
         Assert.assertEquals("pseudo", User.pseudo)
+    }
+
+    @Test
+    fun onErrorShowsDialog() {
+        activityRule.activity.onError()
+        Espresso.onView(withText("Error")).check(matches(isDisplayed()))
     }
 }
