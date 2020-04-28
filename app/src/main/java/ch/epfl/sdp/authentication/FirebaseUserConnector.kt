@@ -21,7 +21,6 @@ class FirebaseUserConnector : IUserConnector {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db = Firebase.firestore
     private val storage = Firebase.storage
-    private val userCache = UserCache()
 
     override fun connect(email: String, password: String, successCallback: () -> Unit, errorCallback: () -> Unit) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->

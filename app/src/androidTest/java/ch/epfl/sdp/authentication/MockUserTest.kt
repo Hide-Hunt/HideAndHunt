@@ -9,7 +9,7 @@ import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
 class MockUserTest {
-    val callbackLatch = CountDownLatch(1)
+    private val callbackLatch = CountDownLatch(1)
     var correctCallback = false
 
     @Before

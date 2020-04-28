@@ -11,17 +11,21 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.authentication.User
+import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.db.IRepoFactory
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
+import ch.epfl.sdp.user.IUserCache
 import ch.epfl.sdp.user.ProfileActivity
 import ch.epfl.sdp.user.UserCache
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
+    @Inject lateinit var cache: IUserCache
     private lateinit var binding: ActivityMainBinding
     private val repositoryFactory = object : IRepoFactory {
         override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // We have to handle the dependency injection before the call to super.onCreate
+        (applicationContext as HideAndHuntApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -53,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnDebug.setOnClickListener {
             startActivity(Intent(this@MainActivity, DebugActivity::class.java))
         }
-        val cache = UserCache()
         cache.get(this)
         activateProfile()
     }
