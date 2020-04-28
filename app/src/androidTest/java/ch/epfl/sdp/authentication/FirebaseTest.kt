@@ -12,8 +12,8 @@ class FirebaseTest {
     fun disconnectingResetsSingleton() {
         val connector = FirebaseUserConnector()
         User.connected = true
-        User.username = "LOL"
-        Assert.assertTrue(connector.disconnect())
+        User.pseudo = "LOL"
+        connector.disconnect()
         Assert.assertFalse(User.connected)
     }
 }

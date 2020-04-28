@@ -16,14 +16,18 @@ class MockUserConnector : IUserConnector {
     }
 
     override fun connect(email: String, password: String, successCallback: () -> Unit, errorCallback: () -> Unit) {
-        if(User.connected)
+        if(User.connected) {
+            errorCallback()
             return
+        }
         val usrEmail = emails.withIndex().filter {(_, str) -> str == email}
         if(usrEmail.isEmpty()) {
             User.pseudo = ""
             User.email = ""
             User.uid = ""
             User.connected = false
+            errorCallback()
+            return
         }
         val (index, foundEmail) = usrEmail[0]
         val pswrd = passwords[index]
@@ -33,11 +37,13 @@ class MockUserConnector : IUserConnector {
             User.pseudo = pseudos[index]
             User.uid = index.toString()
             User.connected = true
+            successCallback()
         } else {
             User.pseudo = ""
             User.email = ""
             User.uid = ""
             User.connected = false
+            errorCallback()
         }
     }
 
@@ -50,8 +56,10 @@ class MockUserConnector : IUserConnector {
     }
 
     override fun register(email: String, password: String, pseudo: String, successCallback: () -> Unit, errorCallback: () -> Unit) {
-        if(emails.any {str -> str == email})
+        if(emails.any {str -> str == email}) {
+            errorCallback()
             return
+        }
         emails.add(email)
         passwords.add(password)
         pseudos.add(pseudo)
@@ -59,6 +67,7 @@ class MockUserConnector : IUserConnector {
         User.pseudo = pseudo
         User.uid = (emails.size - 1).toString()
         User.connected = true
+        successCallback()
     }
 
 }
