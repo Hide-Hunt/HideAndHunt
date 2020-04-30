@@ -23,12 +23,14 @@ import ch.epfl.sdp.databinding.ActivityProfileBinding
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.io.File
+import java.lang.NullPointerException
 import javax.inject.Inject
 
 
 class ProfileActivity: AppCompatActivity(), Callback {
     private lateinit var binding: ActivityProfileBinding
     private var newProfilePic: Bitmap? = null
+    private var alertDialog: AlertDialog? = null
     @Inject lateinit var connector: IUserConnector
     @Inject lateinit var cache: IUserCache
 
@@ -84,7 +86,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
         }
     }
 
-    private fun setInformations() {
+    fun setInformations() {
         binding.pseudoText.text = Editable.Factory().newEditable(User.pseudo)
         if(User.profilePic == null) {
             Picasso.with(this)
@@ -95,7 +97,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
             binding.profilePictureView.setImageBitmap(User.profilePic)
     }
 
-    private fun validateInformations() {
+    fun validateInformations() {
         val bmp = binding.profilePictureView.drawable.toBitmap()
         val ps = binding.pseudoText.text.toString()
         var pseudoModify: String? = null
@@ -118,12 +120,17 @@ class ProfileActivity: AppCompatActivity(), Callback {
     private fun showSuccessAndKill() {
         Looper.prepare()
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setMessage("Successfully uploaded profile pic")
+        builder.setTitle("Success")
+                .setMessage("Successfully uploaded profile pic")
                 .setCancelable(false)
                 .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ -> finish()})
                 .setOnDismissListener {finish()}
-        val alert: AlertDialog = builder.create()
-        alert.show()
+        alertDialog = builder.create()
+        alertDialog!!.show()
+    }
+
+    fun getAlertDialog(): AlertDialog? {
+        return alertDialog
     }
 
     override fun onSuccess() {
@@ -133,11 +140,12 @@ class ProfileActivity: AppCompatActivity(), Callback {
     override fun onError() {
         Looper.prepare()
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setMessage("Error")
+        builder.setTitle("Error")
+                .setMessage("Error uploading profile picture")
                 .setCancelable(false)
                 .setPositiveButton("OK", null)
                 .setOnDismissListener {finish()}
-        val alert: AlertDialog = builder.create()
-        alert.show()
+        alertDialog = builder.create()
+        alertDialog!!.show()
     }
 }
