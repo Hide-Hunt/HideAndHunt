@@ -21,6 +21,15 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
     private lateinit var replayInfoListFragment: ReplayInfoListFragment
     private val downloads = ArrayList<IReplayDownloader.IReplayDownload>()
 
+    val mockReplayList = listOf(
+            ReplayInfo(0, 0, 2345, Faction.PREDATOR, true),
+            ReplayInfo(1, 6753759194, 6753759194 + 675, Faction.PREDATOR, false),
+            ReplayInfo(2, 964781131, 964781131 + 182, Faction.PREY, false),
+            ReplayInfo(3, 1982211276, 1982211276 + 871, Faction.PREDATOR, false),
+            ReplayInfo(4, 5893518155, 5893518155 + 139, Faction.PREY, false),
+            ReplayInfo(5, 8505536244, 8505536244 + 549, Faction.PREY, false)
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         (applicationContext as HideAndHuntApplication).appComponent.inject(this)
 
@@ -38,14 +47,7 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
             override fun makeReplayRepository(): IReplayRepository {
                 return object : IReplayRepository {
                     override fun getAllGames(cb: Callback<List<ReplayInfo>>) {
-                        cb(listOf(
-                                ReplayInfo(0, 0, 2345, Faction.PREDATOR, true),
-                                ReplayInfo(1, 6753759194, 6753759194 + 675, Faction.PREDATOR, false),
-                                ReplayInfo(2, 964781131, 964781131 + 182, Faction.PREY, false),
-                                ReplayInfo(3, 1982211276, 1982211276 + 871, Faction.PREDATOR, false),
-                                ReplayInfo(4, 5893518155, 5893518155 + 139, Faction.PREY, false),
-                                ReplayInfo(5, 8505536244, 8505536244 + 549, Faction.PREY, false)
-                        ))
+                        cb(mockReplayList)
                     }
                 }
             }
