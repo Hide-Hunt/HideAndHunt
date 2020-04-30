@@ -20,12 +20,12 @@ import org.junit.Test
 
 class PreyActivityTest {
     private val players = arrayListOf(
-            Predator(0),
-            Prey(1, "AAAA"),
-            Predator(2),
-            Prey(3, "BBBB"),
-            Predator(4),
-            Prey(5, "CCCC")
+            Predator("0"),
+            Prey("1", "AAAA"),
+            Predator("2"),
+            Prey("3", "BBBB"),
+            Predator("4"),
+            Prey("5", "CCCC")
     )
 
     private val activityIntent = Intent()
@@ -72,7 +72,7 @@ class PreyActivityTest {
         val activity = activityRule.launchActivity(activityIntent)
 
         activity.runOnUiThread {
-            activity.onPreyCatches(0, 3)
+            activity.onPreyCatches("0", "3")
         }
 
         onView(withId(R.id.preyStateList)).check(matches(hasChildCount(3)))
@@ -91,10 +91,10 @@ class PreyActivityTest {
         activity.locationHandler.lastKnownLocation.latitude = 42.0
         activity.locationHandler.lastKnownLocation.longitude = 6.0
         activity.runOnUiThread {
-            activity.players[0]!!.lastKnownLocation = Location(42.00002, 6.0) //2.2214656 meters away
+            activity.players["0"]!!.lastKnownLocation = Location(42.00002, 6.0) //2.2214656 meters away
             activity.onLocationChanged(activity.locationHandler.lastKnownLocation)
             assertEquals(1, activity.rangePopulation[activity.ranges[0]])
-            activity.players[0]!!.lastKnownLocation = Location(43.0, 6.0) //2.2214656 meters away
+            activity.players["0"]!!.lastKnownLocation = Location(43.0, 6.0) //2.2214656 meters away
             activity.onLocationChanged(activity.locationHandler.lastKnownLocation)
             assertEquals(0, activity.rangePopulation[activity.ranges[0]])
         }
@@ -106,9 +106,9 @@ class PreyActivityTest {
         activity.locationHandler.lastKnownLocation.latitude = 42.0
         activity.locationHandler.lastKnownLocation.longitude = 6.0
         activity.runOnUiThread {
-            activity.onPlayerLocationUpdate(0, Location(42.00002, 6.0)) //2.2214656 meters away
+            activity.onPlayerLocationUpdate("0", Location(42.00002, 6.0)) //2.2214656 meters away
             assertEquals(1, activity.rangePopulation[activity.ranges[0]])
-            activity.onPlayerLocationUpdate(0, Location(43.0, 6.0)) //many kilometers away
+            activity.onPlayerLocationUpdate("0", Location(43.0, 6.0)) //many kilometers away
             assertEquals(0, activity.rangePopulation[activity.ranges[0]])
         }
     }

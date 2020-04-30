@@ -100,6 +100,16 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         return uid
     }
 
+    override fun removePlayer(uid: String) {
+        val indexToRemove : Int
+        players.forEach{ participation ->
+            if(participation.user.uid == uid){
+                players.remove(participation)
+                return
+            }
+        }
+    }
+
     override fun createPlayer(username: String): String {
         val uid : String = "0"
         players.add(Participation(User(username, uid), false, "", PlayerFaction.PREDATOR))

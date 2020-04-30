@@ -21,9 +21,9 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class TargetSelectionFragmentTest {
     private val preys = arrayListOf(
-            Prey(1, "AAAA"),
-            Prey(2, "BBBB"),
-            Prey(3, "CCCC")
+            Prey("1", "AAAA"),
+            Prey("2", "BBBB"),
+            Prey("3", "CCCC")
     )
 
     @Test
@@ -31,7 +31,7 @@ class TargetSelectionFragmentTest {
         val scenario = launchFragmentInContainer<TargetSelectionFragment>()
         var callbackCalled = false
         val listener = object : TargetSelectionFragment.OnTargetSelectedListener {
-            override fun onTargetSelected(targetID: Int) {
+            override fun onTargetSelected(targetID: String) {
                 callbackCalled = true
             }
         }
@@ -52,15 +52,15 @@ class TargetSelectionFragmentTest {
         val scenario = launchFragmentInContainer<TargetSelectionFragment>()
 
         val listener = object : TargetSelectionFragment.OnTargetSelectedListener {
-            override fun onTargetSelected(targetID: Int) {
+            override fun onTargetSelected(targetID: String) {
                 assertEquals(TargetSelectionFragment.NO_TARGET, targetID)
             }
         }
         scenario.onFragment { fragment -> fragment.listener = listener }
 
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 0 }
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 1 }
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 2 }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = "0" }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = "1" }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = "2" }
         scenario.onFragment { fragment -> fragment.selectedTargetID = TargetSelectionFragment.NO_TARGET }
     }
 
@@ -72,15 +72,15 @@ class TargetSelectionFragmentTest {
         val scenario = launchFragmentInContainer<TargetSelectionFragment>(fragmentArgs)
 
         val listener = object : TargetSelectionFragment.OnTargetSelectedListener {
-            override fun onTargetSelected(targetID: Int) {
+            override fun onTargetSelected(targetID: String) {
                 assertEquals(TargetSelectionFragment.NO_TARGET, targetID)
             }
         }
         scenario.onFragment { fragment -> fragment.listener = listener }
 
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 0 }
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 4 }
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 5 }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = "0" }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = "4" }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = "5" }
         scenario.onFragment { fragment -> fragment.selectedTargetID = TargetSelectionFragment.NO_TARGET }
     }
 
@@ -93,11 +93,11 @@ class TargetSelectionFragmentTest {
 
         val listener = object : TargetSelectionFragment.OnTargetSelectedListener {
             var expectedTargetInCallback = 1
-            override fun onTargetSelected(targetID: Int) {
+            override fun onTargetSelected(targetID: String) {
                 assertEquals(expectedTargetInCallback, targetID)
                 expectedTargetInCallback++
                 if (expectedTargetInCallback == 4) {
-                    expectedTargetInCallback = TargetSelectionFragment.NO_TARGET
+                    expectedTargetInCallback = TargetSelectionFragment.NO_TARGET.toInt()
                 }
             }
         }
@@ -106,9 +106,9 @@ class TargetSelectionFragmentTest {
 
         scenario.onFragment { fragment -> fragment.listener = listener }
 
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 1 }
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 2 }
-        scenario.onFragment { fragment -> fragment.selectedTargetID = 3 }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = "1" }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = "2" }
+        scenario.onFragment { fragment -> fragment.selectedTargetID = "3" }
         scenario.onFragment { fragment -> fragment.selectedTargetID = TargetSelectionFragment.NO_TARGET }
     }
 
@@ -166,7 +166,7 @@ class TargetSelectionFragmentTest {
 
         val listener = object : TargetSelectionFragment.OnTargetSelectedListener {
             var expectedTargetInCallback = 1
-            override fun onTargetSelected(targetID: Int) {
+            override fun onTargetSelected(targetID: String) {
                 assertEquals(expectedTargetInCallback, targetID)
                 Log.d("tested", "assertEquals(%d, %d)".format(expectedTargetInCallback, targetID))
                 expectedTargetInCallback++

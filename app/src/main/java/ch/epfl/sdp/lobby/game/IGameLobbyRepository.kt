@@ -87,6 +87,12 @@ interface IGameLobbyRepository {
     fun addPlayer(uid: String, username: String) : String
 
     /**
+     * Remove a player from a game
+     * @param uid String: the player UID
+     */
+    fun removePlayer(uid: String)
+
+    /**
      * Create a new player with a given name
      * @param username String: the new of the new player
      * @return Int: the new player UID

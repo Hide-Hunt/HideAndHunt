@@ -27,11 +27,6 @@ import javax.inject.Inject
  */
 class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, PlayerParametersFragment.OnFactionChangeListener {
 
-    //player id is hardcoded for now
-    /*companion object {
-        const val PLAYER_ID = 23
-    }*/
-
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
     @Inject lateinit var repository : IGameLobbyRepository;
@@ -100,6 +95,11 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         refreshPlayerList()
     }
 
+    override fun onBackPressed() {
+        repository.removePlayer(playerId)
+        super.onBackPressed()
+    }
+
     override fun onFactionChange(newFaction: PlayerFaction) {
         //player id is hardcoded for now
         repository.setPlayerFaction(playerId, newFaction)
@@ -144,7 +144,9 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             setIntent(gameDuration.toLong())
         }
         gameLobbyBinding.startButton.setBackgroundColor(Color.GREEN)
+
         gameLobbyBinding.leaveButton.setOnClickListener {
+            repository.removePlayer(playerId)
             finish() //Goes back to previous activity
         }
         gameLobbyBinding.leaveButton.setBackgroundColor(Color.RED)
