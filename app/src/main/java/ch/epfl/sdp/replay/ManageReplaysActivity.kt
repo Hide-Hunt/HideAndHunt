@@ -6,25 +6,29 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityManageReplaysBinding
 import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.db.IRepoFactory
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.replay.viewer.ReplayActivity
+import javax.inject.Inject
 
 class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnListFragmentInteractionListener {
     private lateinit var binding: ActivityManageReplaysBinding
-    private lateinit var downloader: IReplayDownloader
+    @Inject lateinit var downloader: IReplayDownloader
     private lateinit var replayInfoListFragment: ReplayInfoListFragment
     private val downloads = ArrayList<IReplayDownloader.IReplayDownload>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as HideAndHuntApplication).appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         binding = ActivityManageReplaysBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        downloader = FirebaseReplayDownloader(this)
+        // downloader = FirebaseReplayDownloader(this)
 
         val repoFactory = object : IRepoFactory {
             override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
