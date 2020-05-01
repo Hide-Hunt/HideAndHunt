@@ -22,6 +22,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+import android.util.Log
+
 @RunWith(AndroidJUnit4::class)
 class GameLobbyActivityTest {
 
@@ -43,25 +45,24 @@ class GameLobbyActivityTest {
     fun swipeDownAndFactionChangeRefreshesData() {
         val scenario = launchActivity<GameLobbyActivity>()
 
-        var size = -1
+        var baseSize = -1
         scenario.onActivity { a ->
-            size = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
+            baseSize = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
         }
-        assertEquals(11,size)
 
         onView(ViewMatchers.withId(R.id.faction_selection)).perform(click())
         var newSize = -1
         scenario.onActivity { a ->
             newSize = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
         }
-        assertEquals(12, newSize)
+        assertEquals(baseSize+1, newSize)
 
         onView(ViewMatchers.withId(R.id.player_list)).perform(swipeDown())
 
         scenario.onActivity { a ->
             newSize = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
         }
-        assertEquals(13, newSize)
+        assertEquals(baseSize+2, newSize)
     }
 
     @Test
