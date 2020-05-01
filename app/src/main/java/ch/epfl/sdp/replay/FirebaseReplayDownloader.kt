@@ -13,6 +13,7 @@ class FirebaseReplayDownloader(private val context: Context) : IReplayDownloader
 
     override fun download(gameID: Int, successCallback: UnitCallback, failureCallback: Callback<String>): IReplayDownloader.IReplayDownload {
         var canceled = false
+        checkFolder()
 
         val tempFile = File(context.filesDir.absolutePath + "/replays/game_$gameID.tmp")
         val downloadHandle = storageRef.child("$gameID.game").getFile(tempFile)
@@ -38,6 +39,13 @@ class FirebaseReplayDownloader(private val context: Context) : IReplayDownloader
                 canceled = true
                 downloadHandle.cancel()
             }
+        }
+    }
+
+    private fun checkFolder() {
+        val folder = File(context.filesDir.absolutePath + "/replays")
+        if(!folder.exists()){
+            folder.mkdir()
         }
     }
 }
