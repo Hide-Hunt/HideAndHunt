@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 class GameCreationActivityTest {
 
     @get:Rule
-    val intentsTestRule = IntentsTestRule(LobbyActivity::class.java, false, false)
+    val intentsTestRule = IntentsTestRule(GameCreationActivity::class.java, false, false)
 
     @Before
     fun setup() {
