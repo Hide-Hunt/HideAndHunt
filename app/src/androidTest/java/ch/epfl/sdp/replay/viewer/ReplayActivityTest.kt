@@ -15,6 +15,7 @@ import org.junit.Test
 
 import org.junit.Before
 import org.junit.Rule
+import java.io.File
 
 class ReplayActivityTest {
 
@@ -26,13 +27,13 @@ class ReplayActivityTest {
 
     private val invalidPathActivityIntent = Intent()
     init {
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        activityIntent.putExtra("replay_path", "inexisting")
+        invalidPathActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        invalidPathActivityIntent.putExtra("replay_path", "inexisting")
     }
 
     private val emptyIntent = Intent()
     init {
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        emptyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
 
     @get:Rule
@@ -61,7 +62,7 @@ class ReplayActivityTest {
     @Test
     fun testInvalidFilePathProvided(){
         activityRule.launchActivity(invalidPathActivityIntent)
-        Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText(R.string.file_not_found)))
+        Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("File not found /data/user/0/ch.epfl.sdp/files/replays/inexisting")))
     }
 
     @Test
