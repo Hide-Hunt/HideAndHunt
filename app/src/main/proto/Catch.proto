@@ -2,6 +2,6 @@ syntax = "proto3";
 package ch.epfl.sdp.game.comm;
 
 message Catch {
-    int32 predatorID = 1;
-    int32 preyID     = 2;
+    string predatorID = 1;
+    string preyID     = 2;
 }

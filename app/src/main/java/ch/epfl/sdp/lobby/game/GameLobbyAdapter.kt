@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
  */
 class GameLobbyAdapter(
         private var participations: List<Participation>,
-        private var playerId: String, private var adminId: String) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
+        private var playerId: Int, private var adminId: Int) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameLobbyViewHolder {
@@ -44,7 +44,7 @@ class GameLobbyAdapter(
      * @param adminId  game admin'is id
      */
     class GameLobbyViewHolder(itemView: View,
-                              private var playerId: String, private var adminId: String) : RecyclerView.ViewHolder(itemView) {
+                              private var playerId: Int, private var adminId: Int) : RecyclerView.ViewHolder(itemView) {
 
         fun display(participation: Participation) {
             //set text views
@@ -52,10 +52,10 @@ class GameLobbyAdapter(
             itemView.player_name.text = participation.user.name
             itemView.player_is_ready.text = isReadyToString(participation.ready)
             //set admin logo
-            if (adminId == participation.user.uid) itemView.admin_logo.setImageResource(R.drawable.star_icon)
+            if (adminId.equals(participation.user.uid)) itemView.admin_logo.setImageResource(R.drawable.star_icon)
             else itemView.admin_logo.setImageResource(0)
             //set cell background
-            if (playerId == participation.user.uid) itemView.setBackgroundColor(Color.GRAY)
+            if (playerId.equals(participation.user.uid)) itemView.setBackgroundColor(Color.GRAY)
             else itemView.setBackgroundColor(Color.LTGRAY)
         }
 

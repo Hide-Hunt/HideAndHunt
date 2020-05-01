@@ -25,9 +25,9 @@ class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionCha
 
         for (i in 0..19) {
             val p = if (Math.random() % 2 == 0.0) {
-                Predator(i.toString())
+                Predator(i)
             } else {
-                val p = Prey(i.toString(), i.toString())
+                val p = Prey(i, i.toString())
 
                 if (i >= 7) {
                     p.state = PreyState.DEAD
@@ -37,8 +37,8 @@ class LobbyActivity : AppCompatActivity(), PlayerParametersFragment.OnFactionCha
             }
             players.add(p)
         }
-        players.add(Prey("24", "040D5702D36480"))
-        players.add(Prey("42", "B2F55C01"))
+        players.add(Prey(24, "040D5702D36480"))
+        players.add(Prey(42, "B2F55C01"))
 
         setContentView(lobbyBinding.root)
         lobbyBinding.startGameButton.setOnClickListener {

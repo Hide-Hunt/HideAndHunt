@@ -47,55 +47,55 @@ interface IGameLobbyRepository {
 
     /**
      * Give the game admin's UID
-     * @param cb Callback<String>: a callback called with the admin's UID
+     * @param cb Callback<Int>: a callback called with the admin's UID
      */
-    fun getAdminId(cb: Callback<String>)
+    fun getAdminId(cb: Callback<Int>)
 
     /**
      * Switch the ready state of a player
      * @param uid String: the player UID
      */
-    fun changePlayerReady(uid: String)
+    fun changePlayerReady(uid: Int)
 
     /**
      * Set the ready state of a player
      * @param uid String: the player UID
      * @param ready Boolean: the player's ready state. True = ready, False = not ready
      */
-    fun setPlayerReady(uid: String, ready: Boolean)
+    fun setPlayerReady(uid: Int, ready: Boolean)
 
     /**
      * Set the faction of a player
      * @param uid String: the player UID
      * @param faction String: the player's faction
      */
-    fun setPlayerFaction(uid: String, faction: PlayerFaction)
+    fun setPlayerFaction(uid: Int, faction: PlayerFaction)
 
     /**
      * Set the NFC tag of a player
      * @param uid String: the player UID
      * @param tag String: the player's tag
      */
-    fun setPlayerTag(uid: String, tag: String)
+    fun setPlayerTag(uid: Int, tag: String)
 
     /**
      * Add an existing player to a game
-     * @param uid String: the player UID
+     * @param uid String: the player UID given by firebase
      * @param username String: the player username
-     * @return String: the player UID
+     * @return Int: the local player UID as an int
      */
-    fun addPlayer(uid: String, username: String) : String
+    fun addPlayer(uid: String, username: String) : Int
 
     /**
      * Remove a player from a game
      * @param uid String: the player UID
      */
-    fun removePlayer(uid: String)
+    fun removePlayer(uid: Int)
 
     /**
      * Create a new player with a given name
      * @param username String: the new of the new player
      * @return Int: the new player UID
      */
-    fun createPlayer(username: String) : String
+    fun createPlayer(username: String) : Int
 }

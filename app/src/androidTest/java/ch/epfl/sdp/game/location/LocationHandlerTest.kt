@@ -39,11 +39,11 @@ class LocationHandlerTest {
             anyCalled("provDisabled")
         }
 
-        override fun onPlayerLocationUpdate(playerID: String, location: Location) {
+        override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
             anyCalled("playerUpdate")
         }
 
-        override fun onPreyCatches(predatorID: String, preyID: String) {
+        override fun onPreyCatches(predatorID: Int, preyID: Int) {
             anyCalled("preyCatch")
         }
     }
@@ -70,7 +70,7 @@ class LocationHandlerTest {
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val activity = activityRule.launchActivity(intent)
-        val handler = LocationHandler(activity, listener, "0", "0", null)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
         handler.locationListener.onLocationChanged(createMockLocation(10.0, 11.0))
         assertEquals(10.0, handler.lastKnownLocation.latitude, 0.1)
         assertEquals(11.0, handler.lastKnownLocation.longitude, 0.1)
@@ -88,7 +88,7 @@ class LocationHandlerTest {
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val activity = activityRule.launchActivity(intent)
-        val handler = LocationHandler(activity, listener, "0", "0", null)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
         handler.locationListener.onProviderEnabled("")
         assertTrue(called)
 
@@ -105,7 +105,7 @@ class LocationHandlerTest {
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val activity = activityRule.launchActivity(intent)
-        val handler = LocationHandler(activity, listener, "0", "0", null)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
         handler.locationListener.onStatusChanged("gps", 0, Bundle())
         assertTrue(called)
     }
@@ -121,7 +121,7 @@ class LocationHandlerTest {
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val activity = activityRule.launchActivity(intent)
-        val handler = LocationHandler(activity, listener, "0", "0", null)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
         handler.locationListener.onProviderDisabled("")
         assertTrue(called)
     }
@@ -132,7 +132,7 @@ class LocationHandlerTest {
         val listener = makeListener { Unit }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val activity = activityRule.launchActivity(intent)
-        val handler = LocationHandler(activity, listener, "0", "0", null)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
         activity.runOnUiThread {
             handler.enableRequestUpdates()
             handler.onRequestPermissionsResult(10, arrayOf(""), IntArray(0))
@@ -146,7 +146,7 @@ class LocationHandlerTest {
         val listener = makeListener { Unit }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val activity = activityRule.launchActivity(intent)
-        val handler = LocationHandler(activity, listener, "0", "0", null)
+        val handler = LocationHandler(activity, listener, 0, 0, null)
         assertNotEquals(null, (handler.locationSynchronizer as SimpleLocationSynchronizer).listener)
         handler.stop()
         assertEquals(null, (handler.locationSynchronizer as SimpleLocationSynchronizer).listener)

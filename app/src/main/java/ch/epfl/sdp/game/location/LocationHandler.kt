@@ -14,7 +14,7 @@ import ch.epfl.sdp.game.comm.MQTTRealTimePubSub
 import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
 import ch.epfl.sdp.game.data.Location
 
-class LocationHandler(val activity: AppCompatActivity, val listener: ILocationListener, val gameID: String, val playerID: String, private val URI: String?) {
+class LocationHandler(val activity: AppCompatActivity, val listener: ILocationListener, val gameID: Int, val playerID: Int, private val URI: String?) {
 
     companion object {
         private const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10
@@ -51,25 +51,26 @@ class LocationHandler(val activity: AppCompatActivity, val listener: ILocationLi
 
     init {
         locationSynchronizer.setPlayerUpdateListener(object : LocationSynchronizer.PlayerUpdateListener {
-            override fun onPlayerLocationUpdate(playerID: String, location: Location) {
-                listener.onPlayerLocationUpdate(playerID, location)
+
+            override fun onPlayerLocationUpdate(playerId: Int, location: Location) {
+                listener.onPlayerLocationUpdate(playerId, location)
             }
 
-            override fun onPreyCatches(predatorID: String, preyID: String) {
-                listener.onPreyCatches(predatorID, preyID)
+            override fun onPreyCatches(predatorId: Int, preyId: Int) {
+                listener.onPreyCatches(predatorId, preyId)
             }
         })
     }
 
-    fun unsubscribeFromPlayer(playerID: String) {
+    fun unsubscribeFromPlayer(playerID: Int) {
         locationSynchronizer.unsubscribeFromPlayer(playerID)
     }
 
-    fun subscribeToPlayer(playerID: String) {
+    fun subscribeToPlayer(playerID: Int) {
         locationSynchronizer.subscribeToPlayer(playerID)
     }
 
-    fun declareCatch(preyID: String) {
+    fun declareCatch(preyID: Int) {
         locationSynchronizer.declareCatch(preyID)
     }
 

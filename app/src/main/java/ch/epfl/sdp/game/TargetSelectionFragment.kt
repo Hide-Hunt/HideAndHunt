@@ -20,7 +20,7 @@ import java.util.*
  */
 class TargetSelectionFragment : Fragment() {
     interface OnTargetSelectedListener {
-        fun onTargetSelected(targetID: String)
+        fun onTargetSelected(targetID: Int)
     }
 
     private var _binding: FragmentTargetSelectionBinding? = null
@@ -30,11 +30,11 @@ class TargetSelectionFragment : Fragment() {
     var listener: OnTargetSelectedListener? = null
 
     // TODO use a ViewModel / Model to share this state with activity and other models
-    private lateinit var targets: Map<String, Player>
+    private lateinit var targets: Map<Int, Player>
 
-    var selectedTargetID = ""
+    var selectedTargetID = 0
         set(value) {
-            if (value == NO_TARGET.toString() || targets.containsKey(value)) {
+            if (value == NO_TARGET || targets.containsKey(value)) {
                 field = value
                 updateTargetDisplay()
                 listener?.onTargetSelected(selectedTargetID)
@@ -69,7 +69,7 @@ class TargetSelectionFragment : Fragment() {
             targetSelectionDialog?.show()
         }
 
-        selectedTargetID = (savedInstanceState?.getInt(ARG_SELECTED_TARGET_ID) ?: NO_TARGET) as String
+        selectedTargetID = (savedInstanceState?.getString(ARG_SELECTED_TARGET_ID) ?: NO_TARGET) as Int
 
         return binding.root
     }
@@ -94,19 +94,20 @@ class TargetSelectionFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(ARG_SELECTED_TARGET_ID, selectedTargetID)
+        outState.putInt(ARG_SELECTED_TARGET_ID, selectedTargetID)
     }
 
     private fun updateTargetDisplay() {
-        if (selectedTargetID == NO_TARGET.toString()) {
+        if (selectedTargetID == NO_TARGET) {
             binding.currentTarget.setText(R.string.no_target)
         } else {
-            binding.currentTarget.text = String.format(Locale.getDefault(), "Player %d", selectedTargetID)
+            binding.currentTarget.text = String.format(Locale.getDefault(), "Player %s", selectedTargetID)
         }
     }
 
     companion object {
-        const val NO_TARGET = ""
+        const val NO_TARGET = -1
+
         private const val ARG_TARGETS = "targets"
         private const val ARG_SELECTED_TARGET_ID = "selectedTargetID"
         /**

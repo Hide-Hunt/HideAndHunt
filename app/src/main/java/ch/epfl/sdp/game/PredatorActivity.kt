@@ -22,10 +22,12 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
 
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
     private var validGame: Boolean = false
-    private var targetID: String = TargetSelectionFragment.NO_TARGET.toString()
 
-    private var players = HashMap<String, Player>()
-    private var preys = HashMap<String, String>()
+    private var targetID: Int = TargetSelectionFragment.NO_TARGET
+
+
+    private var players = HashMap<Int, Player>()
+    private var preys = HashMap<String, Int>()
 
     private lateinit var gameTimerFragment: GameTimerFragment
     private lateinit var targetSelectionFragment: TargetSelectionFragment
@@ -47,7 +49,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
             return
         }
         gameData = gameDataAndValidity.first
-        locationHandler = LocationHandler(this, this, gameData.gameID.toString(), gameData.playerID.toString(), gameData.mqttURI)
+        locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
 
         if (savedInstanceState == null) { // First load
             for (p in gameData.playerList) {
@@ -91,7 +93,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         locationHandler.enableRequestUpdates()
     }
 
-    override fun onTargetSelected(targetID: String) {
+    override fun onTargetSelected(targetID: Int) {
         if (this.targetID != TargetSelectionFragment.NO_TARGET) {
             locationHandler.unsubscribeFromPlayer(this.targetID)
         }
@@ -109,13 +111,13 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 preys[it]?.let { preyID ->
-                    onPreyCatch(preyID.toString())
+                    onPreyCatch(preyID)
                 }
             }
         }
     }
 
-    private fun onPreyCatch(preyID: String) {
+    private fun onPreyCatch(preyID: Int) {
         players[preyID]?.let {
             if (it is Prey && it.state == PreyState.ALIVE) {
                 it.state = PreyState.DEAD
@@ -164,7 +166,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         targetDistanceFragment.distance = TargetDistanceFragment.DISABLED
     }
 
-    override fun onPlayerLocationUpdate(playerID: String, location: Location) {
+    override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
         if (players.containsKey(playerID)) {
             players[playerID]!!.lastKnownLocation = location
             if (playerID == targetID) {
@@ -174,7 +176,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         }
     }
 
-    override fun onPreyCatches(predatorID: String, preyID: String) {
+    override fun onPreyCatches(predatorID: Int, preyID: Int) {
         players[preyID]?.let {
             if (it is Prey && it.state == PreyState.ALIVE) {
                 it.state = PreyState.DEAD

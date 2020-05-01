@@ -27,15 +27,18 @@ import javax.inject.Inject
  */
 class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, PlayerParametersFragment.OnFactionChangeListener {
 
+    private val uid = User.uid
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
-    @Inject lateinit var repository : IGameLobbyRepository;
+    @Inject lateinit var repository : IGameLobbyRepository
+
+
     private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
     private var myFaction: PlayerFaction = PlayerFaction.PREDATOR
     private var myTag: String? = null
 
-    private var playerId: String = ""
-    private var adminId: String  = ""
+    private var playerId: Int = -1
+    private var adminId: Int  = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (applicationContext as HideAndHuntApplication).appComponent.inject(this)
@@ -71,8 +74,10 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 myTag = it
+
                 repository.setPlayerReady(playerId, true)
                 repository.setPlayerTag(playerId, it)
+
                 updateLocalPlayerState()
             }
         }
@@ -103,6 +108,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     override fun onFactionChange(newFaction: PlayerFaction) {
         //player id is hardcoded for now
         repository.setPlayerFaction(playerId, newFaction)
+
         myFaction = newFaction
         updateLocalPlayerState()
     }

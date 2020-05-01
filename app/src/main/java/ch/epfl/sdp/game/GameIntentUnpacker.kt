@@ -9,17 +9,17 @@ class GameIntentUnpacker {
         fun unpack(intent: Intent): Pair<GameIntentData, Boolean> {
             var valid = true
             val gameID = intent.getIntExtra("gameID", -1)
-            val playerID = intent.getIntExtra("playerID", -1)
+            var playerId = intent.getIntExtra("playerID", -1)
+            if (playerId == null) playerId = -1
             val initialTime = intent.getLongExtra("initialTime", -1)
-
-            if(gameID < 0 || playerID < 0 || initialTime < 0) {
+            if (gameID < 0 || playerId < 0 || initialTime < 0) {
                 valid = false
             }
 
-            val playerList = if(intent.getSerializableExtra("players") == null) emptyList() else (intent.getSerializableExtra("players") as List<*>).filterIsInstance<Player>()
+            val playerList = if (intent.getSerializableExtra("players") == null) emptyList() else (intent.getSerializableExtra("players") as List<*>).filterIsInstance<Player>()
             val mqttURI = intent.getStringExtra("mqttURI")
 
-            return Pair(GameIntentData(gameID, playerID, initialTime, playerList, mqttURI), valid)
+            return Pair(GameIntentData(gameID, playerId, initialTime, playerList, mqttURI), valid)
         }
     }
 

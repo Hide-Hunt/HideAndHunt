@@ -4,15 +4,15 @@ import ch.epfl.sdp.game.data.Location
 
 interface LocationSynchronizer {
     interface PlayerUpdateListener {
-        fun onPlayerLocationUpdate(playerID: String, location: Location)
-        fun onPreyCatches(predatorID: String, preyID: String)
+        fun onPlayerLocationUpdate(playerId: Int, location: Location)
+        fun onPreyCatches(predatorId: Int, preyId: Int)
     }
 
     fun updateOwnLocation(location: Location)
-    fun declareCatch(playerID: String)
+    fun declareCatch(playerId: Int)
 
-    fun subscribeToPlayer(playerID: String)
-    fun unsubscribeFromPlayer(playerID: String)
+    fun subscribeToPlayer(playerId: Int)
+    fun unsubscribeFromPlayer(playerId: Int)
 
     fun setPlayerUpdateListener(listener: PlayerUpdateListener)
 

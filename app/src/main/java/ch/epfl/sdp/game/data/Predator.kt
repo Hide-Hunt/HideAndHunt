@@ -1,3 +1,3 @@
 package ch.epfl.sdp.game.data
 
-class Predator(id: String) : Player(id)
+class Predator(id: Int) : Player(id)

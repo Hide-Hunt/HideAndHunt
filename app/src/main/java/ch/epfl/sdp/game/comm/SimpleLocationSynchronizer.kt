@@ -2,7 +2,7 @@ package ch.epfl.sdp.game.comm
 
 import ch.epfl.sdp.game.data.Location
 
-class SimpleLocationSynchronizer(private val gameID: String, private val ownPlayerID: String, private val pubSub: RealTimePubSub) : LocationSynchronizer {
+class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerID: Int, private val pubSub: RealTimePubSub) : LocationSynchronizer {
     var listener : LocationSynchronizer.PlayerUpdateListener? = null
     private val topicOffset = gameID.toString().length + 1// gameID + char('/')
 
@@ -18,10 +18,10 @@ class SimpleLocationSynchronizer(private val gameID: String, private val ownPlay
                 val channel = topic.substring(topicOffset)
                 if (channel == "catch") {
                     val catch = CatchOuterClass.Catch.parseFrom(payload)
-                    listener?.onPreyCatches(catch.predatorID.toString(), catch.preyID.toString())
+                    listener?.onPreyCatches(catch.predatorID.toInt(), catch.preyID.toInt())
                 } else {
                     try {
-                        val playerID = channel
+                        val playerID = channel.toInt()
                         val protoLoc = LocationOuterClass.Location.parseFrom(payload)
                         listener?.onPlayerLocationUpdate(playerID, Location(protoLoc.latitude, protoLoc.longitude))
                     } catch (_: NumberFormatException) {}
@@ -38,19 +38,19 @@ class SimpleLocationSynchronizer(private val gameID: String, private val ownPlay
         pubSub.publish("$gameID/$ownPlayerID", payload.toByteArray())
     }
 
-    override fun declareCatch(playerID: String) {
+    override fun declareCatch(playerID: Int) {
         val payload = CatchOuterClass.Catch.newBuilder()
-                .setPredatorID(ownPlayerID.toInt())
-                .setPreyID(playerID.toInt())
+                .setPredatorID(ownPlayerID.toString())
+                .setPreyID(playerID.toString())
                 .build()
         pubSub.publish("$gameID/catch", payload.toByteArray())
     }
 
-    override fun subscribeToPlayer(playerID: String) {
+    override fun subscribeToPlayer(playerID: Int) {
         pubSub.subscribe("$gameID/$playerID")
     }
 
-    override fun unsubscribeFromPlayer(playerID: String) {
+    override fun unsubscribeFromPlayer(playerID: Int) {
         pubSub.unsubscribe("$gameID/$playerID")
     }
 
