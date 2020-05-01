@@ -1,8 +1,6 @@
 package ch.epfl.sdp.replay.viewer
 
 import android.content.Intent
-import android.icu.text.CaseMap
-import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
@@ -15,7 +13,6 @@ import ch.epfl.sdp.game.PredatorActivity
 import org.junit.After
 import org.junit.Test
 
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 
@@ -24,7 +21,7 @@ class ReplayActivityTest {
     private val activityIntent = Intent()
     init {
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        activityIntent.putExtra("replay_path", "test_file1.txt")
+        activityIntent.putExtra("replay_path", "0.game")
     }
 
     private val invalidPathActivityIntent = Intent()
@@ -33,8 +30,13 @@ class ReplayActivityTest {
         activityIntent.putExtra("replay_path", "inexisting")
     }
 
+    private val emptyIntent = Intent()
+    init {
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
     @get:Rule
-    val activityRule = ActivityTestRule(PredatorActivity::class.java, false, false)
+    val activityRule = ActivityTestRule(ReplayActivity::class.java, false, false)
     @get:Rule
     var grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
     @get:Rule
@@ -52,19 +54,19 @@ class ReplayActivityTest {
 
     @Test
     fun testNoFilePathProvided(){
-        launchActivity<ReplayActivity>()
+        activityRule.launchActivity(emptyIntent)
         Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText(R.string.missing_replay_path_parameter)))
     }
 
     @Test
     fun testInvalidFilePathProvided(){
-        launchActivity<ReplayActivity>(invalidPathActivityIntent)
+        activityRule.launchActivity(invalidPathActivityIntent)
         Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText(R.string.file_not_found)))
     }
 
     @Test
     fun testValidFilePathProvided(){
-        launchActivity<ReplayActivity>(activityIntent)
+        activityRule.launchActivity(activityIntent)
         Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("")))
     }
 }
