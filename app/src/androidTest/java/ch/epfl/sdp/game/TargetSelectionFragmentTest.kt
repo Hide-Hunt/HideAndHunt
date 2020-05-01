@@ -97,7 +97,7 @@ class TargetSelectionFragmentTest {
                 assertEquals(expectedTargetInCallback, targetID)
                 expectedTargetInCallback++
                 if (expectedTargetInCallback == 4) {
-                    expectedTargetInCallback = TargetSelectionFragment.NO_TARGET.toInt()
+                    expectedTargetInCallback = TargetSelectionFragment.NO_TARGET
                 }
             }
         }

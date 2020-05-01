@@ -32,7 +32,7 @@ class PreyActivityTest {
     init {
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         activityIntent.putExtra("gameID", 0)
-        activityIntent.putExtra("playerID", "0")
+        activityIntent.putExtra("playerID", 0)
         activityIntent.putExtra("players", players)
         activityIntent.putExtra("initialTime", 2 * 60 * 1000L)
         activityIntent.putExtra("mqttURI", "tcp://localhost:1883")

@@ -12,7 +12,7 @@ class UserTest {
     fun defaultMatchesExpected() {
         val user = User("", 0)
         assertEquals("", user.name)
-        assertEquals("0", user.uid)
+        assertEquals(0, user.uid)
     }
 
 }

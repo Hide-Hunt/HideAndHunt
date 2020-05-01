@@ -69,7 +69,7 @@ class TargetSelectionFragment : Fragment() {
             targetSelectionDialog?.show()
         }
 
-        selectedTargetID = (savedInstanceState?.getString(ARG_SELECTED_TARGET_ID) ?: NO_TARGET) as Int
+        selectedTargetID = (savedInstanceState?.getInt(ARG_SELECTED_TARGET_ID) ?: NO_TARGET)
 
         return binding.root
     }
@@ -101,7 +101,7 @@ class TargetSelectionFragment : Fragment() {
         if (selectedTargetID == NO_TARGET) {
             binding.currentTarget.setText(R.string.no_target)
         } else {
-            binding.currentTarget.text = String.format(Locale.getDefault(), "Player %s", selectedTargetID)
+            binding.currentTarget.text = String.format(Locale.getDefault(), "Player %d", selectedTargetID)
         }
     }
 
