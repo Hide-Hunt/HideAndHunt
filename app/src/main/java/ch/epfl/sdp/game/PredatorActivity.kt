@@ -126,6 +126,9 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
                 locationHandler.declareCatch(preyID)
             }
         }
+        if(players.values.filterIsInstance<Prey>().isEmpty()) {
+            EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
