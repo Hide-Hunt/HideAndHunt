@@ -22,7 +22,7 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
     private val downloads = ArrayList<IReplayDownloader.IReplayDownload>()
 
     val mockReplayList = listOf(
-            ReplayInfo(0, 0, 2345, Faction.PREDATOR, true),
+            ReplayInfo(0, 0, 2345, Faction.PREDATOR, false),
             ReplayInfo(1, 6753759194, 6753759194 + 675, Faction.PREDATOR, false),
             ReplayInfo(2, 964781131, 964781131 + 182, Faction.PREY, false),
             ReplayInfo(3, 1982211276, 1982211276 + 871, Faction.PREDATOR, false),
@@ -36,8 +36,6 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
         super.onCreate(savedInstanceState)
         binding = ActivityManageReplaysBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // downloader = FirebaseReplayDownloader(this)
 
         val repoFactory = object : IRepoFactory {
             override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {

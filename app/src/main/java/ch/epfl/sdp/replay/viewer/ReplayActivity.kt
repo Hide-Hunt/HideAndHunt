@@ -36,6 +36,7 @@ class ReplayActivity : AppCompatActivity() {
                     setupFragments(firstTimestamp, lastTimestamp, gameHistory)
                 }
             } catch (e: Exception) {
+                binding.errorDetails.text = getString(R.string.replay_file_format_error)
                 e.printStackTrace()
             }
         }
