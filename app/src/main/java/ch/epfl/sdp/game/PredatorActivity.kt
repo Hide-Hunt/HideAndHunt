@@ -110,24 +110,9 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 preys[it]?.let { preyID ->
-                    onPreyCatch(preyID)
+                    onPreyCatches(gameData.playerID, preyID)
                 }
             }
-        }
-    }
-
-    private fun onPreyCatch(preyID: Int) {
-        players[preyID]?.let {
-            if (it is Prey && it.state == PreyState.ALIVE) {
-                it.state = PreyState.DEAD
-                catchCount++
-                preyFragment.setPreyState(preyID, PreyState.DEAD)
-                Toast.makeText(this, "Caught a prey : id=" + players[preyID]?.id, Toast.LENGTH_LONG).show()
-                locationHandler.declareCatch(preyID)
-            }
-        }
-        if(players.values.filterIsInstance<Prey>().isEmpty()) {
-            EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
         }
     }
 
@@ -184,8 +169,11 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
             if (it is Prey && it.state == PreyState.ALIVE) {
                 it.state = PreyState.DEAD
                 preyFragment.setPreyState(preyID, PreyState.DEAD)
-                Toast.makeText(this@PredatorActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
             }
+        }
+
+        if(players.values.filterIsInstance<Prey>().none { p -> p.state != PreyState.DEAD }) {
+            EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
         }
     }
 
