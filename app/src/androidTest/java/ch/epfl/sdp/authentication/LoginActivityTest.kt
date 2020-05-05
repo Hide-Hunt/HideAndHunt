@@ -22,7 +22,7 @@ class LoginActivityTest {
 
     @Before
     fun forceDisconnect() {
-        User.connected = false
+        LocalUser.connected = false
     }
 
     @Test
@@ -38,7 +38,7 @@ class LoginActivityTest {
         onView(withId(R.id.userPasswordLogin)).perform(typeText("passwordNew"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.registerSubmitButton)).perform(click())
         onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("Account created and logged in as testNew@test.com")))
-        Assert.assertTrue(User.connected)
+        Assert.assertTrue(LocalUser.connected)
     }
 
     @Test
@@ -48,7 +48,7 @@ class LoginActivityTest {
         onView(withId(R.id.userPasswordLogin)).perform(typeText("password0"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.registerSubmitButton)).perform(click())
         onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("Account creation failed")))
-        Assert.assertFalse(User.connected)
+        Assert.assertFalse(LocalUser.connected)
     }
 
     @Test
@@ -58,7 +58,7 @@ class LoginActivityTest {
         onView(withId(R.id.userPasswordLogin)).perform(typeText("password0"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.loginSubmitButton)).perform(click())
         onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("User logged in as test0@test.com")))
-        Assert.assertTrue(User.connected)
+        Assert.assertTrue(LocalUser.connected)
     }
 
     @Test
@@ -68,6 +68,6 @@ class LoginActivityTest {
         onView(withId(R.id.userPasswordLogin)).perform(typeText("fewewfwe"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.loginSubmitButton)).perform(click())
         onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("Logging failed")))
-        Assert.assertFalse(User.connected)
+        Assert.assertFalse(LocalUser.connected)
     }
 }

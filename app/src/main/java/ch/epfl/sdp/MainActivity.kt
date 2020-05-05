@@ -3,6 +3,7 @@ package ch.epfl.sdp
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.db.IRepoFactory
@@ -10,6 +11,7 @@ import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,9 +40,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, GameCreationActivity::class.java)
             startActivity(intent)
         }
+    }
 
-        binding.btnDebug.setOnClickListener {
-            startActivity(Intent(this@MainActivity, DebugActivity::class.java))
-        }
+    override fun onResume() {
+        super.onResume()
+        binding.playButton.isEnabled = LocalUser.connected
+        binding.newGameButton.isEnabled = LocalUser.connected
     }
 }
