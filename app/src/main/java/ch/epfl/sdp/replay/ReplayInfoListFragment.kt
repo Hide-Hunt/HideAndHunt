@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.FragmentReplayInfoListBinding
-import ch.epfl.sdp.db.IRepoFactory
+import javax.inject.Inject
 
 /**
  * A fragment representing a list of Items.
@@ -20,14 +21,12 @@ class ReplayInfoListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewAdapter: ReplayInfoRecyclerViewAdapter
-    private lateinit var repo: IReplayRepository
+    @Inject lateinit var repo: IReplayRepository
     var listener: OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (activity?.applicationContext as HideAndHuntApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            repo = (it.getSerializable(REPO_FACTORY_ARG) as IRepoFactory).makeReplayRepository()
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -87,14 +86,7 @@ class ReplayInfoListFragment : Fragment() {
     }
 
     companion object {
-        private const val REPO_FACTORY_ARG = "repoFacto"
-
         @JvmStatic
-        fun newInstance(factory: IRepoFactory) =
-                ReplayInfoListFragment().apply {
-                    val args = Bundle()
-                    args.putSerializable(REPO_FACTORY_ARG, factory)
-                    this.arguments = args
-                }
+        fun newInstance() = ReplayInfoListFragment()
     }
 }

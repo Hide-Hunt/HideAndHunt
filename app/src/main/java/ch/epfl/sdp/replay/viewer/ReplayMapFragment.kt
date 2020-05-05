@@ -81,6 +81,7 @@ class ReplayMapFragment : Fragment() {
 
     private fun mapsforgeInit() {
         try {
+            // map adress : https://download.mapsforge.org/maps/v5/europe/switzerland.map
             val mapView = binding.map
             mapView.mapScaleBar.isVisible = true
             mapView.setBuiltInZoomControls(true)
@@ -179,11 +180,10 @@ class ReplayMapFragment : Fragment() {
         private const val ARG_HISTORY = "history"
         private const val MAP_FILE = "cache.map"
 
-        fun newInstance(history: GameHistory) =
-                ReplayMapFragment().apply {
-                    arguments = Bundle().apply {
-                        putSerializable(ARG_HISTORY, history)
-                    }
-                }
+        fun newInstance(history: GameHistory) = ReplayMapFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(ARG_HISTORY, history)
+            }
+        }
     }
 }

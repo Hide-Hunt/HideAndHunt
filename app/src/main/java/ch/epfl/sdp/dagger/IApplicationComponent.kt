@@ -6,6 +6,7 @@ import ch.epfl.sdp.dagger.modules.*
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import ch.epfl.sdp.replay.ManageReplaysActivity
+import ch.epfl.sdp.replay.ReplayInfoListFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -24,6 +25,7 @@ interface ApplicationComponent : IApplicationComponent {
     fun inject(activity: GameLobbyActivity)
     fun inject(activity: LoginActivity)
     fun inject(activity: ManageReplaysActivity)
+    fun inject(activity: ReplayInfoListFragment)
 }
 
 @Singleton
@@ -38,4 +40,5 @@ interface TestApplicationComponent : ApplicationComponent {
     override fun inject(activity: GameLobbyActivity)
     override fun inject(activity: LoginActivity)
     override fun inject(activity: ManageReplaysActivity)
+    override fun inject(activity: ReplayInfoListFragment)
 }
