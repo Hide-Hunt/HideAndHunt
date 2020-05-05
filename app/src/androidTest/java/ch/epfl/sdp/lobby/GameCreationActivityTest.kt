@@ -36,11 +36,4 @@ class GameCreationActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.create_button)).perform(ViewActions.click())
         Intents.intended(IntentMatchers.hasComponent(GameLobbyActivity::class.java.name))
     }
-
-    @Test
-    fun mainActivityCreateGameButtonLeadsToGameCreation() {
-        launchActivity<MainActivity>()
-        Espresso.onView(ViewMatchers.withId(R.id.newGame_button)).perform(ViewActions.click())
-        Intents.intended(IntentMatchers.hasComponent(GameCreationActivity::class.java.name))
-    }
 }
