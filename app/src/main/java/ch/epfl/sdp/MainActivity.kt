@@ -8,6 +8,7 @@ import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.db.IRepoFactory
 import ch.epfl.sdp.lobby.GameCreationActivity
+import ch.epfl.sdp.lobby.global.FirebaseGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val repositoryFactory = object : IRepoFactory {
         override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
-            return MockGlobalLobbyRepository()
+            return FirebaseGlobalLobbyRepository()
         }
     }
 
