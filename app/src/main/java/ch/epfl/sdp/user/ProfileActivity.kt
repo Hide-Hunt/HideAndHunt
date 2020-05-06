@@ -118,7 +118,6 @@ class ProfileActivity: AppCompatActivity(), Callback {
     }
 
     private fun showSuccessAndKill() {
-        Looper.prepare()
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle("Success")
                 .setMessage("Successfully uploaded profile pic")

@@ -52,8 +52,10 @@ class MockUserConnector : IUserConnector {
     }
 
     override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
-        User.pseudo = pseudo!!
-        User.profilePic = profilePic!!
+        if(pseudo != null)
+            User.pseudo = pseudo!!
+        if(profilePic != null)
+            User.profilePic = profilePic!!
         successCallback()
     }
 
