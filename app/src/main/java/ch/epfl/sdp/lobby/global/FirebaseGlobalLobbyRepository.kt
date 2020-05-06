@@ -22,7 +22,7 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
                         (doc["id"] as Long).toInt(),
                         doc["name"] as String,
                         doc["admin"] as String,
-                        (doc["duration"] as Long).toInt(),
+                        (doc["duration"] as Long),
                         emptyMap(),
                         GameState.values()[(doc["state"] as Long).toInt()],
                         emptyList(), // TODO: Retrieve participation list

@@ -20,7 +20,8 @@ class GlobalLobbyAdapter(var data: List<Game>) :  RecyclerView.Adapter<MyViewHol
         override fun onClick(v: View?) {
             val game = data[layoutPosition]
             Toast.makeText(v?.context, game.name, Toast.LENGTH_SHORT).show()
-            val intent = Intent(v?.context, GameLobbyActivity::class.java) //TODO: Call with the game as param
+            val intent = Intent(v?.context, GameLobbyActivity::class.java)
+            intent.putExtra("gameID", game.id)
             v?.context?.startActivity(intent)
         }
 

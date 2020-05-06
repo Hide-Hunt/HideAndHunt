@@ -9,23 +9,21 @@ import java.sql.Time
 interface IGameLobbyRepository {
     fun createGame(gameName: String, gameDuration: Long): Int
 
-    fun getGameId(cb: Callback<Int>)
+    fun getGameName(gameId: Int, cb: Callback<String>)
 
-    fun getGameName(cb: Callback<String>)
+    fun getGameDuration(gameId: Int, cb: Callback<Int>)
 
-    fun getGameDuration(cb: Callback<Int>)
+    fun getPlayers(gameId: Int, cb: Callback<List<Player>>)
 
-    fun getPlayers(cb: Callback<List<Player>>)
+    fun getParticipations(gameId: Int, cb: Callback<List<Participation>>)
 
-    fun getParticipations(cb: Callback<List<Participation>>)
+    fun getAdminId(gameId: Int, cb: Callback<Int>)
 
-    fun getAdminId(cb: Callback<Int>)
+    fun changePlayerReady(gameId: Int, uid: Int)
 
-    fun changePlayerReady(uid: Int)
+    fun setPlayerReady(gameId: Int, uid: Int, ready: Boolean)
 
-    fun setPlayerReady(uid: Int, ready: Boolean)
+    fun setPlayerFaction(gameId: Int, uid: Int, faction: PlayerFaction)
 
-    fun setPlayerFaction(uid: Int, faction: PlayerFaction)
-
-    fun setPlayerTag(uid: Int, tag: String)
+    fun setPlayerTag(gameId: Int, uid: Int, tag: String)
 }
