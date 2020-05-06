@@ -15,16 +15,17 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     private const val gameName = "My mock game"
     private const val gameDuration = 1200L
     private val players = mutableListOf(
-            Participation(User("George Kittle", 85), false, "CAFE", PlayerFaction.PREDATOR),
-            Participation(User("Nick Bosa", 97), false, "0A0A", PlayerFaction.PREDATOR),
-            Participation(User("Richard Sherman", 25), false, "C0BA", PlayerFaction.PREDATOR),
-            Participation(User("Dummy User", 23), false, "AB00", PlayerFaction.PREDATOR),
-            Participation(User("Hello World", 42), true, "C0B0", PlayerFaction.PREY),
-            Participation(User("Morgan Freeman", 1), false, "0BBB", PlayerFaction.PREDATOR),
-            Participation(User("Jack Sparrow", 7), true, "0AAC", PlayerFaction.PREY),
-            Participation(User("Britney Spears", 24), false, "AC00", PlayerFaction.PREDATOR),
-            Participation(User("Spiderman", 25), false, "A0AA", PlayerFaction.PREDATOR),
-            Participation(User("Neymar Jr", 26), false, "C000", PlayerFaction.PREDATOR))
+            Participation("George Kittle", false, "CAFE", 85, PlayerFaction.PREDATOR),
+            Participation("Nick Bosa", false, "0A0A", 97, PlayerFaction.PREDATOR),
+            Participation("Richard Sherman", false, "C0BA", 25, PlayerFaction.PREDATOR),
+            Participation("Dummy ", false, "AB00", 23, PlayerFaction.PREDATOR),
+            Participation("Hello World", true, "C0B0", 42, PlayerFaction.PREY),
+            Participation("Morgan Freeman", false, "0BBB", 1, PlayerFaction.PREDATOR),
+            Participation("Jack Sparrow", true, "0AAC", 7, PlayerFaction.PREY),
+            Participation("Britney Spears", false, "AC00", 24, PlayerFaction.PREDATOR),
+            Participation("Spiderman", false, "A0AA", 25, PlayerFaction.PREDATOR),
+            Participation("Neymar Jr", false, "C000", 26, PlayerFaction.PREDATOR)
+    )
 
     override fun createGame(gameName: String, gameDuration: Long): Int {
         return 42
@@ -40,8 +41,8 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun getParticipations(gameId: Int, cb: Callback<List<Participation>>) {
         //add players to show refreshing works
-        if (counter != 0) players.add(Participation(User("Player$counter", 10 + counter),
-                false, "0ABC", PlayerFaction.PREY))
+        if (counter != 0) players.add(Participation("Player$counter",
+                false, "0ABC", 10 + counter, PlayerFaction.PREY))
         ++counter
         cb(players)
     }
@@ -49,18 +50,18 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     override fun getPlayers(gameId: Int, cb: Callback<List<Player>>) {
         var mPlayers: List<Player> = ArrayList()
         for (p in players) {
-            mPlayers = if (p.faction == PlayerFaction.PREY) mPlayers + Prey(p.user.uid, p.tag) else mPlayers + Predator(p.user.uid)
+            mPlayers = if (p.faction == PlayerFaction.PREY) mPlayers + Prey(p.playerID, p.tag) else mPlayers + Predator(p.playerID)
         }
         cb(mPlayers)
     }
 
     override fun getAdminId(gameId: Int, cb: Callback<Int>) {
-        cb(players[1].user.uid)
+        cb(players[1].playerID)
     }
 
     override fun changePlayerReady(gameId: Int, uid: Int) {
         for (player in players) {
-            if (player.user.uid == uid) {
+            if (player.playerID == uid) {
                 player.ready = !player.ready
                 break
             }
@@ -69,7 +70,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun setPlayerReady(gameId: Int, uid: Int, ready: Boolean) {
         for (player in players) {
-            if (player.user.uid == uid) {
+            if (player.playerID == uid) {
                 player.ready = ready
                 break
             }
@@ -78,13 +79,13 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun setPlayerFaction(gameId: Int, uid: Int, faction: PlayerFaction) {
         players.forEach { participation ->
-            if (uid == participation.user.uid) participation.faction = faction
+            if (uid == participation.playerID) participation.faction = faction
         }
     }
 
     override fun setPlayerTag(gameId: Int, uid: Int, tag: String) {
         players.forEach { player ->
-            if(uid == player.user.uid) {
+            if(uid == player.playerID) {
                 player.tag = tag
                 return
             }

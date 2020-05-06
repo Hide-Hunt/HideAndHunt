@@ -8,6 +8,7 @@ import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
+import ch.epfl.sdp.user.User
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
@@ -86,6 +87,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                         part.get().addOnSuccessListener {
                             players.add(
                                     Participation(
+                                            it["username"] as String,
                                             (it["state"] as Int) == 0,
                                             it["tag"] as String,
                                             it["playerID"] as Int,
@@ -100,7 +102,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun getAdminId(gameId: Int, cb: Callback<Int>) {
-        TODO("Not yet implemented")
+
     }
 
     override fun changePlayerReady(gameId: Int, uid: Int) {
