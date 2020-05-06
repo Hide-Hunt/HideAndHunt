@@ -24,9 +24,9 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
                         doc["admin"] as String,
                         (doc["duration"] as Long),
                         emptyMap(),
-                        GameState.values()[(doc["state"] as Long).toInt()],
-                        emptyList(), // TODO: Retrieve participation list
-                        Date(), Date(), Date() // TODO: Convert timestamps to date
+                        GameState.valueOf(doc["state"] as String),
+                        emptyList(),            // TODO: Retrieve participation list
+                        Date(), Date(), Date()  // TODO: Convert timestamps to date
                 )
                 games.add(g)
             }

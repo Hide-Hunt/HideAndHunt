@@ -10,11 +10,11 @@ import java.util.*
 
 class MockGlobalLobbyRepository : IGlobalLobbyRepository {
 
-    private val participation1 = listOf<Participation>(Participation("JeanMichel", false, "FFCA", 42, PlayerFaction.PREY))
+    private val participation1 = listOf<Participation>(Participation("JeanMichel", false, "FFCA", 42, PlayerFaction.PREY, 1))
     private val participation2 = listOf<Participation>(
-            Participation("George Kittle", true, "CAFE", 85, PlayerFaction.PREY),
-            Participation("Nick Bosa", true, "0A0A", 97, PlayerFaction.PREDATOR),
-            Participation("Richard Sherman", true, "C0BA", 25, PlayerFaction.PREDATOR)
+            Participation("George Kittle", true, "CAFE", 85, PlayerFaction.PREY, 0),
+            Participation("Nick Bosa", true, "0A0A", 97, PlayerFaction.PREDATOR, 0),
+            Participation("Richard Sherman", true, "C0BA", 25, PlayerFaction.PREDATOR, 0)
     )
     private var games = listOf<Game>(
             Game(1, "Classical Game in Geneva", "Alex",

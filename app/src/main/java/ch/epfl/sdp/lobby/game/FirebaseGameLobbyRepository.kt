@@ -40,7 +40,8 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                         false,
                         "",
                         IDHelper.getPlayerID(),
-                        PlayerFaction.PREY
+                        PlayerFaction.PREY,
+                        gameId
                 )
         )
     }
@@ -56,7 +57,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                         GameState.LOBBY,
                         emptyList(), //TODO: Add local user participation
                         Date(),
-                        Date(Long.MAX_VALUE), //TODO: For now the game is available to the max
+                        Date((Int.MAX_VALUE / 2).toLong()), //TODO: For now the game is available to the max
                         Date()
                 )
         )
@@ -87,23 +88,19 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun getParticipations(gameId: Int, cb: Callback<List<Participation>>) {
         val players: MutableList<Participation> = ArrayList()
-        getFirebaseGameWithID(gameId) { fid ->
-            fs.collection("games").document(fid).get().addOnSuccessListener { game ->
-                val participations = (game["participation"] as List<*>).filterIsInstance<DocumentReference>()
-                participations.forEach { part ->
-                    part.get().addOnSuccessListener {
-                        players.add(
-                                Participation(
-                                        it["username"] as String,
-                                        (it["state"] as Boolean),
-                                        it["tag"] as String,
-                                        (it["playerID"] as Long).toInt(),
-                                        PlayerFaction.values()[(it["faction"] as Long).toInt()]
-                                )
-                        )
-                    }
-                }
+        fs.collection("participations").whereEqualTo("gameID", gameId).get().addOnSuccessListener { documents ->
+
+            for(doc in documents) {
+                players.add(Participation(
+                        doc["username"] as String,
+                        doc["ready"] as Boolean,
+                        doc["tag"] as String,
+                        (doc["playerID"] as Long).toInt(),
+                        PlayerFaction.valueOf(doc["faction"] as String),
+                        (doc["gameID"] as Long).toInt()
+                ))
             }
+            cb(players)
         }
     }
 
@@ -122,7 +119,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     override fun setPlayerReady(gameId: Int, uid: Int, ready: Boolean) {
         fs.collection("participations").whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
             for(doc in documents) {
-                fs.collection("participations").document(doc.id).update("ready", if(ready) 1 else 0)
+                fs.collection("participations").document(doc.id).update("ready", ready)
             }
         }
     }
@@ -130,7 +127,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     override fun setPlayerFaction(gameId: Int, uid: Int, faction: PlayerFaction) {
         fs.collection("participations").whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
             for(doc in documents) {
-                fs.collection("participations").document(doc.id).update("faction", faction.ordinal)
+                fs.collection("participations").document(doc.id).update("faction", faction)
             }
         }
     }

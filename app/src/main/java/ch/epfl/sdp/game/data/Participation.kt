@@ -8,5 +8,6 @@ data class Participation (
         var ready: Boolean,
         var tag: String,
         var playerID: Int,
-        var faction: PlayerFaction
+        var faction: PlayerFaction,
+        var gameID: Int
 )

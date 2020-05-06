@@ -15,16 +15,16 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     private const val gameName = "My mock game"
     private const val gameDuration = 1200L
     private val players = mutableListOf(
-            Participation("George Kittle", false, "CAFE", 85, PlayerFaction.PREDATOR),
-            Participation("Nick Bosa", false, "0A0A", 97, PlayerFaction.PREDATOR),
-            Participation("Richard Sherman", false, "C0BA", 25, PlayerFaction.PREDATOR),
-            Participation("Dummy ", false, "AB00", 23, PlayerFaction.PREDATOR),
-            Participation("Hello World", true, "C0B0", 42, PlayerFaction.PREY),
-            Participation("Morgan Freeman", false, "0BBB", 1, PlayerFaction.PREDATOR),
-            Participation("Jack Sparrow", true, "0AAC", 7, PlayerFaction.PREY),
-            Participation("Britney Spears", false, "AC00", 24, PlayerFaction.PREDATOR),
-            Participation("Spiderman", false, "A0AA", 25, PlayerFaction.PREDATOR),
-            Participation("Neymar Jr", false, "C000", 26, PlayerFaction.PREDATOR)
+            Participation("George Kittle", false, "CAFE", 85, PlayerFaction.PREDATOR, gameId),
+            Participation("Nick Bosa", false, "0A0A", 97, PlayerFaction.PREDATOR, gameId),
+            Participation("Richard Sherman", false, "C0BA", 25, PlayerFaction.PREDATOR, gameId),
+            Participation("Dummy ", false, "AB00", 23, PlayerFaction.PREDATOR, gameId),
+            Participation("Hello World", true, "C0B0", 42, PlayerFaction.PREY, gameId),
+            Participation("Morgan Freeman", false, "0BBB", 1, PlayerFaction.PREDATOR, gameId),
+            Participation("Jack Sparrow", true, "0AAC", 7, PlayerFaction.PREY, gameId),
+            Participation("Britney Spears", false, "AC00", 24, PlayerFaction.PREDATOR, gameId),
+            Participation("Spiderman", false, "A0AA", 25, PlayerFaction.PREDATOR, gameId),
+            Participation("Neymar Jr", false, "C000", 26, PlayerFaction.PREDATOR, gameId)
     )
 
     override fun addLocalParticipation(gameId: Int) {
@@ -46,7 +46,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     override fun getParticipations(gameId: Int, cb: Callback<List<Participation>>) {
         //add players to show refreshing works
         if (counter != 0) players.add(Participation("Player$counter",
-                false, "0ABC", 10 + counter, PlayerFaction.PREY))
+                false, "0ABC", 10 + counter, PlayerFaction.PREY, gameId))
         ++counter
         cb(players)
     }
