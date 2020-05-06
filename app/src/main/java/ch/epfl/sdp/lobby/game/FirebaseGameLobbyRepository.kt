@@ -11,6 +11,7 @@ import ch.epfl.sdp.game.data.Player
 import ch.epfl.sdp.user.User
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -58,7 +59,8 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                         emptyList(), //TODO: Add local user participation
                         Date(),
                         Date((Int.MAX_VALUE / 2).toLong()), //TODO: For now the game is available to the max
-                        Date()
+                        Date(),
+                        IDHelper.getPlayerID()
                 )
         )
         return gameName.hashCode() //TODO: Better id generation

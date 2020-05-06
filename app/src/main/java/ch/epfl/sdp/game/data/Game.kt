@@ -12,5 +12,6 @@ data class Game (
         var participation: List<Participation>,
         var startDate: Date,
         var endDate: Date,
-        var creationDate: Date
+        var creationDate: Date,
+        var adminID: Int
 )

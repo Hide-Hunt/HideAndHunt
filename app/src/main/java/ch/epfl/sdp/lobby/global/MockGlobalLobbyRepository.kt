@@ -21,17 +21,17 @@ class MockGlobalLobbyRepository : IGlobalLobbyRepository {
                     3600, emptyMap(),
                     GameState.LOBBY, emptyList(),
                     Date(3243432), Date(3243213432),
-                    Date(32434332113212)),
+                    Date(32434332113212), 0),
             Game(2, "Classical Game in Lausanne", "Maxime",
                     7200, emptyMap(),
                     GameState.ENDED, participation1,
                     Date(3243432), Date(3243213432),
-                    Date(32434332113212)),
+                    Date(32434332113212), 0),
             Game(3, "Battle Royale in San Francisco", "JimmyG",
                     3600, emptyMap(),
                     GameState.STARTED, participation2,
                     Date(3243432), Date(3243213432),
-                    Date(32434332113212))
+                    Date(32434332113212), 0)
     )
 
 

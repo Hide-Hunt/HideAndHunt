@@ -28,7 +28,7 @@ class GameCreationActivity : AppCompatActivity() {
             val timInMilliseconds: Long = time.toLong() * 60000
             val newGameID = lobbyRepo.createGame(binding.gameName.text.toString(), timInMilliseconds)
             val intent = Intent(this@GameCreationActivity, GameLobbyActivity::class.java)
-            intent.putExtra("GameID", newGameID)
+            intent.putExtra("gameID", newGameID)
             startActivity(intent)
         }
     }
