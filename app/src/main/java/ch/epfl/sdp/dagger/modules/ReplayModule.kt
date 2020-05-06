@@ -14,7 +14,7 @@ import dagger.Provides
 class ReplayModule {
     @Provides
     fun providesFirebaseDownloader(context: Context): IReplayDownloader {
-        return FirebaseReplayDownloader(context)
+        return FirebaseReplayDownloader()
     }
 
     @Provides
