@@ -19,7 +19,7 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
     @Inject
     lateinit var downloader: IReplayDownloader
     private lateinit var replayInfoListFragment: ReplayInfoListFragment
-    private val downloads = ArrayList<IReplayDownloader.IReplayDownload>()
+    private val downloads = HashMap<Int, IReplayDownloader.IReplayDownload>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,12 +62,17 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
     override fun onDestroy() {
         super.onDestroy()
         downloads.forEach {
-            it.cancel()
+            it.value.cancel()
         }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun downloadReplay(gameID: Int) {
+        if (downloads.containsKey(gameID)) {
+            Toast.makeText(this, "Already downloading replay", Toast.LENGTH_LONG).show()
+            return
+        }
+
         File(filesDir.absolutePath + "/replays").let {
             if(!it.exists()) {
                 it.mkdir()
@@ -75,17 +80,22 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
         }
 
         val tempFile = File(filesDir.absolutePath + "/replays/game_$gameID.tmp")
-        downloader.download(
+        // TODO Set downloading state on replayInfoListFragment
+        val dl = downloader.download(
                 gameID,
                 tempFile,
                 {
                     tempFile.renameTo(File(filesDir.absolutePath + "/replays/${gameID}.game"))
                     replayInfoListFragment.setDownloadedGame(gameID)
+                    downloads.remove(gameID)
                 },
                 { error ->
                     tempFile.delete()
+                    downloads.remove(gameID)
+                    // TODO Remove downloading state on replayInfoListFragment
                     Toast.makeText(this, "Error downloading \"${gameID}\": $error", Toast.LENGTH_LONG).show()
                 }
         )
+        downloads[gameID] = dl
     }
 }
