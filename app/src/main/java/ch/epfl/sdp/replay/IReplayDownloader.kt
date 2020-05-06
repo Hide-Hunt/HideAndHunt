@@ -8,5 +8,9 @@ interface IReplayDownloader {
     interface IReplayDownload {
         fun cancel()
     }
-    fun download(gameID: Int, file: File, successCallback: UnitCallback, failureCallback: Callback<String>): IReplayDownload
+
+    fun download(gameID: Int,
+                 file: File,
+                 successCallback: UnitCallback,
+                 failureCallback: Callback<String>): IReplayDownload
 }
