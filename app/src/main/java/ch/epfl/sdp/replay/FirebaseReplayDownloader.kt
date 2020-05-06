@@ -11,28 +11,17 @@ class FirebaseReplayDownloader(private val context: Context) : IReplayDownloader
     var storage = FirebaseStorage.getInstance()
     var storageRef = storage.getReferenceFromUrl("gs://hidehunt-71e41.appspot.com").child("replays")
 
-    override fun download(gameID: Int, successCallback: UnitCallback, failureCallback: Callback<String>): IReplayDownloader.IReplayDownload {
+    override fun download(gameID: Int, file: File, successCallback: UnitCallback, failureCallback: Callback<String>): IReplayDownloader.IReplayDownload {
         var canceled = false
         checkFolder()
 
-        val tempFile = File(context.filesDir.absolutePath + "/replays/game_$gameID.tmp")
-        val downloadHandle = storageRef.child("$gameID.game").getFile(tempFile)
+        val downloadHandle = storageRef.child("$gameID.game").getFile(file)
                 .addOnSuccessListener {
-                    if (canceled) {
-                        tempFile.delete()
-                    } else {
-                        tempFile.renameTo(File(context.filesDir.absolutePath + "/replays/$gameID.game"))
-                        successCallback()
-                    }
+                    if (canceled) { failureCallback("Canceled") }
+                    else { successCallback() }
                 }
-                .addOnFailureListener {
-                    tempFile.delete()
-                    failureCallback(it.toString())
-                }
-                .addOnCanceledListener {
-                    tempFile.delete()
-                    failureCallback("Canceled")
-                }
+                .addOnFailureListener { failureCallback(it.toString()) }
+                .addOnCanceledListener { failureCallback("Canceled") }
 
         return object : IReplayDownloader.IReplayDownload {
             override fun cancel() {

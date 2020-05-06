@@ -9,11 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityManageReplaysBinding
 import ch.epfl.sdp.replay.viewer.ReplayActivity
+import java.io.File
 import javax.inject.Inject
 
 class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnListFragmentInteractionListener {
     private lateinit var binding: ActivityManageReplaysBinding
-    @Inject lateinit var downloader: IReplayDownloader
+
+    @Inject
+    lateinit var downloader: IReplayDownloader
     private lateinit var replayInfoListFragment: ReplayInfoListFragment
     private val downloads = ArrayList<IReplayDownloader.IReplayDownload>()
 
@@ -44,14 +47,8 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
             AlertDialog.Builder(this)
                     .setTitle("No local copy")
                     .setMessage("Would you like to download the replay ?")
-                    .setPositiveButton("Download") { dialog, i ->
-                        downloader.download(game.gameID, {
-                            replayInfoListFragment.setDownloadedGame(game.gameID)
-                        }, { error ->
-                            Toast.makeText(this, "Error downloading \"${game.gameID}\": $error", Toast.LENGTH_LONG).show()
-                        })
-                    }
-                    .setNegativeButton("Cancel") {dialog, which ->  }
+                    .setPositiveButton("Download") { _, _ -> downloadReplay(game.gameID) }
+                    .setNegativeButton("Cancel") { _, _ -> }
                     .create().show()
         }
     }
@@ -66,5 +63,21 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
         downloads.forEach {
             it.cancel()
         }
+    }
+
+    private fun downloadReplay(gameID: Int) {
+        val tempFile = File(filesDir.absolutePath + "/replays/game_$gameID.tmp")
+        downloader.download(
+                gameID,
+                tempFile,
+                {
+                    tempFile.renameTo(File(filesDir.absolutePath + "/replays/${gameID}.game"))
+                    replayInfoListFragment.setDownloadedGame(gameID)
+                },
+                { error ->
+                    tempFile.delete()
+                    Toast.makeText(this, "Error downloading \"${gameID}\": $error", Toast.LENGTH_LONG).show()
+                }
+        )
     }
 }
