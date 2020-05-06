@@ -27,18 +27,3 @@ interface ApplicationComponent : IApplicationComponent {
     fun inject(activity: ManageReplaysActivity)
     fun inject(activity: ReplayInfoListFragment)
 }
-
-@Singleton
-@Component(modules = [FakeRepoModule::class, FakeUserConnectorModule::class, ReplayModule::class])
-interface TestApplicationComponent : ApplicationComponent {
-    @Component.Factory
-    interface Factory{
-        fun create(@BindsInstance context: Context): TestApplicationComponent
-    }
-
-    override fun inject(activity: GameCreationActivity)
-    override fun inject(activity: GameLobbyActivity)
-    override fun inject(activity: LoginActivity)
-    override fun inject(activity: ManageReplaysActivity)
-    override fun inject(activity: ReplayInfoListFragment)
-}

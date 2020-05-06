@@ -3,18 +3,15 @@ package ch.epfl.sdp.dagger.modules
 import android.content.Context
 import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.game.data.Faction
-import ch.epfl.sdp.replay.FirebaseReplayDownloader
-import ch.epfl.sdp.replay.IReplayDownloader
-import ch.epfl.sdp.replay.IReplayRepository
-import ch.epfl.sdp.replay.ReplayInfo
+import ch.epfl.sdp.replay.*
 import dagger.Module
 import dagger.Provides
 
 @Module
-class ReplayModule {
+class FakeReplayModule {
     @Provides
     fun providesFirebaseDownloader(context: Context): IReplayDownloader {
-        return FirebaseReplayDownloader(context)
+        return FakeReplayDownloader()
     }
 
     @Provides
