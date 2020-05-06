@@ -11,7 +11,7 @@ interface IGameLobbyRepository {
 
     fun getGameName(gameId: Int, cb: Callback<String>)
 
-    fun getGameDuration(gameId: Int, cb: Callback<Int>)
+    fun getGameDuration(gameId: Int, cb: Callback<Long>)
 
     fun getPlayers(gameId: Int, cb: Callback<List<Player>>)
 

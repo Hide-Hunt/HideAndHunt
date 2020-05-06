@@ -13,7 +13,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     private var counter = 0
     private const val gameId = 1
     private const val gameName = "My mock game"
-    private const val gameDuration = 1200
+    private const val gameDuration = 1200L
     private val players = mutableListOf(
             Participation(User("George Kittle", 85), false, "CAFE", PlayerFaction.PREDATOR),
             Participation(User("Nick Bosa", 97), false, "0A0A", PlayerFaction.PREDATOR),
@@ -34,7 +34,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         cb(gameName)
     }
 
-    override fun getGameDuration(gameId: Int, cb: Callback<Int>) {
+    override fun getGameDuration(gameId: Int, cb: Callback<Long>) {
         cb(gameDuration)
     }
 
