@@ -53,20 +53,16 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun getGameName(gameId: Int, cb: Callback<String>) {
         getFirebaseGameWithID(gameId) { fid ->
-            if(fid != "") {
-                fs.collection("games").document(fid).get().addOnSuccessListener {
-                    cb(it["name"] as String)
-                }
+            fs.collection("games").document(fid).get().addOnSuccessListener {
+                cb(it["name"] as String)
             }
         }
     }
 
     override fun getGameDuration(gameId: Int, cb: Callback<Long>) {
         getFirebaseGameWithID(gameId) { fid ->
-            if(fid != "") {
-                fs.collection("games").document(fid).get().addOnSuccessListener {
-                    cb(it["duration"] as Long)
-                }
+            fs.collection("games").document(fid).get().addOnSuccessListener {
+                cb(it["duration"] as Long)
             }
         }
     }
@@ -80,21 +76,19 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     override fun getParticipations(gameId: Int, cb: Callback<List<Participation>>) {
         val players: MutableList<Participation> = ArrayList()
         getFirebaseGameWithID(gameId) { fid ->
-            if(fid != "") {
-                fs.collection("games").document(fid).get().addOnSuccessListener { game ->
-                    val participations = (game["participation"] as List<*>).filterIsInstance<DocumentReference>()
-                    participations.forEach { part ->
-                        part.get().addOnSuccessListener {
-                            players.add(
-                                    Participation(
-                                            it["username"] as String,
-                                            (it["state"] as Int) == 0,
-                                            it["tag"] as String,
-                                            it["playerID"] as Int,
-                                            PlayerFaction.values()[it["faction"] as Int]
-                                    )
-                            )
-                        }
+            fs.collection("games").document(fid).get().addOnSuccessListener { game ->
+                val participations = (game["participation"] as List<*>).filterIsInstance<DocumentReference>()
+                participations.forEach { part ->
+                    part.get().addOnSuccessListener {
+                        players.add(
+                                Participation(
+                                        it["username"] as String,
+                                        (it["state"] as Int) == 1,
+                                        it["tag"] as String,
+                                        it["playerID"] as Int,
+                                        PlayerFaction.values()[it["faction"] as Int]
+                                )
+                        )
                     }
                 }
             }
@@ -102,22 +96,38 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun getAdminId(gameId: Int, cb: Callback<Int>) {
-
+        getFirebaseGameWithID(gameId) { fid ->
+            fs.collection("games").document(fid).get().addOnSuccessListener {
+                cb(it["adminID"] as Int)
+            }
+        }
     }
 
     override fun changePlayerReady(gameId: Int, uid: Int) {
-        TODO("Not yet implemented")
+        setPlayerReady(gameId, uid, true)
     }
 
     override fun setPlayerReady(gameId: Int, uid: Int, ready: Boolean) {
-        TODO("Not yet implemented")
+        fs.collection("participations").whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
+            for(doc in documents) {
+                fs.collection("participations").document(doc.id).update("ready", if(ready) 1 else 0)
+            }
+        }
     }
 
     override fun setPlayerFaction(gameId: Int, uid: Int, faction: PlayerFaction) {
-        TODO("Not yet implemented")
+        fs.collection("participations").whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
+            for(doc in documents) {
+                fs.collection("participations").document(doc.id).update("faction", faction.ordinal)
+            }
+        }
     }
 
     override fun setPlayerTag(gameId: Int, uid: Int, tag: String) {
-        TODO("Not yet implemented")
+        fs.collection("participations").whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
+            for(doc in documents) {
+                fs.collection("participations").document(doc.id).update("tag", tag)
+            }
+        }
     }
 }
