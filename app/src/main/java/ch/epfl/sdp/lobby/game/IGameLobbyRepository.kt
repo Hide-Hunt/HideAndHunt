@@ -7,6 +7,9 @@ import ch.epfl.sdp.game.data.Player
 import java.sql.Time
 
 interface IGameLobbyRepository {
+
+    fun addLocalParticipation(gameId: Int)
+
     fun createGame(gameName: String, gameDuration: Long): Int
 
     fun getGameName(gameId: Int, cb: Callback<String>)

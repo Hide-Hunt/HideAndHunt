@@ -24,13 +24,25 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     private fun getFirebaseGameWithID(gameID: Int, cb: Callback<String>) {
         val games: MutableList<Game> = ArrayList()
         fs.collection("games").get().addOnSuccessListener { result ->
-            val match = result.filter { x -> (x["id"] as Int) == gameID }
+            val match = result.filter { x -> (x["id"] as Long).toInt() == gameID }
             if(match.isEmpty()) {
                 cb("")
             } else {
                 cb(match[0].id)
             }
         }
+    }
+
+    override fun addLocalParticipation(gameId: Int) {
+        fs.collection("participations").add(
+                Participation(
+                        LocalUser.username,
+                        false,
+                        "",
+                        IDHelper.getPlayerID(),
+                        PlayerFaction.PREY
+                )
+        )
     }
 
     override fun createGame(gameName: String, gameDuration: Long): Int {
@@ -83,10 +95,10 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                         players.add(
                                 Participation(
                                         it["username"] as String,
-                                        (it["state"] as Int) == 1,
+                                        (it["state"] as Boolean),
                                         it["tag"] as String,
-                                        it["playerID"] as Int,
-                                        PlayerFaction.values()[it["faction"] as Int]
+                                        (it["playerID"] as Long).toInt(),
+                                        PlayerFaction.values()[(it["faction"] as Long).toInt()]
                                 )
                         )
                     }
@@ -98,7 +110,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     override fun getAdminId(gameId: Int, cb: Callback<Int>) {
         getFirebaseGameWithID(gameId) { fid ->
             fs.collection("games").document(fid).get().addOnSuccessListener {
-                cb(it["adminID"] as Int)
+                cb((it["adminID"] as Long).toInt())
             }
         }
     }

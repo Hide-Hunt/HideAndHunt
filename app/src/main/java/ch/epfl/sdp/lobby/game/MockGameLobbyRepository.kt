@@ -27,6 +27,10 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation("Neymar Jr", false, "C000", 26, PlayerFaction.PREDATOR)
     )
 
+    override fun addLocalParticipation(gameId: Int) {
+        //No code
+    }
+
     override fun createGame(gameName: String, gameDuration: Long): Int {
         return 42
     }

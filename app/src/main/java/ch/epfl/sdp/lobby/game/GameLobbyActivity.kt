@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ch.epfl.sdp.R
+import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.game.*
+import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import javax.inject.Inject
 
@@ -47,6 +49,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         rv = gameLobbyBinding.playerList
         rv.layoutManager = LinearLayoutManager(this)
 
+        repository.addLocalParticipation(gameID)
 
         //repository interactions
         repository.setPlayerFaction(gameID, playerID, PlayerFaction.PREDATOR)
