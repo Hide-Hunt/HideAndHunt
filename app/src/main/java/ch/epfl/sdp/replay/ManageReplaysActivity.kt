@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.dagger.HideAndHuntApplication
@@ -65,7 +66,14 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
         }
     }
 
-    private fun downloadReplay(gameID: Int) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun downloadReplay(gameID: Int) {
+        File(filesDir.absolutePath + "/replays").let {
+            if(!it.exists()) {
+                it.mkdir()
+            }
+        }
+
         val tempFile = File(filesDir.absolutePath + "/replays/game_$gameID.tmp")
         downloader.download(
                 gameID,

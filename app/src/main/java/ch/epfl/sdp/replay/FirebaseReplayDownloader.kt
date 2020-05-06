@@ -13,7 +13,6 @@ class FirebaseReplayDownloader(private val context: Context) : IReplayDownloader
 
     override fun download(gameID: Int, file: File, successCallback: UnitCallback, failureCallback: Callback<String>): IReplayDownloader.IReplayDownload {
         var canceled = false
-        checkFolder()
 
         val downloadHandle = storageRef.child("$gameID.game").getFile(file)
                 .addOnSuccessListener {
@@ -28,13 +27,6 @@ class FirebaseReplayDownloader(private val context: Context) : IReplayDownloader
                 canceled = true
                 downloadHandle.cancel()
             }
-        }
-    }
-
-    private fun checkFolder() {
-        val folder = File(context.filesDir.absolutePath + "/replays")
-        if(!folder.exists()){
-            folder.mkdir()
         }
     }
 }
