@@ -42,11 +42,11 @@ class GlobalLobbyFragmentTest {
 
                 override fun getAllGames(cb: Callback<List<Game>>) {
                     if(callID == 0) {
-                        cb(listOf(Game(0, "Blabla", "Bloublou", 10000, emptyMap(), GameState.LOBBY, listOf(), Date(), Date(), Date())))
+                        cb(listOf(Game(0, "Blabla", "Bloublou", 10000, emptyMap(), GameState.LOBBY, listOf(), Date(), Date(), Date(), 0)))
                     } else {
                         cb(listOf(
-                                Game(0, "Blabla", "Bloublou", 10000, emptyMap(), GameState.STARTED, listOf(), Date(), Date(), Date()),
-                                Game(1, "Jean", "Michel", 8000, emptyMap(), GameState.LOBBY, listOf(), Date(), Date(), Date())
+                                Game(0, "Blabla", "Bloublou", 10000, emptyMap(), GameState.STARTED, listOf(), Date(), Date(), Date(), 0),
+                                Game(1, "Jean", "Michel", 8000, emptyMap(), GameState.LOBBY, listOf(), Date(), Date(), Date(), 0)
                         ))
                     }
                     callID++
