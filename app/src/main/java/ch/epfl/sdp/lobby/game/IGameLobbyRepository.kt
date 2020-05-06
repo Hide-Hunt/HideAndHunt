@@ -7,7 +7,7 @@ import ch.epfl.sdp.game.data.Player
 import java.sql.Time
 
 interface IGameLobbyRepository {
-    fun createGame(gameName: String, gameDuration: Time): Int
+    fun createGame(gameName: String, gameDuration: Long): Int
 
     fun getGameId(cb: Callback<Int>)
 

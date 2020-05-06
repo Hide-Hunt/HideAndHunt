@@ -8,7 +8,7 @@ import dagger.Provides
 @Module
 class FakeRepoModule {
     @Provides
-    fun providesMockGameLobbyRepo(): IGameLobbyRepository {
+    fun providesGameLobbyRepo(): IGameLobbyRepository {
         return MockGameLobbyRepository
     }
 }

@@ -11,11 +11,11 @@ class RepoModuleTest{
     @Test
     fun testProvidesMockGameLobbyRepo(){
         val repo = RepoModule()
-        assertTrue(repo.providesMockGameLobbyRepo() is MockGameLobbyRepository)
+        assertTrue(repo.providesGameLobbyRepo() is MockGameLobbyRepository)
     }
     @Test
     fun testFakeProvidesMockGameLobbyRepo(){
         val repo = FakeRepoModule()
-        assertTrue(repo.providesMockGameLobbyRepo() is MockGameLobbyRepository)
+        assertTrue(repo.providesGameLobbyRepo() is MockGameLobbyRepository)
     }
 }
