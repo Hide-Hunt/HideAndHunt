@@ -134,10 +134,11 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             mSwipeRefreshLayout.setOnRefreshListener(this)
 
             //add intents to start button
-            setIntent(gameDuration.toLong())
+            setIntent(gameDuration)
         }
         gameLobbyBinding.startButton.setBackgroundColor(Color.GREEN)
         gameLobbyBinding.leaveButton.setOnClickListener {
+            //TODO: Remove participation from the game
             finish() //Goes back to previous activity
         }
         gameLobbyBinding.leaveButton.setBackgroundColor(Color.RED)

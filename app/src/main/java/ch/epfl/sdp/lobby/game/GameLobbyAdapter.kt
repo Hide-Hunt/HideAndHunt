@@ -49,7 +49,7 @@ class GameLobbyAdapter(
         fun display(participation: Participation) {
             //set text views
             itemView.player_faction.text = factionToString(participation.faction)
-            itemView.player_name.text = participation.username
+            itemView.player_name.text = participation.username.subSequence(0, participation.username.indexOf("."))
             itemView.player_is_ready.text = isReadyToString(participation.ready)
             //set admin logo
             if (adminId == participation.playerID) itemView.admin_logo.setImageResource(R.drawable.star_icon)
