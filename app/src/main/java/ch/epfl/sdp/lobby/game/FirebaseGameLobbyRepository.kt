@@ -17,6 +17,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.w3c.dom.Document
 import java.util.*
+import kotlin.math.abs
 
 class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
@@ -48,9 +49,10 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun createGame(gameName: String, gameDuration: Long): Int {
+        val gameID = abs(gameName.hashCode()) //TODO: Better id generation
         fs.collection("games").add(
                 Game(
-                        gameName.hashCode(),
+                        gameID,
                         gameName,
                         LocalUser.username,
                         gameDuration,
@@ -63,7 +65,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                         IDHelper.getPlayerID()
                 )
         )
-        return gameName.hashCode() //TODO: Better id generation
+        return gameID
     }
 
     override fun getGameName(gameId: Int, cb: Callback<String>) {
