@@ -12,7 +12,7 @@ import ch.epfl.sdp.game.location.LocationHandler
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-class PreyActivity : AppCompatActivity(), ILocationListener {
+class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.GameTimeOutListener {
 
     private lateinit var binding: ActivityPreyBinding
     private lateinit var preyFragment: PreyFragment
@@ -143,8 +143,19 @@ class PreyActivity : AppCompatActivity(), ILocationListener {
                 it.state = PreyState.DEAD
                 preyFragment.setPreyState(preyID, PreyState.DEAD)
                 Toast.makeText(this@PreyActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
+
+                if(it.id == gameData.playerID) {
+                    //I've been caught
+                    EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
+                }
             }
         }
     }
+
+    override fun onTimeOut() {
+        EndGameHelper.startEndGameActivity(this, gameData.initialTime, 0)
+    }
+
+
 
 }
