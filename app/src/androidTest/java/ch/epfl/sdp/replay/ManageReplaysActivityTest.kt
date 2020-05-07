@@ -1,20 +1,19 @@
 package ch.epfl.sdp.replay
 
-import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import ch.epfl.sdp.EspressoTestsMatchers.withDrawable
 import ch.epfl.sdp.R
-import org.hamcrest.Matchers
+import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.concurrent.thread
 
 class ManageReplaysActivityTest {
 
@@ -36,41 +35,44 @@ class ManageReplaysActivityTest {
 
     @Test
     fun correctDisplay(){
-        Espresso.onView(ViewMatchers.withId(R.id.replay_info_list_recycler)).check(matches(ViewMatchers.hasChildCount(6)))
+        onView(withId(R.id.replay_info_list_recycler)).check(matches(hasChildCount(6)))
 
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #0")))
-                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_saved))))
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #0")))
+                .check(matches(hasSibling(withDrawable(R.drawable.ic_saved))))
 
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #1")))
-                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_download))))
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #2")))
-                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_download))))
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #3")))
-                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_download))))
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #4")))
-                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_download))))
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #5")))
-                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_download))))
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #1")))
+                .check(matches(hasSibling(withDrawable(R.drawable.ic_download))))
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #2")))
+                .check(matches(hasSibling(withDrawable(R.drawable.ic_download))))
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #3")))
+                .check(matches(hasSibling(withDrawable(R.drawable.ic_download))))
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #4")))
+                .check(matches(hasSibling(withDrawable(R.drawable.ic_download))))
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #5")))
+                .check(matches(hasSibling(withDrawable(R.drawable.ic_download))))
     }
 
     @Test
-    fun downloadLaunched(){
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #1")))
+    fun downloadSucceeded(){
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #1")))
                 .perform(click())
-        Espresso.onView(ViewMatchers.withText("Download")).perform(click())
 
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #1")))
-                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_saved))))
+        onView(withText("Download")).perform(click())
+
+        Thread.sleep(100)
+
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #1")))
+                .check(matches(hasSibling(withDrawable(R.drawable.ic_saved))))
     }
 
     @Test
     fun downloadFailed(){
 
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #2")))
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #2")))
                 .perform(click())
-        Espresso.onView(ViewMatchers.withText("Download")).perform(click())
+        onView(withText("Download")).perform(click())
 
-        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #2")))
-                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_download))))
+        onView(allOf(isDescendantOfA(withId(R.id.replay_info_list_recycler)), withId(R.id.gameName), withText("Game #2")))
+                .check(matches(hasSibling(withDrawable(R.drawable.ic_download))))
     }
 }
