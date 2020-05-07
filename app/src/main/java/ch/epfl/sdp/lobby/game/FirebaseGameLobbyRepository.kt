@@ -5,14 +5,9 @@ import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.game.IDHelper
 import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.data.*
-import ch.epfl.sdp.user.User
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.w3c.dom.Document
 import java.util.*
 import kotlin.math.abs
 
@@ -21,7 +16,6 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     private var fs: FirebaseFirestore = Firebase.firestore
 
     private fun getFirebaseGameWithID(gameID: Int, cb: Callback<String>) {
-        val games: MutableList<Game> = ArrayList()
         fs.collection("games").get().addOnSuccessListener { result ->
             val match = result.filter { x -> (x["id"] as Long).toInt() == gameID }
             if(match.isEmpty()) {
@@ -97,14 +91,16 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
         fs.collection("participations").whereEqualTo("gameID", gameId).get().addOnSuccessListener { documents ->
 
             for(doc in documents) {
-                players.add(Participation(
-                        doc["username"] as String,
-                        doc["ready"] as Boolean,
-                        doc["tag"] as String,
-                        (doc["playerID"] as Long).toInt(),
-                        PlayerFaction.valueOf(doc["faction"] as String),
-                        (doc["gameID"] as Long).toInt()
-                ))
+                if(players.none { p -> p.playerID == (doc["playerID"] as Long).toInt() }) {
+                    players.add(Participation(
+                            doc["username"] as String,
+                            doc["ready"] as Boolean,
+                            doc["tag"] as String,
+                            (doc["playerID"] as Long).toInt(),
+                            PlayerFaction.valueOf(doc["faction"] as String),
+                            (doc["gameID"] as Long).toInt()
+                    ))
+                }
             }
             cb(players)
         }
