@@ -18,7 +18,7 @@ class GlobalLobbyAdapter(var data: List<Game>) :  RecyclerView.Adapter<MyViewHol
     class MyViewHolder(val linearLayout: LinearLayout, val data: List<Game>) : RecyclerView.ViewHolder(linearLayout), View.OnClickListener {
 
         override fun onClick(v: View?) {
-            val game = data[layoutPosition]
+            val game = data[adapterPosition]
             Toast.makeText(v?.context, game.name, Toast.LENGTH_SHORT).show()
             val intent = Intent(v?.context, GameLobbyActivity::class.java)
             intent.putExtra("gameID", game.id)
