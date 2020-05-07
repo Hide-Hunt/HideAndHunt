@@ -11,16 +11,24 @@ import com.google.firebase.ktx.Firebase
 import java.util.*
 import kotlin.math.abs
 
+/**
+ * Repository for Firestore databse interactions
+ */
 class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     private var fs: FirebaseFirestore = Firebase.firestore
 
+    /**
+     * Get the game associated to a given id
+     */
     private fun getFirebaseGameWithID(gameID: Int, cb: Callback<String>) {
         fs.collection("games").get().addOnSuccessListener { result ->
             val match = result.filter { x -> (x["id"] as Long).toInt() == gameID }
             if(match.isEmpty()) {
+                //no game matches the given id
                 cb("")
             } else {
+                //found a game matching the id
                 cb(match[0].id)
             }
         }
@@ -78,6 +86,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     override fun getPlayers(gameId: Int, cb: Callback<List<Player>>) {
         getParticipations(gameId) {
             cb(it.map { x ->
+                //callback to the right instance of Player
                 if(x.faction == PlayerFaction.PREY)
                     Prey(x.playerID, x.tag)
                 else
