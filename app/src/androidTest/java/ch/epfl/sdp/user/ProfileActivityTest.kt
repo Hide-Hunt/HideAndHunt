@@ -43,13 +43,6 @@ import org.junit.*
 import java.util.concurrent.CountDownLatch
 
 class ProfileActivityTest {
-    /*@get:Rule
-    val activityRule = ActivityTestRule(ProfileActivity::class.java)
-    @get:Rule
-    var writeRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    @get:Rule
-    val intentsTestRule = IntentsTestRule(ProfileActivity::class.java)*/
-
     @get:Rule
     val intentsTestRule = IntentsTestRule(ProfileActivity::class.java, false, false)
 

@@ -14,23 +14,29 @@ import org.junit.runner.RunWith
 import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
-class MockUserTest {
-    private var cache = MockUserCache
+class UserCacheTest {
+    private var cache = UserCache()
 
     @Before
     fun eraseCache() {
-        cache.resetCache()
+        cache.invalidateCache(ApplicationProvider.getApplicationContext())
     }
 
     @Test
     fun putPutsCurrentUserInCache() {
         User.pseudo = "test"
         User.uid = "0"
-        User.profilePic = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        val whiteBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        User.profilePic = whiteBitmap
         cache.put(ApplicationProvider.getApplicationContext())
-        val split = cache.toString().split(":")
-        Assert.assertEquals("test", split[0])
-        Assert.assertEquals("0", split[1])
+        User.pseudo = ""
+        User.uid = ""
+        User.profilePic = null
+        cache.get(ApplicationProvider.getApplicationContext())
+        Assert.assertTrue(User.connected)
+        Assert.assertEquals("0", User.uid)
+        Assert.assertEquals("test", User.pseudo)
+        Assert.assertTrue(whiteBitmap.sameAs(User.profilePic))
     }
 
     @Test

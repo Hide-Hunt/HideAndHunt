@@ -1,13 +1,11 @@
 package ch.epfl.sdp.authentication
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityLoginBinding
-import ch.epfl.sdp.user.IUserCache
 import ch.epfl.sdp.user.UserCache
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
@@ -16,7 +14,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     @Inject lateinit var connector:IUserConnector
-    @Inject lateinit var cache: IUserCache
+    val cache: UserCache = UserCache()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // We have to handle the dependency injection before the call to super.onCreate

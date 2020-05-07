@@ -10,9 +10,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class UserCache : IUserCache {
+class UserCache {
     private val cacheFilename = "user_cache"
     private val imageFilename = "user_image"
+
+    fun invalidateCache(context: Context) {
+        if(doesExist(context)) {
+            context.deleteFile(cacheFilename)
+            context.deleteFile(imageFilename)
+        }
+    }
 
     private fun doesExist(context: Context): Boolean {
         try{
@@ -27,10 +34,11 @@ class UserCache : IUserCache {
         return true
     }
 
-    override fun get(context: Context) {
+    fun get(context: Context) {
         if(!doesExist(context)) {
            // context.filesDir.list().forEach { Log.d("CACHE", it) }
             Log.d("CACHE", "USER NOT FOUND IN CACHE")
+            User.connected = false
             return
         }
 
@@ -66,7 +74,7 @@ class UserCache : IUserCache {
         Log.d("CACHE", "USER FOUND IN CACHE")
     }
 
-    override fun put (context: Context) {
+    fun put (context: Context) {
         val outputStream = OutputStreamWriter(context.openFileOutput(cacheFilename, Context.MODE_PRIVATE))
         val currentTime = Calendar.getInstance().time
         val output = "DATE\n" + currentTime.toString() + "\nUID\n" + User.uid + "\nPSEUDO\n" + User.pseudo + "\n"

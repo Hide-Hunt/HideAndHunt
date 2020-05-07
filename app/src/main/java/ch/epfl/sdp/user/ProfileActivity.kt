@@ -30,7 +30,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
     private lateinit var binding: ActivityProfileBinding
     private var newProfilePic: Bitmap? = null
     @Inject lateinit var connector: IUserConnector
-    @Inject lateinit var cache: IUserCache
+    val cache = UserCache()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (applicationContext as HideAndHuntApplication).appComponent.inject(this)

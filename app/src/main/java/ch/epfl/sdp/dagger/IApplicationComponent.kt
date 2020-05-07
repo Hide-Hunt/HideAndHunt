@@ -12,21 +12,21 @@ import javax.inject.Singleton
 interface IApplicationComponent
 
 @Singleton
-@Component(modules = [RepoModule::class, UserConnectorModule::class, UserCacheModule::class])
+@Component(modules = [RepoModule::class, UserConnectorModule::class])
 interface ApplicationComponent : IApplicationComponent {
     fun inject(activity: GameCreationActivity)
     fun inject(activity: GameLobbyActivity)
     fun inject(activity: LoginActivity)
-    fun inject(activity: ProfileActivity)
     fun inject(activity: MainActivity)
+    fun inject(activity: ProfileActivity)
 }
 
 @Singleton
-@Component(modules = [FakeRepoModule::class, FakeUserConnectorModule::class, FakeUserCacheModule::class])
+@Component(modules = [FakeRepoModule::class, FakeUserConnectorModule::class])
 interface TestApplicationComponent : ApplicationComponent {
     override fun inject(activity: GameCreationActivity)
     override fun inject(activity: GameLobbyActivity)
     override fun inject(activity: LoginActivity)
-    override fun inject(activity: ProfileActivity)
     override fun inject(activity: MainActivity)
+    override fun inject(activity: ProfileActivity)
 }

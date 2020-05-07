@@ -1,14 +1,9 @@
 package ch.epfl.sdp
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.authentication.User
 import ch.epfl.sdp.dagger.HideAndHuntApplication
@@ -18,14 +13,12 @@ import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
-import ch.epfl.sdp.user.IUserCache
 import ch.epfl.sdp.user.ProfileActivity
 import ch.epfl.sdp.user.UserCache
-import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
-    @Inject lateinit var cache: IUserCache
+    val cache: UserCache = UserCache()
     private lateinit var binding: ActivityMainBinding
     private val repositoryFactory = object : IRepoFactory {
         override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
