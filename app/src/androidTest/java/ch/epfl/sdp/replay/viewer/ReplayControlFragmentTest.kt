@@ -38,7 +38,6 @@ class ReplayControlFragmentTest {
         val scenario = launchFragmentInContainer<ReplayControlFragment>(longGame)
         onView(withId(R.id.speedFactor)).check(matches(withText("x0")))
         scenario.onFragment {
-            assertEquals(0, it.timeSelectionBar.min)
             assertEquals(after41m34s.timestamp.toInt() - firstDate.timestamp.toInt(), it.timeSelectionBar.max)
         }
     }
@@ -78,10 +77,6 @@ class ReplayControlFragmentTest {
     fun eachTimeCursorStepShouldIncreaseTheDateByOneSecond() {
         val scenario = launchFragmentInContainer<ReplayControlFragment>(tenSecondsGame)
 
-        scenario.onFragment {
-            assertEquals(it.timeSelectionBar.min, it.timeSelectionBar.progress)
-        }
-
         val timeRange = 0..(tenSeconds.timestamp - firstDate.timestamp)
         for (time in timeRange) {
             onView(withId(R.id.timeSelectionBar)).perform(clickSeekBar(time.toInt()))
@@ -101,7 +96,6 @@ class ReplayControlFragmentTest {
         var maxSpeedIndex = 0
         scenario.onFragment {
             it.speedSelection.progress = 0
-            assertEquals(it.speedSelection.min, it.speedSelection.progress)
             maxSpeedIndex = it.speedSelection.max
         }
 
@@ -141,7 +135,6 @@ class ReplayControlFragmentTest {
         var maxSpeedIndex = 0
         scenario.onFragment {
             it.speedSelection.progress = 0
-            assertEquals(it.speedSelection.min, it.speedSelection.progress)
             maxSpeedIndex = it.speedSelection.max
         }
 
