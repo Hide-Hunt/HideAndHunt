@@ -4,10 +4,7 @@ import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.game.IDHelper
 import ch.epfl.sdp.game.PlayerFaction
-import ch.epfl.sdp.game.data.Game
-import ch.epfl.sdp.game.data.GameState
-import ch.epfl.sdp.game.data.Participation
-import ch.epfl.sdp.game.data.Player
+import ch.epfl.sdp.game.data.*
 import ch.epfl.sdp.user.User
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -86,7 +83,12 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun getPlayers(gameId: Int, cb: Callback<List<Player>>) {
         getParticipations(gameId) {
-            cb(it.map { x -> Player(x.playerID) })
+            cb(it.map { x ->
+                if(x.faction == PlayerFaction.PREY)
+                    Prey(x.playerID, x.tag)
+                else
+                    Predator(x.playerID)
+            })
         }
     }
 
