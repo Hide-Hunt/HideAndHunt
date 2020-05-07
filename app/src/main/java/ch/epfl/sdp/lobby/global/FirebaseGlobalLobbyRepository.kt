@@ -36,6 +36,9 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
                         cb(games.filter { p -> p.state == GameState.LOBBY })
                 }
             }
+            if(result.size() == 0) {
+                cb(emptyList())
+            }
         }
     }
 
