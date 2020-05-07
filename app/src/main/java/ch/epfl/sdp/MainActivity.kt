@@ -56,11 +56,6 @@ class MainActivity : AppCompatActivity() {
         activateProfile()
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        activateProfile()
-    }
-
     override fun onResume() {
         super.onResume()
         activateProfile()
