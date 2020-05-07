@@ -31,7 +31,7 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
                 )
                 games.add(g)
             }
-            cb(games)
+            cb(games.filter { p -> p.state == GameState.LOBBY })
         }
     }
 
