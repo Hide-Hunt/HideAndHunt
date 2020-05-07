@@ -1,17 +1,14 @@
 package ch.epfl.sdp.user
 
-import android.content.Context
 import android.graphics.Bitmap
 import androidx.test.core.app.ApplicationProvider
 import ch.epfl.sdp.authentication.User
-import java.nio.charset.Charset
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
 class UserCacheTest {

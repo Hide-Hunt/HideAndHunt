@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Looper
 import android.text.Editable
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,8 +20,6 @@ import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityProfileBinding
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import java.io.File
-import java.net.URI
 import javax.inject.Inject
 
 

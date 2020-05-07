@@ -1,12 +1,7 @@
 package ch.epfl.sdp.authentication
 
-import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import ch.epfl.sdp.user.UserCache
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -14,8 +9,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.google.firebase.storage.ktx.storageMetadata
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.OutputStream
 
 class FirebaseUserConnector : IUserConnector {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
