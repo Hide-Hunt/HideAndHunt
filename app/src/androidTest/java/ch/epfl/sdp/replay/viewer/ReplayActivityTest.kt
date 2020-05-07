@@ -25,9 +25,10 @@ class ReplayActivityTest {
     }
 
     private val invalidPathActivityIntent = Intent()
+    private val invalidFilename = "inexisting"
     init {
         invalidPathActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        invalidPathActivityIntent.putExtra("replay_path", "inexisting")
+        invalidPathActivityIntent.putExtra("replay_path", invalidFilename)
     }
 
     private val emptyIntent = Intent()
@@ -117,7 +118,8 @@ class ReplayActivityTest {
     @Test
     fun testInvalidFilePathProvided(){
         activityRule.launchActivity(invalidPathActivityIntent)
-        Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("File not found /data/user/0/ch.epfl.sdp/files/replays/inexisting")))
+        val file = activityRule.activity.filesDir.absolutePath + "/replays/" + invalidFilename
+        Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("File not found $file")))
     }
 
     @Test
