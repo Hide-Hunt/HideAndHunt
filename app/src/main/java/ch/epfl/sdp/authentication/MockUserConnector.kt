@@ -53,10 +53,13 @@ class MockUserConnector : IUserConnector {
 
     override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
         if(pseudo != null)
-            User.pseudo = pseudo!!
+            User.pseudo = pseudo
         if(profilePic != null)
-            User.profilePic = profilePic!!
-        successCallback()
+            User.profilePic = profilePic
+        if(pseudo == "REQUESTING_ERROR")
+            errorCallback()
+        else
+            successCallback()
     }
 
     override fun register(email: String, password: String, pseudo: String, successCallback: () -> Unit, errorCallback: () -> Unit) {

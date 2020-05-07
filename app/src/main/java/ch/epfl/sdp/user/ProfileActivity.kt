@@ -5,12 +5,11 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.provider.MediaStore
 import android.text.Editable
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,14 +22,13 @@ import ch.epfl.sdp.databinding.ActivityProfileBinding
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.io.File
-import java.lang.NullPointerException
+import java.net.URI
 import javax.inject.Inject
 
 
 class ProfileActivity: AppCompatActivity(), Callback {
     private lateinit var binding: ActivityProfileBinding
     private var newProfilePic: Bitmap? = null
-    private var alertDialog: AlertDialog? = null
     @Inject lateinit var connector: IUserConnector
     @Inject lateinit var cache: IUserCache
 
@@ -40,8 +38,13 @@ class ProfileActivity: AppCompatActivity(), Callback {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.profilePictureView.setOnClickListener() {
-            val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(i, 1)
+            //val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            //startActivityForResult(i, 1)
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1)
+
         }
         binding.okButton.setOnClickListener {
             validateInformations()
@@ -70,17 +73,9 @@ class ProfileActivity: AppCompatActivity(), Callback {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            val selectedImage = data.data!!
-            val filePathColumn = Array(1) { MediaStore.Images.Media.DATA }
-
-            val cursor = contentResolver.query(selectedImage, filePathColumn, null, null, null)
-            cursor?.moveToFirst()
-
-            val columnIndex = cursor?.getColumnIndex(filePathColumn[0])!!
-            val picturePath = cursor.getString(columnIndex)
-            cursor.close()
+            val picturePath: Uri = if(data.data != null) data.data!! else data.extras!!.get("picturePath") as Uri
             Picasso.with(this)
-                    .load(File(picturePath))
+                    .load(picturePath)
                     .fit().centerCrop()
                     .into(binding.profilePictureView, this)
         }
@@ -124,12 +119,8 @@ class ProfileActivity: AppCompatActivity(), Callback {
                 .setCancelable(false)
                 .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ -> finish()})
                 .setOnDismissListener {finish()}
-        alertDialog = builder.create()
-        alertDialog!!.show()
-    }
-
-    fun getAlertDialog(): AlertDialog? {
-        return alertDialog
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 
     override fun onSuccess() {
@@ -137,14 +128,14 @@ class ProfileActivity: AppCompatActivity(), Callback {
     }
 
     override fun onError() {
-        Looper.prepare()
+        //Looper.prepare()
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
                 .setMessage("Error uploading profile picture")
                 .setCancelable(false)
                 .setPositiveButton("OK", null)
                 .setOnDismissListener {finish()}
-        alertDialog = builder.create()
-        alertDialog!!.show()
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 }
