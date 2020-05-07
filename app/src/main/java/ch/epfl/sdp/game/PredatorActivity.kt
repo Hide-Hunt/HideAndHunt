@@ -180,4 +180,8 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     override fun onTimeOut() {
         EndGameHelper.startEndGameActivity(this, gameData.initialTime, catchCount)
     }
+
+    override fun onBackPressed() {
+        //No code
+    }
 }
