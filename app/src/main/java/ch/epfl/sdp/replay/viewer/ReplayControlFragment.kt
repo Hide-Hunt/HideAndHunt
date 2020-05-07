@@ -79,7 +79,8 @@ class ReplayControlFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 playSpeed = if (progress > 0) 2.0.pow(progress - 1.0).toInt() else 0
                 binding.speedFactor.text = "x%d".format(playSpeed)
-                onPlayTick()
+                playHandler.removeCallbacks(playRunnable)
+                playHandler.postDelayed(playRunnable, (1000.0 / playSpeed).toLong())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
@@ -92,15 +93,13 @@ class ReplayControlFragment : Fragment() {
     private fun onPlayTick() {
         if (playSpeed != 0) {
             binding.timeSelectionBar.progress++
-
-            playHandler.removeCallbacks(playRunnable)
             playHandler.postDelayed(playRunnable, (1000.0 / playSpeed).toLong())
         }
     }
 
     companion object {
-        private const val FIRST_TIMESTAMP = "first_timestamp"
-        private const val LAST_TIMESTAMP = "last_timestamp"
+        const val FIRST_TIMESTAMP = "first_timestamp"
+        const val LAST_TIMESTAMP = "last_timestamp"
 
         /**
          * Use this factory method to create a new instance of
