@@ -4,6 +4,7 @@ import ch.epfl.sdp.game.comm.GameOuterClass
 import ch.epfl.sdp.game.data.*
 import ch.epfl.sdp.utils.protoToGameEvent
 import ch.epfl.sdp.utils.protoToPlayer
+import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.Serializable
 import java.lang.Exception
@@ -14,18 +15,34 @@ data class GameHistory(
         val players: List<Player>,
         val bounds: Area,
         val events: List<GameEvent>) : Serializable {
-    class WrongGameFormat : Exception()
+    open class InvalidGameHistory(msg: String) : Exception(msg)
+    class InvalidFileFormat(msg: String) : InvalidGameHistory(msg)
+    class InvalidGameFormat(msg: String) : InvalidGameHistory(msg)
 
     companion object {
         fun fromFile(inputStream: InputStream): GameHistory {
-            val game = GameOuterClass.Game.parseFrom(inputStream)
+            val game = try {
+                GameOuterClass.Game.parseFrom(inputStream)
+            } catch (e: InvalidProtocolBufferException) {
+                throw InvalidFileFormat(e.toString())
+            }
 
-            val events = game.eventsList.map { it.protoToGameEvent() }
+            if (game.id < 0) throw InvalidGameFormat("Invalid game id")
+            if (game.adminID < 0) throw InvalidGameFormat("Invalid admin id")
 
             val players = game.playersList.map { it.protoToPlayer() }
-            players.forEach {player ->
-                val firstLoc = events.first { it is LocationEvent && it.playerID == player.id }
-                player.lastKnownLocation = (firstLoc as LocationEvent).location
+            if (players.isEmpty()) throw InvalidGameFormat("No player")
+
+            val events = game.eventsList.map { it.protoToGameEvent() }
+            if (events.isEmpty()) throw InvalidGameFormat("No event")
+
+            players.forEach { player ->
+                try {
+                    val firstLoc = events.first { it is LocationEvent && it.playerID == player.id }
+                    player.lastKnownLocation = (firstLoc as LocationEvent).location
+                } catch (_: NoSuchElementException) {
+                    // The player has no associated location event
+                }
             }
 
             val firstLocation = (events.first { it is LocationEvent } as LocationEvent).location
