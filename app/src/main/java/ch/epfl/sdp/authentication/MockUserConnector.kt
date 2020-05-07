@@ -14,7 +14,7 @@ class MockUserConnector : IUserConnector {
     override fun connect(email: String, password: String): Boolean {
         if(LocalUser.connected)
             return false
-        val usrEmail = emails.withIndex().filter {(_, str) -> str == email}
+        val usrEmail = emails.withIndex().filter {(_, str) -> str == email.toLowerCase()}
         if(usrEmail.isEmpty()) {
             LocalUser.username = ""
             LocalUser.uid = ""
@@ -43,7 +43,7 @@ class MockUserConnector : IUserConnector {
     }
 
     override fun register(email: String, password: String): Boolean {
-        if(emails.any {str -> str == email})
+        if(emails.any {str -> str == email.toLowerCase()})
             return false
         emails.add(email)
         passwords.add(password)
