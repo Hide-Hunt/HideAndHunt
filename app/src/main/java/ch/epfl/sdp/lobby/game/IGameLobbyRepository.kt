@@ -88,7 +88,7 @@ interface IGameLobbyRepository {
 
     /**
      * Remove a player from a game
-     * @param uid String: the player UID
+     * @param uid Int: the player UID
      */
     fun removePlayer(uid: Int)
 

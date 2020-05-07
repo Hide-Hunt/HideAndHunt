@@ -98,7 +98,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun addPlayer(uid: String, username: String) : Int{
-        players.add(Participation(User(username, nextUserId), false, "", PlayerFaction.PREDATOR))
+        players.add(Participation(User(username, nextUserId, uid), false, "", PlayerFaction.PREDATOR))
         return nextUserId++
     }
 

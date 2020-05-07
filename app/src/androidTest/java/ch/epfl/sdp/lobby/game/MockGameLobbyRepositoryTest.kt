@@ -3,6 +3,7 @@ package ch.epfl.sdp.lobby.game
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.data.Participation
+import ch.epfl.sdp.game.data.Player
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -126,5 +127,42 @@ class MockGameLobbyRepositoryTest {
 
         assertEquals(false, newPlayer1IsReady)
         assertEquals(true, newPlayer2IsReady)
+    }
+
+    @Test
+    fun addPlayerIsAddingANewPlayer() {
+        var playerList = Collections.emptyList<Player>()
+        var newID = glr.addPlayer("1234667", "TestUser")
+
+        glr.getPlayers {
+            players -> playerList = players
+        }
+
+        assertEquals(playerList.last().id, newID)
+    }
+
+    @Test
+    fun removePlayerIsRemovingPlayer() {
+        var playerList = Collections.emptyList<Player>()
+        var newID = glr.addPlayer("1234667", "TestUser")
+        glr.removePlayer(newID)
+
+        glr.getPlayers {
+            players -> playerList = players
+        }
+
+        assertNotEquals(playerList.last().id, newID)
+    }
+
+    @Test
+    fun createPlayerCreatesANewPlayer() {
+        var playerList = Collections.emptyList<Player>()
+        var newID =glr.createPlayer("TestUser")
+
+        glr.getPlayers {
+            players -> playerList = players
+        }
+
+        assertEquals(playerList.last().id, newID)
     }
 }
