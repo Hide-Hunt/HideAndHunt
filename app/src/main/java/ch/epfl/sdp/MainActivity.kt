@@ -6,22 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
-import ch.epfl.sdp.db.IRepoFactory
 import ch.epfl.sdp.lobby.GameCreationActivity
-import ch.epfl.sdp.lobby.global.FirebaseGlobalLobbyRepository
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
-import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
-import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
-import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val repositoryFactory = object : IRepoFactory {
-        override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
-            return FirebaseGlobalLobbyRepository()
-        }
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.playButton.setOnClickListener {
             val intent = Intent(this@MainActivity, GlobalLobbyActivity::class.java)
-            intent.putExtra("repoFactory", repositoryFactory)
             startActivity(intent)
         }
         binding.loginButton.setOnClickListener{

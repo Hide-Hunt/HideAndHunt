@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.FragmentGlobalLobbyBinding
-import ch.epfl.sdp.db.IRepoFactory
 import javax.inject.Inject
 
 class GlobalLobbyFragment : Fragment() {
@@ -56,13 +55,9 @@ class GlobalLobbyFragment : Fragment() {
     }
 
     companion object {
-        private const val REPO_FACTORY_ARG = "repoFacto"
 
         @JvmStatic
-        fun newInstance(factory: IRepoFactory) = GlobalLobbyFragment().apply {
-            val args = Bundle()
-            args.putSerializable(REPO_FACTORY_ARG, factory)
-            this.arguments = args
+        fun newInstance() = GlobalLobbyFragment().apply {
         }
     }
 }

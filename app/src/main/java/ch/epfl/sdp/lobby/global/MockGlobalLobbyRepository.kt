@@ -6,6 +6,7 @@ import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.user.User
+import java.lang.Math.random
 import java.util.*
 
 class MockGlobalLobbyRepository : IGlobalLobbyRepository {
@@ -35,5 +36,12 @@ class MockGlobalLobbyRepository : IGlobalLobbyRepository {
     )
 
 
-    override fun getAllGames(cb: Callback<List<Game>>)= cb(games)
+    override fun getAllGames(cb: Callback<List<Game>>) {
+        cb(games)
+        games = games + Game(games.size + 1, "BA"+(games.size + 1), "JimmyG",
+                3600, emptyMap(),
+                GameState.STARTED, participation2,
+                Date(3243432), Date(3243213432),
+                Date(32434332113212), 0)
+    }
 }
