@@ -15,11 +15,11 @@ import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
 class MockUserTest {
-    var cache = MockUserCache()
+    private var cache = MockUserCache
 
     @Before
     fun eraseCache() {
-        cache = MockUserCache()
+        cache.resetCache()
     }
 
     @Test

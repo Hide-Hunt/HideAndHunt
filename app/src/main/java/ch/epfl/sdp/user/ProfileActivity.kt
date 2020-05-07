@@ -128,7 +128,6 @@ class ProfileActivity: AppCompatActivity(), Callback {
     }
 
     override fun onError() {
-        //Looper.prepare()
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
                 .setMessage("Error uploading profile picture")

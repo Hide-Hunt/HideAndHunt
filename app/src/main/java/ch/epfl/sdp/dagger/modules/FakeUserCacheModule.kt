@@ -11,6 +11,6 @@ import dagger.Provides
 class FakeUserCacheModule {
     @Provides
     fun providesUserCache(): IUserCache {
-        return MockUserCache()
+        return MockUserCache
     }
 }
