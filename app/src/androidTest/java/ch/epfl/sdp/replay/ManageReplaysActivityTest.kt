@@ -1,7 +1,7 @@
 package ch.epfl.sdp.replay
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
@@ -14,6 +14,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.concurrent.thread
 
 class ManageReplaysActivityTest {
 
@@ -35,7 +36,7 @@ class ManageReplaysActivityTest {
 
     @Test
     fun correctDisplay(){
-        Espresso.onView(ViewMatchers.withId(R.id.replay_info_list_recycler)).check(ViewAssertions.matches(ViewMatchers.hasChildCount(6)))
+        Espresso.onView(ViewMatchers.withId(R.id.replay_info_list_recycler)).check(matches(ViewMatchers.hasChildCount(6)))
 
         Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #0")))
                 .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_saved))))
@@ -54,11 +55,22 @@ class ManageReplaysActivityTest {
 
     @Test
     fun downloadLaunched(){
+        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #1")))
+                .perform(click())
+        Espresso.onView(ViewMatchers.withText("Download")).perform(click())
 
+        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #1")))
+                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_saved))))
     }
 
     @Test
     fun downloadFailed(){
 
+        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #2")))
+                .perform(click())
+        Espresso.onView(ViewMatchers.withText("Download")).perform(click())
+
+        Espresso.onView(Matchers.allOf(ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.replay_info_list_recycler)), ViewMatchers.withId(R.id.gameName), ViewMatchers.withText("Game #2")))
+                .check(matches(ViewMatchers.hasSibling(withDrawable(R.drawable.ic_download))))
     }
 }
