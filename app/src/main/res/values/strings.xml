@@ -53,9 +53,6 @@
 
     <!-- Game Lobby -->
     <string name="default_username">Current User</string>
-    <string name="you_are_not_ready">You are not ready, scan your NFC tag</string>
-    <string name="you_are_ready">You are ready</string>
-
 
     <string name="crosshair_icon">crosshair_icon</string>
     <string name="no_target">No target</string>
