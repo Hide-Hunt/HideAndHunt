@@ -11,6 +11,9 @@ import com.google.firebase.ktx.Firebase
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * Repository for Firestore database interactions with the global lobby
+ */
 class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
 
     private var fs: FirebaseFirestore = Firebase.firestore
@@ -37,6 +40,7 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
                 }
             }
             if(result.size() == 0) {
+                // no games found
                 cb(emptyList())
             }
         }

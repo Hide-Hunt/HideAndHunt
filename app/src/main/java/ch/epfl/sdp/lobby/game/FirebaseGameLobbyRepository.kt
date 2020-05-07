@@ -12,7 +12,7 @@ import java.util.*
 import kotlin.math.abs
 
 /**
- * Repository for Firestore databse interactions
+ * Repository for Firestore database interactions with the game lobby
  */
 class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
