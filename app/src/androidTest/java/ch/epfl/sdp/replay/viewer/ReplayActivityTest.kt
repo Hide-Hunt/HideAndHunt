@@ -126,4 +126,11 @@ class ReplayActivityTest {
         activityRule.launchActivity(activityIntent)
         Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("")))
     }
+
+    @Test
+    fun testValidFileWrongFormatPathProvided(){
+        createFile("4.game", badFormatExampleFile)
+        activityRule.launchActivity(activityIntent)
+        Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("Replay file format error")))
+    }
 }
