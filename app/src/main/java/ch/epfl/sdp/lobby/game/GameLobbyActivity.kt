@@ -43,6 +43,8 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         setContentView(gameLobbyBinding.root)
 
         gameID = intent.getIntExtra("gameID", 0)
+
+        //the user ids (Strings) are mapped injectively to player ids (Integers)
         playerID = IDHelper.getPlayerID()
 
 
@@ -164,6 +166,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     override fun finish() {
+        //Remove player from lobby on finish
         repository.removeLocalParticipation(gameID)
         super.finish()
     }

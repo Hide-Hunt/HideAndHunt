@@ -182,6 +182,6 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     }
 
     override fun onBackPressed() {
-        //No code
+        //No code to avoid leaving the activity and returning to the game lobby
     }
 }
