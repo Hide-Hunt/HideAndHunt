@@ -31,7 +31,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "ch.epfl.sdp.lobby.MyCustomTestRunner"
+        testInstrumentationRunner "ch.epfl.sdp.MyCustomTestRunner"
         //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
