@@ -34,10 +34,10 @@ class LoginActivityTest {
     @Test
     fun registeringNewUserWorksAndConnectsIt() {
         launchActivity<LoginActivity>()
-        onView(withId(R.id.userNameLogin)).perform(typeText("testNew@test.com"), ViewActions.closeSoftKeyboard())
+        onView(withId(R.id.userNameLogin)).perform(typeText("testnew@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("passwordNew"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.registerSubmitButton)).perform(click())
-        onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("Account created and logged in as testNew@test.com")))
+        onView(withId(R.id.loginTextResult)).check(ViewAssertions.matches(withText("Account created and logged in as testnew@test.com")))
         Assert.assertTrue(LocalUser.connected)
     }
 
