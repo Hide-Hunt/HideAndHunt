@@ -39,6 +39,11 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
         }
     }
 
+    /**
+     * Reacts to an interaction with the ListFragment by either downloading the requested replay or
+     * launching it
+     * @param game The requested value selected by the user
+     */
     override fun onListFragmentInteraction(game: ReplayInfo) {
         if (game.localCopy) {
             val intent = Intent(this, ReplayActivity::class.java)
@@ -66,6 +71,10 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
         }
     }
 
+    /**
+     * Downloads the requested replay
+     * @param gameID The id of the game we want to download the replay
+     */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun downloadReplay(gameID: Int) {
         if (downloads.containsKey(gameID)) {
@@ -73,11 +82,7 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
             return
         }
 
-        File(filesDir.absolutePath + "/replays").let {
-            if(!it.exists()) {
-                it.mkdir()
-            }
-        }
+        File(filesDir.absolutePath + "/replays").let {if(!it.exists()) it.mkdir()}
 
         val tempFile = File(filesDir.absolutePath + "/replays/game_$gameID.tmp")
         // TODO Set downloading state on replayInfoListFragment
