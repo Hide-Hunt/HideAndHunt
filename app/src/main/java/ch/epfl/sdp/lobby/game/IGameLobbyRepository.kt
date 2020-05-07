@@ -29,4 +29,6 @@ interface IGameLobbyRepository {
     fun setPlayerFaction(gameId: Int, uid: Int, faction: PlayerFaction)
 
     fun setPlayerTag(gameId: Int, uid: Int, tag: String)
+
+    fun removeLocalParticipation(gameId: Int)
 }

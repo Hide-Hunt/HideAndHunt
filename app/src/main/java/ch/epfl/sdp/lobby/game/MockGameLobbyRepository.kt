@@ -31,6 +31,10 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         //No code
     }
 
+    override fun removeLocalParticipation(gameId: Int) {
+        //No code
+    }
+
     override fun createGame(gameName: String, gameDuration: Long): Int {
         return 42
     }

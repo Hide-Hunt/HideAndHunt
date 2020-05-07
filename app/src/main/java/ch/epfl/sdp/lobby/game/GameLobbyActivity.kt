@@ -138,7 +138,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         }
         gameLobbyBinding.startButton.setBackgroundColor(Color.GREEN)
         gameLobbyBinding.leaveButton.setOnClickListener {
-            //TODO: Remove participation from the game
             finish() //Goes back to previous activity
         }
         gameLobbyBinding.leaveButton.setBackgroundColor(Color.RED)
@@ -162,5 +161,10 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             }
 
         }
+    }
+
+    override fun finish() {
+        repository.removeLocalParticipation(gameID)
+        super.finish()
     }
 }

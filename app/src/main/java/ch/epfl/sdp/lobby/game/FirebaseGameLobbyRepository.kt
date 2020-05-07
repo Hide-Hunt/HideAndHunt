@@ -30,10 +30,10 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
         fs.collection("participations").add(
                 Participation(
                         LocalUser.username,
-                        false,
+                        true,
                         "",
                         IDHelper.getPlayerID(),
-                        PlayerFaction.PREY,
+                        PlayerFaction.PREDATOR,
                         gameId
                 )
         )
@@ -139,6 +139,12 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
             for(doc in documents) {
                 fs.collection("participations").document(doc.id).update("tag", tag)
             }
+        }
+    }
+
+    override fun removeLocalParticipation(gameId: Int) {
+        fs.collection("participations").whereEqualTo("gameID", gameId).get().addOnSuccessListener {
+            it.forEach { x -> x.reference.delete() }
         }
     }
 }
