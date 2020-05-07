@@ -1,5 +1,7 @@
 package ch.epfl.sdp.authentication
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert
 import org.junit.Test
@@ -15,5 +17,15 @@ class FirebaseTest {
         User.pseudo = "LOL"
         connector.disconnect()
         Assert.assertFalse(User.connected)
+    }
+
+    @Test
+    fun dummyTestForCoverage() {
+        val connector = FirebaseUserConnector()
+        connector.connect("test@test.com", "testtest", {}, {})
+        connector.register("test@test.com", "testtest", "Test", {}, {})
+        val profilePix = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        connector.modify("Test", profilePix, {}, {})
+        connector.modify("Test", null, {}, {})
     }
 }

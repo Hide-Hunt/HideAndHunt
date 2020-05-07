@@ -60,11 +60,7 @@ class FirebaseUserConnector : IUserConnector {
     }
 
     override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
-        Log.d("CACHE", "MODIFYING")
-        Log.d("CACHE", "ProfilePic null ? " + (profilePic == null))
-        Log.d("CACHE", "MODIFYING")
         if(pseudo != null){
-            Log.d("CACHE", "pseudo")
             val dataToAdd = hashMapOf("pseudo" to pseudo)
             db.collection("user").document(User.uid).set(dataToAdd).addOnCompleteListener() {
                 if(it.isSuccessful)
@@ -74,7 +70,6 @@ class FirebaseUserConnector : IUserConnector {
             }
         }
         if(profilePic != null) {
-            Log.d("CACHE", "pic")
             val metadata = storageMetadata {
                 contentType = "image/png"
             }
@@ -118,5 +113,4 @@ class FirebaseUserConnector : IUserConnector {
             }
         }
     }
-
 }

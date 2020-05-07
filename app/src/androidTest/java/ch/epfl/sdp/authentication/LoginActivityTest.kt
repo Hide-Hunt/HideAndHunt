@@ -16,7 +16,7 @@ import org.junit.*
 
 @RunWith(AndroidJUnit4::class)
 class LoginActivityTest {
-    val cache = UserCache()
+    private val cache = UserCache()
     @get:Rule
     val activityRule = ActivityTestRule(LoginActivity::class.java)
 
@@ -46,6 +46,7 @@ class LoginActivityTest {
         launchActivity<LoginActivity>()
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("password0"), ViewActions.closeSoftKeyboard())
+        User.connected = false
         onView(withId(R.id.registerSubmitButton)).perform(click())
         Assert.assertFalse(User.connected)
     }
