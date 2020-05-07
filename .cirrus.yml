@@ -22,7 +22,7 @@ connected_check_task:
     adb shell settings put global window_animation_scale 0.0
     adb shell settings put global transition_animation_scale 0.0
     adb shell settings put global animator_duration_scale 0.0
-  setup_mapsforge:
+  setup_mapsforge_script:
     adb push app/src/androidTest/monaco.map /storage/emulated/0/Android/data/ch.epfl.sdp/files/cache.map
   prepare_codeclimate_script:
     - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
