@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.FragmentGlobalLobbyBinding
 import ch.epfl.sdp.db.IRepoFactory
+import javax.inject.Inject
 
 class GlobalLobbyFragment : Fragment() {
 
@@ -16,13 +18,12 @@ class GlobalLobbyFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewAdapter: GlobalLobbyAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var repo: IGlobalLobbyRepository
+    @Inject lateinit var repo: IGlobalLobbyRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // We have to handle the dependency injection before the call to super.onCreate
+        (activity?.applicationContext as HideAndHuntApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            repo = (it.getSerializable(REPO_FACTORY_ARG) as IRepoFactory).makeGlobalLobbyRepository()
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
