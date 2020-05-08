@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 class GameCreationActivityTest {
 
     @get:Rule
-    val intentsTestRule = IntentsTestRule(LobbyActivity::class.java, false, false)
+    val intentsTestRule = IntentsTestRule(GameCreationActivity::class.java, false, false)
 
     @Before
     fun setup() {
@@ -35,12 +35,5 @@ class GameCreationActivityTest {
         launchActivity<GameCreationActivity>()
         Espresso.onView(ViewMatchers.withId(R.id.create_button)).perform(ViewActions.click())
         Intents.intended(IntentMatchers.hasComponent(GameLobbyActivity::class.java.name))
-    }
-
-    @Test
-    fun mainActivityCreateGameButtonLeadsToGameCreation() {
-        launchActivity<MainActivity>()
-        Espresso.onView(ViewMatchers.withId(R.id.newGame_button)).perform(ViewActions.click())
-        Intents.intended(IntentMatchers.hasComponent(GameCreationActivity::class.java.name))
     }
 }

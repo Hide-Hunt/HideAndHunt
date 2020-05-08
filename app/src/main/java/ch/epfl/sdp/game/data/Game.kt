@@ -6,11 +6,12 @@ data class Game (
         var id: Int,
         var name: String,
         var admin: String,
-        var duration: Int,
+        var duration: Long,
         val params: Map<String, GameOption>,
         var state: GameState,
         var participation: List<Participation>,
         var startDate: Date,
         var endDate: Date,
-        var creationDate: Date
+        var creationDate: Date,
+        var adminID: Int
 )

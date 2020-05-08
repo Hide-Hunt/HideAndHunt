@@ -5,6 +5,7 @@ import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.dagger.modules.*
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
+import ch.epfl.sdp.lobby.global.GlobalLobbyFragment
 import ch.epfl.sdp.replay.ManageReplaysActivity
 import ch.epfl.sdp.replay.ReplayInfoListFragment
 import dagger.BindsInstance
@@ -26,4 +27,5 @@ interface ApplicationComponent : IApplicationComponent {
     fun inject(activity: LoginActivity)
     fun inject(activity: ManageReplaysActivity)
     fun inject(activity: ReplayInfoListFragment)
+    fun inject(activity: GlobalLobbyFragment)
 }
