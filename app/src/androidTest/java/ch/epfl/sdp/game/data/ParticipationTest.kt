@@ -12,9 +12,12 @@ class ParticipationTest {
 
     @Test
     fun defaultMatchesExpected() {
-        val part = Participation(User("", 0), false, "", PlayerFaction.PREY)
+        val part = Participation("", false, "", 0, PlayerFaction.PREY, 0)
         assertEquals(PlayerFaction.PREY, part.faction)
         assertEquals("", part.tag)
         assertEquals(false, part.ready)
+        assertEquals("", part.username)
+        assertEquals(0, part.playerID)
+        assertEquals(0, part.gameID)
     }
 }

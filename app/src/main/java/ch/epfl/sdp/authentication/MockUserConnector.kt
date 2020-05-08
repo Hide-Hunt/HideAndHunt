@@ -12,44 +12,44 @@ class MockUserConnector : IUserConnector {
     }
 
     override fun connect(email: String, password: String): Boolean {
-        if(User.connected)
+        if(LocalUser.connected)
             return false
-        val usrEmail = emails.withIndex().filter {(_, str) -> str == email}
+        val usrEmail = emails.withIndex().filter {(_, str) -> str == email.toLowerCase()}
         if(usrEmail.isEmpty()) {
-            User.username = ""
-            User.uid = ""
-            User.connected = false
+            LocalUser.username = ""
+            LocalUser.uid = ""
+            LocalUser.connected = false
             return false
         }
         val (index, foundEmail) = usrEmail[0]
         val pswrd = passwords[index]
 
         if (password == pswrd){
-            User.username = foundEmail
-            User.uid = index.toString()
-            User.connected = true
+            LocalUser.username = foundEmail
+            LocalUser.uid = index.toString()
+            LocalUser.connected = true
         } else {
-            User.username = ""
-            User.uid = ""
-            User.connected = false
+            LocalUser.username = ""
+            LocalUser.uid = ""
+            LocalUser.connected = false
         }
 
-        return User.connected
+        return LocalUser.connected
     }
 
     override fun disconnect(): Boolean {
-        User.connected = false
+        LocalUser.connected = false
         return true
     }
 
     override fun register(email: String, password: String): Boolean {
-        if(emails.any {str -> str == email})
+        if(emails.any {str -> str == email.toLowerCase()})
             return false
         emails.add(email)
         passwords.add(password)
-        User.username = email
-        User.uid = (emails.size - 1).toString()
-        User.connected = true
+        LocalUser.username = email
+        LocalUser.uid = (emails.size - 1).toString()
+        LocalUser.connected = true
         return true
     }
 

@@ -1,6 +1,6 @@
 package ch.epfl.sdp.authentication
 
-object User {
+object LocalUser {
     var username: String = ""
     var uid: String = ""
     var connected = false

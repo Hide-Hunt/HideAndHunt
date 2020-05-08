@@ -31,16 +31,16 @@ class LoginActivity : AppCompatActivity() {
 
     private fun register(email:Editable, password:Editable, connector:IUserConnector) {
         connector.register(email.toString(), password.toString())
-        if(User.connected)
-            changeDummyText("Account created and logged in as " + User.username)
+        if(LocalUser.connected)
+            changeDummyText("Account created and logged in as " + LocalUser.username.toLowerCase())
         else
             changeDummyText("Account creation failed")
     }
 
     private fun signIn(email:Editable, password:Editable, connector: IUserConnector) {
         connector.connect(email.toString(), password.toString())
-        if(User.connected)
-            changeDummyText("User logged in as " + User.username)
+        if(LocalUser.connected)
+            changeDummyText("User logged in as " + LocalUser.username.toLowerCase())
         else
             changeDummyText("Logging failed")
     }

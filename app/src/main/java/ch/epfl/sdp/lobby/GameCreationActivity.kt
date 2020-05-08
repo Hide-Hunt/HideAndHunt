@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityGameCreationBinding
 import ch.epfl.sdp.lobby.game.IGameLobbyRepository
-import java.sql.Time
 import javax.inject.Inject
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
 
@@ -26,10 +25,10 @@ class GameCreationActivity : AppCompatActivity() {
 
         binding.createButton.setOnClickListener {
             val time = binding.gameDuration.text.toString()
-            val timInMilliseconds: Long = time.toLong() * 60000
-            val newGameID = lobbyRepo.createGame(binding.gameName.text.toString(), Time(timInMilliseconds))
+            val timeeInSeconds: Long = time.toLong() * 60
+            val newGameID = lobbyRepo.createGame(binding.gameName.text.toString(), timeeInSeconds)
             val intent = Intent(this@GameCreationActivity, GameLobbyActivity::class.java)
-            intent.putExtra("GameID", newGameID)
+            intent.putExtra("gameID", newGameID)
             startActivity(intent)
         }
     }

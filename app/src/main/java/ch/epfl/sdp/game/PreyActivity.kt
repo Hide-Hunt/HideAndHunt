@@ -159,6 +159,8 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
         EndGameHelper.startEndGameActivity(this, gameData.initialTime, 0)
     }
 
-
+    override fun onBackPressed() {
+        //No code
+    }
 
 }
