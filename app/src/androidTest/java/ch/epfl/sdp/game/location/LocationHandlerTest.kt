@@ -135,7 +135,7 @@ class LocationHandlerTest {
         val handler = LocationHandler(activity, listener, 0, 0, null)
         activity.runOnUiThread {
             handler.enableRequestUpdates()
-            handler.onRequestPermissionsResult(10, arrayOf(""), IntArray(0))
+            handler.onRequestPermissionsResult(10)
         }
         assertFalse(activity.isDestroyed)
     }

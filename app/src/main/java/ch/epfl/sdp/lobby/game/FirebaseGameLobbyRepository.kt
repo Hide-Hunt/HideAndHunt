@@ -37,7 +37,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     override fun addLocalParticipation(gameId: Int) {
         fs.collection("participations").add(
                 Participation(
-                        LocalUser.username,
+                        LocalUser.pseudo,
                         true,
                         "",
                         IDHelper.getPlayerID(),
@@ -53,7 +53,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                 Game(
                         gameID,
                         gameName,
-                        LocalUser.username,
+                        LocalUser.pseudo,
                         gameDuration,
                         emptyMap(), //TODO: For now no params
                         GameState.LOBBY,

@@ -84,7 +84,7 @@ class LocationHandler(val activity: AppCompatActivity, val listener: ILocationLi
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME.toLong(), LOCATION_REFRESH_DISTANCE.toFloat(), locationListener)
     }
 
-    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(requestCode: Int) {
         if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
             enableRequestUpdates()
         }

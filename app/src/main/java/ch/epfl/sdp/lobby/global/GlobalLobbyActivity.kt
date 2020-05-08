@@ -11,7 +11,6 @@ class GlobalLobbyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val b = intent.extras
         setContentView(R.layout.activity_global_lobby)
         glf = GlobalLobbyFragment.newInstance()
         if (savedInstanceState == null) {

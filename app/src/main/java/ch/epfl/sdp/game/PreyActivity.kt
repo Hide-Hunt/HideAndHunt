@@ -1,8 +1,5 @@
 package ch.epfl.sdp.game
 
-import android.app.PendingIntent
-import android.content.Intent
-import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -110,7 +107,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        locationHandler.onRequestPermissionsResult(requestCode)
     }
 
     override fun onPause() {

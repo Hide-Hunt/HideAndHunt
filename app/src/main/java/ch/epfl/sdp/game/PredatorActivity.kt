@@ -117,7 +117,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        locationHandler.onRequestPermissionsResult(requestCode)
     }
 
     override fun onPause() {
