@@ -8,13 +8,6 @@ open class HideAndHuntApplication: Application(){
         initializeComponent()
     }
     open fun initializeComponent(): ApplicationComponent {
-        return DaggerApplicationComponent.create()!!
-    }
-}
-
-//The application Component must have the same lifecycle than the application
-class HideAndHuntTestApplication: HideAndHuntApplication(){
-    override fun initializeComponent(): ApplicationComponent {
-        return DaggerTestApplicationComponent.create()!!
+        return DaggerApplicationComponent.factory().create(applicationContext)
     }
 }

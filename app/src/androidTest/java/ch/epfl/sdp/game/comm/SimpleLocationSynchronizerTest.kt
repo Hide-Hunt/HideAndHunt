@@ -39,7 +39,7 @@ class SimpleLocationSynchronizerTest {
         }
 
         fun sendCatchPublish(predatorID: Int, preyID: Int) {
-            val catch = CatchOuterClass.Catch.newBuilder()
+            val catch = CatchEventOuterClass.CatchEvent.newBuilder()
                     .setPredatorID(predatorID)
                     .setPreyID(preyID)
                     .build()

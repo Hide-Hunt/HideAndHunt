@@ -1,4 +1,4 @@
-package ch.epfl.sdp.lobby
+package ch.epfl.sdp
 
 import android.app.Application
 import android.content.Context
