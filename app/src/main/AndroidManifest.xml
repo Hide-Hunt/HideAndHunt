@@ -23,12 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".game.EndGameActivity"/>
-        <activity android:name=".replay.viewer.ReplayActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".replay.viewer.ReplayActivity" />
         <activity android:name=".replay.ManageReplaysActivity" />
         <activity android:name=".DebugActivity" />
         <activity android:name=".lobby.global.GlobalLobbyActivity" />
