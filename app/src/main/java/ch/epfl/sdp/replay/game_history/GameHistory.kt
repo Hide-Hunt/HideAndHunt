@@ -27,6 +27,10 @@ data class GameHistory(
                 throw InvalidFileFormat(e.toString())
             }
 
+            return fromProtobufObject(game)
+        }
+
+        private fun fromProtobufObject(game: GameOuterClass.Game): GameHistory {
             if (game.id < 0) throw InvalidGameFormat("Invalid game id")
             if (game.adminID < 0) throw InvalidGameFormat("Invalid admin id")
 
@@ -40,7 +44,8 @@ data class GameHistory(
                 try {
                     val firstLoc = events.first { it is LocationEvent && it.playerID == player.id }
                     player.lastKnownLocation = (firstLoc as LocationEvent).location
-                } catch (_: NoSuchElementException) { /* The player has no associated location event */ }
+                } catch (_: NoSuchElementException) { /* The player has no associated location event */
+                }
             }
 
             val firstLocation = (events.first { it is LocationEvent } as LocationEvent).location
