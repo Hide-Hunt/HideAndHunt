@@ -3,6 +3,7 @@ package ch.epfl.sdp
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.authentication.LoginActivity
@@ -11,33 +12,39 @@ import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.user.ProfileActivity
 import ch.epfl.sdp.user.UserCache
+import ch.epfl.sdp.replay.ManageReplaysActivity
+import ch.epfl.sdp.replay.viewer.ReplayActivity
 
 
 class MainActivity : AppCompatActivity() {
     val cache: UserCache = UserCache()
     private lateinit var binding: ActivityMainBinding
 
+    private fun buttonToActivity(button: Button, cls: Class<*>, intentFiller: (Intent) -> Unit = {}) {
+        button.setOnClickListener {
+            val intent = Intent(this@MainActivity, cls)
+            intentFiller(intent)
+            startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.playButton.setOnClickListener {
-            val intent = Intent(this@MainActivity, GlobalLobbyActivity::class.java)
-            startActivity(intent)
+
+
+        buttonToActivity(binding.playButton, GlobalLobbyActivity::class.java)
+
+        buttonToActivity(binding.loginButton, LoginActivity::class.java)
+
+        buttonToActivity(binding.profileButton, ProfileActivity::class.java)
+
+        buttonToActivity(binding.replayButton, ManageReplaysActivity::class.java) {
+            it.putExtra(ReplayActivity.REPLAY_PATH_ARG, "0.game")
         }
-        binding.loginButton.setOnClickListener{
-            val intent = Intent(this@MainActivity, LoginActivity::class.java)
-            startActivity(intent)
-        }
-        binding.profileButton.setOnClickListener{
-            val intent = Intent(this@MainActivity, ProfileActivity::class.java)
-            startActivity(intent)
-        }
-        binding.newGameButton.setOnClickListener{
-            val intent = Intent(this@MainActivity, GameCreationActivity::class.java)
-            startActivity(intent)
-        }
+        buttonToActivity(binding.newGameButton, GameCreationActivity::class.java)
+
         cache.get(this)
         activateProfile()
     }

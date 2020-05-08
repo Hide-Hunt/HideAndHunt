@@ -1,32 +1,33 @@
 package ch.epfl.sdp.dagger
 
+import android.content.Context
 import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.dagger.modules.*
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import ch.epfl.sdp.user.ProfileActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyFragment
+import ch.epfl.sdp.replay.ManageReplaysActivity
+import ch.epfl.sdp.replay.ReplayInfoListFragment
+import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 interface IApplicationComponent
 
 @Singleton
-@Component(modules = [RepoModule::class, UserConnectorModule::class])
+@Component(modules = [RepoModule::class, UserConnectorModule::class, ReplayModule::class])
 interface ApplicationComponent : IApplicationComponent {
+    @Component.Factory
+    interface Factory{
+        fun create(@BindsInstance context: Context): ApplicationComponent
+    }
+
     fun inject(activity: GameCreationActivity)
     fun inject(activity: GameLobbyActivity)
     fun inject(activity: LoginActivity)
     fun inject(activity: ProfileActivity)
     fun inject(activity: GlobalLobbyFragment)
-}
-
-@Singleton
-@Component(modules = [FakeRepoModule::class, FakeUserConnectorModule::class])
-interface TestApplicationComponent : ApplicationComponent {
-    override fun inject(activity: GameCreationActivity)
-    override fun inject(activity: GameLobbyActivity)
-    override fun inject(activity: LoginActivity)
-    override fun inject(activity: ProfileActivity)
-    override fun inject(activity: GlobalLobbyFragment)
+    fun inject(activity: ManageReplaysActivity)
+    fun inject(activity: ReplayInfoListFragment)
 }
