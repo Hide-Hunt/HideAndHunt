@@ -14,7 +14,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     @Inject lateinit var connector:IUserConnector
-    val cache: UserCache = UserCache()
+    private val cache: UserCache = UserCache()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // We have to handle the dependency injection before the call to super.onCreate

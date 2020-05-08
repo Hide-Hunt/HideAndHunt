@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import ch.epfl.sdp.DebugActivity
+import ch.epfl.sdp.MainActivity
 import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
 import ch.epfl.sdp.game.data.Location
 import org.junit.*
@@ -20,7 +20,7 @@ class LocationHandlerTest {
     var grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
 
     @Rule @JvmField
-    val activityRule = ActivityTestRule(DebugActivity::class.java, false, false)
+    val activityRule = ActivityTestRule(MainActivity::class.java, false, false)
 
     private fun makeListener(anyCalled: (String) -> Unit): ILocationListener = object : ILocationListener {
         override fun onLocationChanged(newLocation: Location) {
@@ -135,7 +135,7 @@ class LocationHandlerTest {
         val handler = LocationHandler(activity, listener, 0, 0, null)
         activity.runOnUiThread {
             handler.enableRequestUpdates()
-            handler.onRequestPermissionsResult(10, arrayOf(""), IntArray(0))
+            handler.onRequestPermissionsResult(10)
         }
         assertFalse(activity.isDestroyed)
     }

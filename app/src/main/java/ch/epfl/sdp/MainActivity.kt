@@ -4,15 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.authentication.LoginActivity
-import ch.epfl.sdp.authentication.User
-import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityMainBinding
-import ch.epfl.sdp.db.IRepoFactory
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
-import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
-import ch.epfl.sdp.lobby.global.MockGlobalLobbyRepository
 import ch.epfl.sdp.user.ProfileActivity
 import ch.epfl.sdp.user.UserCache
 
@@ -20,21 +16,14 @@ import ch.epfl.sdp.user.UserCache
 class MainActivity : AppCompatActivity() {
     val cache: UserCache = UserCache()
     private lateinit var binding: ActivityMainBinding
-    private val repositoryFactory = object : IRepoFactory {
-        override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
-            return MockGlobalLobbyRepository()
-        }
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // We have to handle the dependency injection before the call to super.onCreate
-        (applicationContext as HideAndHuntApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.playButton.setOnClickListener {
             val intent = Intent(this@MainActivity, GlobalLobbyActivity::class.java)
-            intent.putExtra("repoFactory", repositoryFactory)
             startActivity(intent)
         }
         binding.loginButton.setOnClickListener{
@@ -49,9 +38,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, GameCreationActivity::class.java)
             startActivity(intent)
         }
-        binding.btnDebug.setOnClickListener {
-            startActivity(Intent(this@MainActivity, DebugActivity::class.java))
-        }
         cache.get(this)
         activateProfile()
     }
@@ -62,9 +48,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun activateProfile() {
-        if(!User.connected)
+        if(!LocalUser.connected)
             binding.profileButton.visibility = View.INVISIBLE
         else
             binding.profileButton.visibility = View.VISIBLE
+        binding.playButton.isEnabled = LocalUser.connected
+        binding.newGameButton.isEnabled = LocalUser.connected
     }
 }

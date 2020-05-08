@@ -12,69 +12,63 @@ import java.util.*
 class MockGameLobbyRepositoryTest {
     private val glr = MockGameLobbyRepository
 
-    @Test
-    fun getGameIdCallbackIsCalled() {
-        var called = false
-        glr.getGameId { called = true }
-        assertTrue(called)
-    }
 
     @Test
     fun getGameNameCallbackIsCalled() {
         var called = false
-        glr.getGameName { called = true }
+        glr.getGameName(0) { called = true }
         assertTrue(called)
     }
 
     @Test
     fun getGameDurationCallbackIsCalled() {
         var called = false
-        glr.getGameDuration { called = true }
+        glr.getGameDuration(0) { called = true }
         assertTrue(called)
     }
 
     @Test
     fun getParticipationsCallbackIsCalled() {
         var called = false
-        glr.getParticipations { called = true }
+        glr.getParticipations(0) { called = true }
         assertTrue(called)
     }
 
     @Test
     fun getPlayersCallbackIsCalled() {
         var called = false
-        glr.getPlayers { called = true }
+        glr.getPlayers(0) { called = true }
         assertTrue(called)
     }
 
     @Test
     fun getAdminIdCallbackIsCalled() {
         var called = false
-        glr.getAdminId { called = true }
+        glr.getAdminId(0) { called = true }
         assertTrue(called)
     }
 
     @Test
     fun getParticipationsAddsAPlayer() {
         var nPlayers = 0
-        glr.getParticipations { players -> nPlayers = players.size }
+        glr.getParticipations(0) { players -> nPlayers = players.size }
         var newNPlayers = 0
-        glr.getParticipations { players -> newNPlayers = players.size }
+        glr.getParticipations(0) { players -> newNPlayers = players.size }
         assertEquals(nPlayers + 1, newNPlayers)
     }
 
     @Test
     fun changePlayerReadyChangesReady() {
         var playerList = Collections.emptyList<Participation>()
-        glr.getParticipations {
+        glr.getParticipations(0) {
             players -> playerList = players
         }
         val player1IsReady = playerList[3].ready
         val player2IsReady = playerList[4].ready
-        glr.changePlayerReady(playerList[3].user.uid)
-        glr.changePlayerReady(playerList[4].user.uid)
+        glr.changePlayerReady(0, playerList[3].playerID)
+        glr.changePlayerReady(0, playerList[4].playerID)
 
-        glr.getParticipations {
+        glr.getParticipations(0) {
             players -> playerList = players
         }
 
@@ -89,18 +83,18 @@ class MockGameLobbyRepositoryTest {
     @Test
     fun setPlayerFactionSetsFaction() {
         var playerList = Collections.emptyList<Participation>()
-        glr.getParticipations {
+        glr.getParticipations(0) {
             players -> playerList = players
         }
 
-        glr.setPlayerFaction(playerList[1].user.uid, PlayerFaction.PREDATOR)
-        glr.getParticipations {
+        glr.setPlayerFaction(0, playerList[1].playerID, PlayerFaction.PREDATOR)
+        glr.getParticipations(0) {
             players -> playerList = players
         }
         assertEquals(playerList[1].faction, PlayerFaction.PREDATOR)
 
-        glr.setPlayerFaction(playerList[1].user.uid, PlayerFaction.PREY)
-        glr.getParticipations {
+        glr.setPlayerFaction(0, playerList[1].playerID, PlayerFaction.PREY)
+        glr.getParticipations(0) {
             players -> playerList = players
         }
         assertEquals(playerList[1].faction, PlayerFaction.PREY)
@@ -109,14 +103,14 @@ class MockGameLobbyRepositoryTest {
     @Test
     fun setPlayerReadyChangesReadyness() {
         var playerList = Collections.emptyList<Participation>()
-        glr.getParticipations {
+        glr.getParticipations(0) {
             players -> playerList = players
         }
 
-        glr.setPlayerReady(playerList[3].user.uid, false)
-        glr.setPlayerReady(playerList[4].user.uid, true)
+        glr.setPlayerReady(0, playerList[3].playerID, false)
+        glr.setPlayerReady(0, playerList[4].playerID, true)
 
-        glr.getParticipations {
+        glr.getParticipations(0) {
             players -> playerList = players
         }
 

@@ -16,16 +16,16 @@ class MockUserConnector : IUserConnector {
     }
 
     override fun connect(email: String, password: String, successCallback: () -> Unit, errorCallback: () -> Unit) {
-        if(User.connected) {
+        if(LocalUser.connected) {
             errorCallback()
             return
         }
         val usrEmail = emails.withIndex().filter {(_, str) -> str == email}
         if(usrEmail.isEmpty()) {
-            User.pseudo = ""
-            User.email = ""
-            User.uid = ""
-            User.connected = false
+            LocalUser.pseudo = ""
+            LocalUser.email = ""
+            LocalUser.uid = ""
+            LocalUser.connected = false
             errorCallback()
             return
         }
@@ -33,29 +33,29 @@ class MockUserConnector : IUserConnector {
         val pswrd = passwords[index]
 
         if (password == pswrd){
-            User.email = foundEmail
-            User.pseudo = pseudos[index]
-            User.uid = index.toString()
-            User.connected = true
+            LocalUser.email = foundEmail
+            LocalUser.pseudo = pseudos[index]
+            LocalUser.uid = index.toString()
+            LocalUser.connected = true
             successCallback()
         } else {
-            User.pseudo = ""
-            User.email = ""
-            User.uid = ""
-            User.connected = false
+            LocalUser.pseudo = ""
+            LocalUser.email = ""
+            LocalUser.uid = ""
+            LocalUser.connected = false
             errorCallback()
         }
     }
 
     override fun disconnect() {
-        User.connected = false
+        LocalUser.connected = false
     }
 
     override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
         if(pseudo != null)
-            User.pseudo = pseudo
+            LocalUser.pseudo = pseudo
         if(profilePic != null)
-            User.profilePic = profilePic
+            LocalUser.profilePic = profilePic
         if(pseudo == "REQUESTING_ERROR")
             errorCallback()
         else
@@ -70,10 +70,10 @@ class MockUserConnector : IUserConnector {
         emails.add(email)
         passwords.add(password)
         pseudos.add(pseudo)
-        User.email = email
-        User.pseudo = pseudo
-        User.uid = (emails.size - 1).toString()
-        User.connected = true
+        LocalUser.email = email
+        LocalUser.pseudo = pseudo
+        LocalUser.uid = (emails.size - 1).toString()
+        LocalUser.connected = true
         successCallback()
     }
 

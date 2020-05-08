@@ -8,21 +8,21 @@ import org.junit.runner.RunWith
 import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
-class MockUserTest {
+class MockLocalUserTest {
     private val callbackLatch = CountDownLatch(1)
-    var correctCallback = false
+    private var correctCallback = false
 
     @Before
     fun forceDisconnect() {
-        User.connected = false
+        LocalUser.connected = false
     }
 
-    fun success() {
+    private fun success() {
         callbackLatch.countDown()
         correctCallback = true
     }
 
-    fun error() {
+    private fun error() {
         callbackLatch.countDown()
         correctCallback = false
     }
@@ -35,11 +35,11 @@ class MockUserTest {
             mock.connect("test$i@test.com", "password$i", {success()}, {error()})
             callbackLatch.await()
             Assert.assertTrue(correctCallback)
-            Assert.assertEquals("test$i@test.com", User.email)
-            Assert.assertEquals(i.toString(), User.uid)
-            Assert.assertTrue(User.connected)
+            Assert.assertEquals("test$i@test.com", LocalUser.email)
+            Assert.assertEquals(i.toString(), LocalUser.uid)
+            Assert.assertTrue(LocalUser.connected)
             mock.disconnect()
-            Assert.assertFalse(User.connected)
+            Assert.assertFalse(LocalUser.connected)
         }
     }
 
@@ -49,11 +49,11 @@ class MockUserTest {
         mock.connect("test0@test.com", "password0", {success()}, {error()})
         callbackLatch.await()
         Assert.assertTrue(correctCallback)
-        Assert.assertTrue(User.connected)
+        Assert.assertTrue(LocalUser.connected)
         mock.connect("test0@test.com", "password0", {success()}, {error()})
         callbackLatch.await()
         Assert.assertFalse(correctCallback)
-        Assert.assertTrue(User.connected)
+        Assert.assertTrue(LocalUser.connected)
     }
 
     @Test
@@ -62,7 +62,7 @@ class MockUserTest {
         mock.connect("fewfwef@test.com", "password0", {success()}, {error()})
         callbackLatch.await()
         Assert.assertFalse(correctCallback)
-        Assert.assertFalse(User.connected)
+        Assert.assertFalse(LocalUser.connected)
     }
 
     @Test
@@ -71,7 +71,7 @@ class MockUserTest {
         mock.connect("test0@test.com", "its2AMrightnow", {success()}, {error()})
         callbackLatch.await()
         Assert.assertFalse(correctCallback)
-        Assert.assertFalse(User.connected)
+        Assert.assertFalse(LocalUser.connected)
     }
 
     @Test
@@ -80,17 +80,17 @@ class MockUserTest {
         mock.register("testing", "C-C-C-CANDEAAAA", "pseudo", {success()}, {error()})
         callbackLatch.await()
         Assert.assertTrue(correctCallback)
-        Assert.assertEquals("testing", User.email)
-        Assert.assertEquals("pseudo", User.pseudo)
-        Assert.assertTrue(User.connected)
+        Assert.assertEquals("testing", LocalUser.email)
+        Assert.assertEquals("pseudo", LocalUser.pseudo)
+        Assert.assertTrue(LocalUser.connected)
         mock.disconnect()
-        Assert.assertFalse(User.connected)
+        Assert.assertFalse(LocalUser.connected)
         mock.connect("testing", "C-C-C-CANDEAAAA", {success()}, {error()})
         callbackLatch.await()
         Assert.assertTrue(correctCallback)
-        Assert.assertEquals("testing", User.email)
-        Assert.assertEquals("pseudo", User.pseudo)
-        Assert.assertTrue(User.connected)
+        Assert.assertEquals("testing", LocalUser.email)
+        Assert.assertEquals("pseudo", LocalUser.pseudo)
+        Assert.assertTrue(LocalUser.connected)
     }
 
     @Test
@@ -99,6 +99,6 @@ class MockUserTest {
         mock.register("test0@test.com", "Covid-19", "pseudo", {success()}, {error()})
         callbackLatch.await()
         Assert.assertFalse(correctCallback)
-        Assert.assertFalse(User.connected)
+        Assert.assertFalse(LocalUser.connected)
     }
 }

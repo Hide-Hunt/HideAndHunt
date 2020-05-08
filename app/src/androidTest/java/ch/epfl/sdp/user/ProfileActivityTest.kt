@@ -17,7 +17,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.*
 import ch.epfl.sdp.R
-import ch.epfl.sdp.authentication.User
+import ch.epfl.sdp.authentication.LocalUser
 import org.junit.*
 
 class ProfileActivityTest {
@@ -43,9 +43,9 @@ class ProfileActivityTest {
 
     @Test
     fun pseudoTextShowsCurrentPseudo() {
-        User.profilePic = null
-        User.pseudo = "pseudo"
-        User.connected = true
+        LocalUser.profilePic = null
+        LocalUser.pseudo = "pseudo"
+        LocalUser.connected = true
         launchActivity<ProfileActivity>()
         onView(withId(R.id.pseudoText)).check(matches(withText("pseudo")))
     }
@@ -53,23 +53,23 @@ class ProfileActivityTest {
     @Test
     fun createActivityWithProfilePicture() {
         val whiteBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
-        User.profilePic = whiteBitmap
-        User.pseudo = "wrongPseudo"
-        User.connected = true
+        LocalUser.profilePic = whiteBitmap
+        LocalUser.pseudo = "wrongPseudo"
+        LocalUser.connected = true
         launchActivity<ProfileActivity>()
         onView(withId(R.id.pseudoText)).perform(ViewActions.clearText())
         onView(withId(R.id.pseudoText)).perform(ViewActions.typeText("correctPseudo"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.okButton)).perform(click())
 
-        Assert.assertTrue(User.profilePic!!.sameAs(whiteBitmap))
-        Assert.assertEquals("correctPseudo", User.pseudo)
+        Assert.assertTrue(LocalUser.profilePic!!.sameAs(whiteBitmap))
+        Assert.assertEquals("correctPseudo", LocalUser.pseudo)
     }
 
     @Test
     fun createActivityWithNoProfilePicture() {
-        User.profilePic = null
-        User.pseudo = "wrongPseudo"
-        User.connected = true
+        LocalUser.profilePic = null
+        LocalUser.pseudo = "wrongPseudo"
+        LocalUser.connected = true
         val resultData = Intent()
         val path = Uri.parse("android.resource://ch.epfl.sdp/" + R.drawable.star_icon)
         resultData.putExtra("picturePath", path)
@@ -79,20 +79,20 @@ class ProfileActivityTest {
 
         intending(IntentMatchers.hasAction("android.intent.action.CHOOSER")).respondWith(result)
         onView(withId(R.id.profilePictureView)).perform(click())
-        User.profilePic = whiteBitmap
+        LocalUser.profilePic = whiteBitmap
         onView(withId(R.id.pseudoText)).perform(ViewActions.clearText())
         onView(withId(R.id.pseudoText)).perform(ViewActions.typeText("correctPseudo"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.okButton)).perform(click())
 
-        Assert.assertFalse(User.profilePic!!.sameAs(whiteBitmap))
-        Assert.assertEquals("correctPseudo", User.pseudo)
+        Assert.assertFalse(LocalUser.profilePic!!.sameAs(whiteBitmap))
+        Assert.assertEquals("correctPseudo", LocalUser.pseudo)
     }
 
     @Test
     fun onErrorShowsDialog() {
-        User.profilePic = null
-        User.pseudo = "wrongPseudo"
-        User.connected = true
+        LocalUser.profilePic = null
+        LocalUser.pseudo = "wrongPseudo"
+        LocalUser.connected = true
         launchActivity<ProfileActivity>()
         onView(withId(R.id.pseudoText)).perform(ViewActions.clearText())
         onView(withId(R.id.pseudoText)).perform(ViewActions.typeText("REQUESTING_ERROR"), ViewActions.closeSoftKeyboard())

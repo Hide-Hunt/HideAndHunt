@@ -22,7 +22,7 @@ class LoginActivityTest {
 
     @Before
     fun forceDisconnect() {
-        User.connected = false
+        LocalUser.connected = false
         cache.invalidateCache(ApplicationProvider.getApplicationContext())
     }
 
@@ -35,10 +35,10 @@ class LoginActivityTest {
     @Test
     fun registeringNewUserWorksAndConnectsIt() {
         launchActivity<LoginActivity>()
-        onView(withId(R.id.userNameLogin)).perform(typeText("testNew@test.com"), ViewActions.closeSoftKeyboard())
+        onView(withId(R.id.userNameLogin)).perform(typeText("testnew@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("passwordNew"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.registerSubmitButton)).perform(click())
-        Assert.assertTrue(User.connected)
+        Assert.assertTrue(LocalUser.connected)
     }
 
     @Test
@@ -46,9 +46,9 @@ class LoginActivityTest {
         launchActivity<LoginActivity>()
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("password0"), ViewActions.closeSoftKeyboard())
-        User.connected = false
+        LocalUser.connected = false
         onView(withId(R.id.registerSubmitButton)).perform(click())
-        Assert.assertFalse(User.connected)
+        Assert.assertFalse(LocalUser.connected)
     }
 
     @Test
@@ -57,7 +57,7 @@ class LoginActivityTest {
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("password0"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.loginSubmitButton)).perform(click())
-        Assert.assertTrue(User.connected)
+        Assert.assertTrue(LocalUser.connected)
     }
 
     @Test
@@ -66,6 +66,6 @@ class LoginActivityTest {
         onView(withId(R.id.userNameLogin)).perform(typeText("test0@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("fewewfwe"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.loginSubmitButton)).perform(click())
-        Assert.assertFalse(User.connected)
+        Assert.assertFalse(LocalUser.connected)
     }
 }

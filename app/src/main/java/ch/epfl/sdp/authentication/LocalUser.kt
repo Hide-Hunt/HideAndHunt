@@ -2,7 +2,7 @@ package ch.epfl.sdp.authentication
 
 import android.graphics.Bitmap
 
-object User {
+object LocalUser {
     lateinit var pseudo: String
     lateinit var email: String
     lateinit var uid: String

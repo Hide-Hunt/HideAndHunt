@@ -19,26 +19,26 @@ class FirebaseUserConnector : IUserConnector {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val authed = auth.currentUser
-                User.email = email
-                User.uid = authed!!.uid
+                LocalUser.email = email
+                LocalUser.uid = authed!!.uid
                 val maxSize: Long = 10 * 1024 * 1024
-                storage.reference.child("profilePics").child(User.uid + ".png").getBytes(maxSize)
+                storage.reference.child("profilePics").child(LocalUser.uid + ".png").getBytes(maxSize)
                 .addOnSuccessListener {
-                    User.profilePic = BitmapFactory.decodeByteArray(it, 0, it.size)
+                    LocalUser.profilePic = BitmapFactory.decodeByteArray(it, 0, it.size)
                 }.addOnFailureListener {
-                    User.profilePic = null
+                    LocalUser.profilePic = null
                 }
-                db.collection("user").document(User.uid).get().addOnSuccessListener { document ->
+                db.collection("user").document(LocalUser.uid).get().addOnSuccessListener { document ->
                     if (document != null) {
-                        User.pseudo = document.data!!["pseudo"].toString()
-                        User.connected = true
+                        LocalUser.pseudo = document.data!!["pseudo"].toString()
+                        LocalUser.connected = true
                         successCallback()
                     } else {
-                        User.connected = false
+                        LocalUser.connected = false
                         errorCallback()
                     }
                 }.addOnFailureListener { _ ->
-                    User.connected = false
+                    LocalUser.connected = false
                     errorCallback()
                 }
             } else {
@@ -49,13 +49,13 @@ class FirebaseUserConnector : IUserConnector {
 
     override fun disconnect() {
         auth.signOut()
-        User.connected = false
+        LocalUser.connected = false
     }
 
     override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
         if(pseudo != null){
             val dataToAdd = hashMapOf("pseudo" to pseudo)
-            db.collection("user").document(User.uid).set(dataToAdd).addOnCompleteListener() {
+            db.collection("user").document(LocalUser.uid).set(dataToAdd).addOnCompleteListener() {
                 if(it.isSuccessful)
                     successCallback()
                 else
@@ -70,7 +70,7 @@ class FirebaseUserConnector : IUserConnector {
             val profilePics = storage.reference.child("profilePics")
             val stream = ByteArrayOutputStream()
             profilePic.compress(Bitmap.CompressFormat.PNG, 90,  stream)
-            val uploadTask = profilePics.child(User.uid + ".png").putBytes(stream.toByteArray(), metadata)
+            val uploadTask = profilePics.child(LocalUser.uid + ".png").putBytes(stream.toByteArray(), metadata)
             uploadTask.addOnSuccessListener {
                 successCallback()
             }.addOnFailureListener {
@@ -86,22 +86,22 @@ class FirebaseUserConnector : IUserConnector {
         .addOnCompleteListener { task ->
             if (task.isSuccessful){
                 val authed = auth.currentUser
-                User.email = email
-                User.uid = authed!!.uid
-                User.pseudo = pseudo
+                LocalUser.email = email
+                LocalUser.uid = authed!!.uid
+                LocalUser.pseudo = pseudo
                 val dataToAdd = hashMapOf("pseudo" to pseudo)
-                db.collection("user").document(User.uid)
+                db.collection("user").document(LocalUser.uid)
                         .set(dataToAdd)
                         .addOnSuccessListener {
-                            User.connected = true
+                            LocalUser.connected = true
                             successCallback()
                         }
                         .addOnFailureListener {
-                            User.connected = false
+                            LocalUser.connected = false
                             errorCallback()
                         }
             } else {
-                User.connected = false
+                LocalUser.connected = false
                 errorCallback()
             }
         }
