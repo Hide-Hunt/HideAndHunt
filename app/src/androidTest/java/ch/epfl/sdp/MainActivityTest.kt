@@ -42,13 +42,13 @@ class MainActivityTest {
         Intents.intended(IntentMatchers.hasComponent(GlobalLobbyActivity::class.java.name))
     }
 
-    /*@Test
+    @Test
     fun newGameCanBeClicked() {
         LocalUser.connected = true
         launchActivity<MainActivity>()
         onView(withId(R.id.newGame_button)).perform(click())
         Intents.intended(IntentMatchers.hasComponent(GameCreationActivity::class.java.name))
-    }*/
+    }
 
     @Test
     fun loginActivityCanBeClicked() {

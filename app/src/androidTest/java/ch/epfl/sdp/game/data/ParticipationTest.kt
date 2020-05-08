@@ -16,5 +16,8 @@ class ParticipationTest {
         assertEquals(PlayerFaction.PREY, part.faction)
         assertEquals("", part.tag)
         assertEquals(false, part.ready)
+        assertEquals("", part.username)
+        assertEquals(0, part.playerID)
+        assertEquals(0, part.gameID)
     }
 }
