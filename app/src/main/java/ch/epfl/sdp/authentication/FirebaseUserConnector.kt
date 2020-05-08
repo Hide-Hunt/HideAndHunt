@@ -10,20 +10,20 @@ class FirebaseUserConnector : IUserConnector {
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val authed = auth.currentUser
-                User.username = email
-                User.uid = authed!!.uid
-                User.connected = true
+                LocalUser.username = email
+                LocalUser.uid = authed!!.uid
+                LocalUser.connected = true
             } else {
-                User.connected = false
+                LocalUser.connected = false
             }
         }
 
-        return User.connected
+        return LocalUser.connected
     }
 
     override fun disconnect(): Boolean {
         auth.signOut()
-        User.connected = false
+        LocalUser.connected = false
         return true
     }
 
@@ -32,14 +32,14 @@ class FirebaseUserConnector : IUserConnector {
         .addOnCompleteListener { task ->
             if (task.isSuccessful){
                 val authed = auth.currentUser
-                User.connected = true
-                User.username = email
-                User.uid = authed!!.uid
+                LocalUser.connected = true
+                LocalUser.username = email
+                LocalUser.uid = authed!!.uid
             } else {
-                User.connected = false
+                LocalUser.connected = false
             }
         }
-        return User.connected
+        return LocalUser.connected
     }
 
 }

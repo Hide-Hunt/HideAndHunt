@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
-import ch.epfl.sdp.db.IRepoFactory
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.lobby.global.IGlobalLobbyRepository
@@ -43,6 +43,13 @@ class MainActivity : AppCompatActivity() {
 
         buttonToActivity(binding.playButton, GlobalLobbyActivity::class.java) {
             it.putExtra("repoFactory", repositoryFactory)
+        binding.playButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, GlobalLobbyActivity::class.java)
+            startActivity(intent)
+        }
+        binding.loginButton.setOnClickListener{
+            val intent = Intent(this@MainActivity, LoginActivity::class.java)
+            startActivity(intent)
         }
 
         buttonToActivity(binding.replayButton, ManageReplaysActivity::class.java) {
@@ -55,5 +62,11 @@ class MainActivity : AppCompatActivity() {
         buttonToActivity(binding.btnDebug, DebugActivity::class.java)
 
         buttonToActivity(binding.loginButton, LoginActivity::class.java)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.playButton.isEnabled = LocalUser.connected
+        binding.newGameButton.isEnabled = LocalUser.connected
     }
 }

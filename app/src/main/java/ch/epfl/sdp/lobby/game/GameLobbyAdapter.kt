@@ -9,6 +9,7 @@ import ch.epfl.sdp.R
 import ch.epfl.sdp.game.PlayerFaction
 import ch.epfl.sdp.game.data.Participation
 import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
+import kotlin.math.max
 
 /**
  * Adapter for the game lobby recyclerView
@@ -49,13 +50,13 @@ class GameLobbyAdapter(
         fun display(participation: Participation) {
             //set text views
             itemView.player_faction.text = factionToString(participation.faction)
-            itemView.player_name.text = participation.user.name
+            itemView.player_name.text = participation.username.subSequence(0, max(5, participation.username.indexOf(".")))
             itemView.player_is_ready.text = isReadyToString(participation.ready)
             //set admin logo
-            if (adminId == participation.user.uid) itemView.admin_logo.setImageResource(R.drawable.star_icon)
+            if (adminId == participation.playerID) itemView.admin_logo.setImageResource(R.drawable.star_icon)
             else itemView.admin_logo.setImageResource(0)
             //set cell background
-            if (playerId == participation.user.uid) itemView.setBackgroundColor(Color.GRAY)
+            if (playerId == participation.playerID) itemView.setBackgroundColor(Color.GRAY)
             else itemView.setBackgroundColor(Color.LTGRAY)
         }
 
