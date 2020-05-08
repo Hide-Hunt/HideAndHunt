@@ -27,4 +27,5 @@ interface ApplicationComponent : IApplicationComponent {
     fun inject(activity: LoginActivity)
     fun inject(activity: ManageReplaysActivity)
     fun inject(activity: ReplayInfoListFragment)
+    fun inject(activity: GlobalLobbyFragment)
 }

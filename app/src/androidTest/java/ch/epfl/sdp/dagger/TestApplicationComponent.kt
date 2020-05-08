@@ -7,6 +7,7 @@ import ch.epfl.sdp.dagger.modules.FakeRepoModule
 import ch.epfl.sdp.dagger.modules.FakeUserConnectorModule
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
+import ch.epfl.sdp.lobby.global.GlobalLobbyFragment
 import ch.epfl.sdp.replay.ManageReplaysActivity
 import ch.epfl.sdp.replay.ReplayInfoListFragment
 import dagger.BindsInstance
@@ -26,4 +27,5 @@ interface TestApplicationComponent : ApplicationComponent {
     override fun inject(activity: LoginActivity)
     override fun inject(activity: ManageReplaysActivity)
     override fun inject(activity: ReplayInfoListFragment)
+    override fun inject(activity: GlobalLobbyFragment)
 }

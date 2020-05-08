@@ -18,15 +18,6 @@ import ch.epfl.sdp.replay.viewer.ReplayActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val repositoryFactory = object : IRepoFactory {
-        override fun makeGlobalLobbyRepository(): IGlobalLobbyRepository {
-            return MockGlobalLobbyRepository()
-        }
-
-        override fun makeReplayRepository(): IReplayRepository {
-            TODO("Not yet implemented")
-        }
-    }
 
     private fun buttonToActivity(button: Button, cls: Class<*>, intentFiller: (Intent) -> Unit = {}) {
         button.setOnClickListener {
@@ -41,16 +32,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        buttonToActivity(binding.playButton, GlobalLobbyActivity::class.java) {
-            it.putExtra("repoFactory", repositoryFactory)
-        binding.playButton.setOnClickListener {
-            val intent = Intent(this@MainActivity, GlobalLobbyActivity::class.java)
-            startActivity(intent)
-        }
-        binding.loginButton.setOnClickListener{
-            val intent = Intent(this@MainActivity, LoginActivity::class.java)
-            startActivity(intent)
-        }
+        buttonToActivity(binding.playButton, GlobalLobbyActivity::class.java)
+
+        buttonToActivity(binding.loginButton, LoginActivity::class.java)
 
         buttonToActivity(binding.replayButton, ManageReplaysActivity::class.java) {
             it.putExtra(ReplayActivity.REPLAY_PATH_ARG, "0.game")
@@ -59,9 +43,10 @@ class MainActivity : AppCompatActivity() {
         buttonToActivity(binding.newGameButton, GameCreationActivity::class.java)
 
 
-        buttonToActivity(binding.btnDebug, DebugActivity::class.java)
+        //buttonToActivity(binding.btnDebug, DebugActivity::class.java)
 
         buttonToActivity(binding.loginButton, LoginActivity::class.java)
+
     }
 
     override fun onResume() {

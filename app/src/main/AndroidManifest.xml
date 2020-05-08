@@ -30,7 +30,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".replay.ManageReplaysActivity" />
-        <activity android:name=".DebugActivity" />
         <activity android:name=".lobby.global.GlobalLobbyActivity" />
         <activity
             android:name=".game.PreyActivity"
