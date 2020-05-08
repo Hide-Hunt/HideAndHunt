@@ -35,8 +35,6 @@ class ProfileActivity: AppCompatActivity(), Callback {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.profilePictureView.setOnClickListener() {
-            //val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            //startActivityForResult(i, 1)
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT

@@ -3,7 +3,6 @@ package ch.epfl.sdp.user
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import ch.epfl.sdp.authentication.User
 import java.io.*
 import java.text.SimpleDateFormat
@@ -36,8 +35,6 @@ class UserCache {
 
     fun get(context: Context) {
         if(!doesExist(context)) {
-           // context.filesDir.list().forEach { Log.d("CACHE", it) }
-            Log.d("CACHE", "USER NOT FOUND IN CACHE")
             User.connected = false
             return
         }
@@ -57,7 +54,6 @@ class UserCache {
                         currentTime.add(Calendar.MINUTE, -1)
 
                         if(currentTime.time.after(sdf.parse(line))) {
-                            Log.d("CACHE", "CACHE IS EXPIRED, DELETING")
                             context.deleteFile(cacheFilename)
                             context.deleteFile(imageFilename)
                             return
@@ -71,7 +67,6 @@ class UserCache {
         }
         User.connected = true
         User.profilePic = BitmapFactory.decodeFile(context.filesDir.absolutePath + "/" + imageFilename)
-        Log.d("CACHE", "USER FOUND IN CACHE")
     }
 
     fun put (context: Context) {
@@ -89,6 +84,5 @@ class UserCache {
         imageStream.flush()
         imageStream.close()
         byteStream.close()
-        Log.d("CACHE", "MODIFICATIONS PUT TO CACHE")
     }
 }
