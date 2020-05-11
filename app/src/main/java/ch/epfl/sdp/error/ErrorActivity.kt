@@ -16,7 +16,6 @@ class ErrorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityErrorBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(toolbar)
 
         val error = intent.getSerializableExtra("error") as Error?
         if (error != null) {
