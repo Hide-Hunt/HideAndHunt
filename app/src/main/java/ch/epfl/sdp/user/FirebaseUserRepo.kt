@@ -20,4 +20,15 @@ class FirebaseUserRepo : IUserRepo {
         fs.collection(FirebaseConstants.USER_COLLECTION).document(userID)
                 .update(FirebaseConstants.USER_GAME_HISTORY_COLLECTION, FieldValue.arrayUnion(gameID))
     }
+
+    override fun getGameHistory(userID: String, cb: Callback<List<String>>) {
+        fs.collection(FirebaseConstants.USER_COLLECTION).document(userID).get().addOnSuccessListener { user ->
+            @Suppress("UNCHECKED_CAST")
+            val gameHistory = user[FirebaseConstants.USER_GAME_HISTORY_COLLECTION] as List<String>
+            cb(gameHistory)
+
+        }.addOnFailureListener {
+            cb(emptyList())
+        }
+    }
 }
