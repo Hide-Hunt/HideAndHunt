@@ -9,6 +9,7 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.R
+import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import org.junit.*
 import org.junit.runner.RunWith
@@ -22,6 +23,7 @@ class GameCreationActivityTest {
     @Before
     fun setup() {
         Intents.init()
+        LocalUser.uid = "u53r1d"
     }
 
     @After
