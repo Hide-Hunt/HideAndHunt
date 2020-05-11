@@ -7,10 +7,12 @@ import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import ch.epfl.sdp.user.ProfileActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyFragment
+import ch.epfl.sdp.replay.FirebaseReplayRepository
 import ch.epfl.sdp.replay.ManageReplaysActivity
 import ch.epfl.sdp.replay.ReplayInfoListFragment
 import dagger.BindsInstance
 import dagger.Component
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Singleton
 
 interface IApplicationComponent
@@ -30,4 +32,6 @@ interface ApplicationComponent : IApplicationComponent {
     fun inject(activity: GlobalLobbyFragment)
     fun inject(activity: ManageReplaysActivity)
     fun inject(activity: ReplayInfoListFragment)
+    @InternalCoroutinesApi
+    fun inject(repo: FirebaseReplayRepository)
 }
