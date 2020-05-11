@@ -9,15 +9,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.FragmentGlobalLobbyBinding
+import ch.epfl.sdp.user.IUserRepo
 import javax.inject.Inject
 
 class GlobalLobbyFragment : Fragment() {
-
     private var _binding: FragmentGlobalLobbyBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewAdapter: GlobalLobbyAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     @Inject lateinit var repo: IGlobalLobbyRepository
+    @Inject lateinit var userRepo: IUserRepo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // We have to handle the dependency injection before the call to super.onCreate
@@ -29,7 +30,7 @@ class GlobalLobbyFragment : Fragment() {
         _binding = FragmentGlobalLobbyBinding.inflate(inflater)
         repo.getAllGames { games ->
             viewManager = LinearLayoutManager(context)
-            viewAdapter = GlobalLobbyAdapter(games)
+            viewAdapter = GlobalLobbyAdapter(games, userRepo)
             binding.globalLobbyRecycler.apply {
                 layoutManager = viewManager
                 adapter = viewAdapter
@@ -42,9 +43,7 @@ class GlobalLobbyFragment : Fragment() {
                 viewAdapter.notifyDataSetChanged()
                 binding.globalLobbySwiperefresh.isRefreshing = false
             }
-
         }
-
 
         return binding.root
     }

@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ch.epfl.sdp.R
-import ch.epfl.sdp.game.PlayerFaction
+import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.game.data.Participation
+import ch.epfl.sdp.user.IUserRepo
 import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
-import kotlin.math.max
 
 /**
  * Adapter for the game lobby recyclerView
@@ -18,16 +18,17 @@ import kotlin.math.max
  * @param adminId  game admin'is id
  */
 class GameLobbyAdapter(
-        private var participations: List<Participation>,
-        private var playerId: Int, private var adminId: Int) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
-
+        private val participations: List<Participation>,
+        private val playerId: String,
+        private val adminId: String,
+        private val userRepo: IUserRepo
+) : RecyclerView.Adapter<GameLobbyAdapter.GameLobbyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameLobbyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.game_lobby_player_cell, parent, false)
-        return GameLobbyViewHolder(view, playerId, adminId)
+        return GameLobbyViewHolder(view, playerId, adminId, userRepo)
     }
-
 
     override fun getItemCount(): Int {
         return participations.size
@@ -45,23 +46,28 @@ class GameLobbyAdapter(
      * @param adminId  game admin'is id
      */
     class GameLobbyViewHolder(itemView: View,
-                              private var playerId: Int, private var adminId: Int) : RecyclerView.ViewHolder(itemView) {
+                              private val playerId: String,
+                              private val adminId: String,
+                              private val userRepo: IUserRepo
+    ) : RecyclerView.ViewHolder(itemView) {
 
         fun display(participation: Participation) {
-            //set text views
-            itemView.player_faction.text = factionToString(participation.faction)
-            itemView.player_name.text = participation.username.subSequence(0, max(5, participation.username.indexOf(".")))
-            itemView.player_is_ready.text = isReadyToString(participation.ready)
-            //set admin logo
-            if (adminId == participation.playerID) itemView.admin_logo.setImageResource(R.drawable.star_icon)
-            else itemView.admin_logo.setImageResource(0)
-            //set cell background
-            if (playerId == participation.playerID) itemView.setBackgroundColor(Color.GRAY)
-            else itemView.setBackgroundColor(Color.LTGRAY)
+            userRepo.getUsername(participation.userID) {username ->
+                //set text views
+                itemView.player_faction.text = factionToString(participation.faction)
+                itemView.player_name.text = username
+                itemView.player_is_ready.text = isReadyToString(participation.ready)
+                //set admin logo
+                if (adminId == participation.userID) itemView.admin_logo.setImageResource(R.drawable.star_icon)
+                else itemView.admin_logo.setImageResource(0)
+                //set cell background
+                if (playerId == participation.userID) itemView.setBackgroundColor(Color.GRAY)
+                else itemView.setBackgroundColor(Color.LTGRAY)
+            }
         }
 
-        private fun factionToString(faction: PlayerFaction): String {
-            return if (faction == PlayerFaction.PREY) "PREY"
+        private fun factionToString(faction: Faction): String {
+            return if (faction == Faction.PREY) "PREY"
             else "PREDATOR"
         }
 
@@ -69,7 +75,5 @@ class GameLobbyAdapter(
             return if (isReady) "Ready"
             else "Not Ready"
         }
-
     }
-
 }

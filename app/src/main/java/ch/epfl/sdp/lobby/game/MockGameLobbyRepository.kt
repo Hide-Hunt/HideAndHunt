@@ -1,103 +1,56 @@
 package ch.epfl.sdp.lobby.game
 
 import ch.epfl.sdp.db.Callback
-import ch.epfl.sdp.game.PlayerFaction
+import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
-import ch.epfl.sdp.game.data.Predator
-import ch.epfl.sdp.game.data.Prey
-import ch.epfl.sdp.user.User
-import java.sql.Time
 
 object MockGameLobbyRepository : IGameLobbyRepository {
-    private var counter = 0
-    private const val gameId = 1
-    private const val gameName = "My mock game"
-    private const val gameDuration = 1200L
-    private val players = mutableListOf(
-            Participation("George Kittle", false, "CAFE", 85, PlayerFaction.PREDATOR, gameId),
-            Participation("Nick Bosa", false, "0A0A", 97, PlayerFaction.PREDATOR, gameId),
-            Participation("Richard Sherman", false, "C0BA", 25, PlayerFaction.PREDATOR, gameId),
-            Participation("Dummy ", false, "AB00", 23, PlayerFaction.PREDATOR, gameId),
-            Participation("Hello World", true, "C0B0", 42, PlayerFaction.PREY, gameId),
-            Participation("Morgan Freeman", false, "0BBB", 1, PlayerFaction.PREDATOR, gameId),
-            Participation("Jack Sparrow", true, "0AAC", 7, PlayerFaction.PREY, gameId),
-            Participation("Britney Spears", false, "AC00", 24, PlayerFaction.PREDATOR, gameId),
-            Participation("Spiderman", false, "A0AA", 25, PlayerFaction.PREDATOR, gameId),
-            Participation("Neymar Jr", false, "C000", 26, PlayerFaction.PREDATOR, gameId)
+    val players = mutableListOf(
+            Participation("u53r1d", Faction.PREDATOR, false, "u53rt4g", ""),
+            Participation("George Kittle", Faction.PREDATOR, false, "CAFE", ""),
+            Participation("Nick Bosa", Faction.PREDATOR, false, "0A0A", ""),
+            Participation("Richard Sherman", Faction.PREDATOR, false, "C0BA", ""),
+            Participation("Dummy ", Faction.PREDATOR, false, "AB00", ""),
+            Participation("Hello World", Faction.PREY, true, "C0B0", ""),
+            Participation("Morgan Freeman", Faction.PREDATOR, false, "0BBB", ""),
+            Participation("Jack Sparrow", Faction.PREY, true, "0AAC", ""),
+            Participation("Britney Spears", Faction.PREDATOR, false, "AC00", ""),
+            Participation("Spiderman", Faction.PREDATOR, false, "A0AA", ""),
+            Participation("Neymar Jr", Faction.PREDATOR, false, "C000", "")
     )
 
-    override fun addLocalParticipation(gameId: Int) {
-        //No code
+    override fun addLocalParticipation(gameId: String) = Unit //No code
+
+    override fun removeLocalParticipation(gameId: String) = Unit //No code
+
+    override fun createGame(gameName: String, gameDuration: Long): String = "42"
+
+    override fun getGameName(gameId: String, cb: Callback<String>) = cb("My mock game")
+
+    override fun getGameDuration(gameId: String, cb: Callback<Long>) = cb(1200L)
+
+    override fun getParticipations(gameId: String, cb: Callback<List<Participation>>) = cb(players)
+
+    override fun getPlayers(gameId: String, cb: Callback<List<Player>>) {
+        cb(players.withIndex().map { p -> p.value.toPlayer(p.index) })
     }
 
-    override fun removeLocalParticipation(gameId: Int) {
-        //No code
+    override fun getAdminId(gameId: String, cb: Callback<String>) { cb(players[1].userID) }
+
+    override fun changePlayerReady(gameId: String, uid: String) {
+        players.first { it.userID == uid }.let { it.ready = !it.ready }
     }
 
-    override fun createGame(gameName: String, gameDuration: Long): Int {
-        return 42
+    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean) {
+        players.first { it.userID == uid }.ready = ready
     }
 
-    override fun getGameName(gameId: Int, cb: Callback<String>) {
-        cb(gameName)
+    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction) {
+        players.first { it.userID == uid }.faction = faction
     }
 
-    override fun getGameDuration(gameId: Int, cb: Callback<Long>) {
-        cb(gameDuration)
+    override fun setPlayerTag(gameId: String, uid: String, tag: String) {
+        players.first { it.userID == uid }.tag = tag
     }
-
-    override fun getParticipations(gameId: Int, cb: Callback<List<Participation>>) {
-        //add players to show refreshing works
-        if (counter != 0) players.add(Participation("Player$counter",
-                false, "0ABC", 10 + counter, PlayerFaction.PREY, gameId))
-        ++counter
-        cb(players)
-    }
-
-    override fun getPlayers(gameId: Int, cb: Callback<List<Player>>) {
-        var mPlayers: List<Player> = ArrayList()
-        for (p in players) {
-            mPlayers = if (p.faction == PlayerFaction.PREY) mPlayers + Prey(p.playerID, p.tag) else mPlayers + Predator(p.playerID)
-        }
-        cb(mPlayers)
-    }
-
-    override fun getAdminId(gameId: Int, cb: Callback<Int>) {
-        cb(players[1].playerID)
-    }
-
-    override fun changePlayerReady(gameId: Int, uid: Int) {
-        for (player in players) {
-            if (player.playerID == uid) {
-                player.ready = !player.ready
-                break
-            }
-        }
-    }
-
-    override fun setPlayerReady(gameId: Int, uid: Int, ready: Boolean) {
-        for (player in players) {
-            if (player.playerID == uid) {
-                player.ready = ready
-                break
-            }
-        }
-    }
-
-    override fun setPlayerFaction(gameId: Int, uid: Int, faction: PlayerFaction) {
-        players.forEach { participation ->
-            if (uid == participation.playerID) participation.faction = faction
-        }
-    }
-
-    override fun setPlayerTag(gameId: Int, uid: Int, tag: String) {
-        players.forEach { player ->
-            if(uid == player.playerID) {
-                player.tag = tag
-                return
-            }
-        }
-    }
-
 }

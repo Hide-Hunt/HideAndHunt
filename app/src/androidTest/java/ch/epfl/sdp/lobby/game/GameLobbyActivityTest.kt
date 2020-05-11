@@ -1,23 +1,21 @@
 package ch.epfl.sdp.lobby.game
 
 import android.content.Intent
-import androidx.recyclerview.widget.RecyclerView
-import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
+import ch.epfl.sdp.EspressoViewAssertions.RecyclerViewItemCount
 import ch.epfl.sdp.NFCTestHelper
 import ch.epfl.sdp.R
+import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.game.NFCTagHelper.byteArrayFromHexString
-import ch.epfl.sdp.game.PlayerFaction
-import ch.epfl.sdp.game.PredatorActivity
-import org.junit.Assert.*
+import ch.epfl.sdp.game.data.Faction
+import ch.epfl.sdp.game.data.Participation
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,39 +27,37 @@ class GameLobbyActivityTest {
     val activityRule = ActivityTestRule(GameLobbyActivity::class.java, false, false)
 
     private val activityIntent = Intent()
-    init {
+
+    @Before
+    fun setup() {
+        activityIntent.putExtra("gameID", "g4m31d")
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        LocalUser.uid = "u53r1d"
     }
 
     @Test
     fun activityDoesNotCrash() {
-        launchActivity<GameLobbyActivity>()
-        onView(ViewMatchers.withId(R.id.swipe_container)).perform(swipeDown())
+        activityRule.launchActivity(activityIntent)
+        onView(withId(R.id.swipe_container)).perform(swipeDown())
     }
 
     @Test
     fun swipeDownAndFactionChangeRefreshesData() {
-        val scenario = launchActivity<GameLobbyActivity>()
+        val activity = activityRule.launchActivity(activityIntent)
+        val repo = activity.repository as MockGameLobbyRepository
 
-        var size = -1
-        scenario.onActivity { a ->
-            size = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
-        }
-        assertEquals(11,size)
+        // Initially 11 players
+        onView(withId(R.id.player_list)).check(RecyclerViewItemCount(11))
 
-        onView(ViewMatchers.withId(R.id.faction_selection)).perform(click())
-        var newSize = -1
-        scenario.onActivity { a ->
-            newSize = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
-        }
-        assertEquals(12, newSize)
+        // Add one then change faction => should reload
+        repo.players.add(Participation("Player11", Faction.PREY, false, "0ABC", ""))
+        onView(withId(R.id.faction_selection)).perform(click())
+        onView(withId(R.id.player_list)).check(RecyclerViewItemCount(12))
 
-        onView(ViewMatchers.withId(R.id.player_list)).perform(swipeDown())
-
-        scenario.onActivity { a ->
-            newSize = a.findViewById<RecyclerView>(R.id.player_list).adapter!!.itemCount
-        }
-        assertEquals(13, newSize)
+        // Add one then swipe => should reload again
+        repo.players.add(Participation("Player12", Faction.PREY, false, "0ABC", ""))
+        onView(withId(R.id.player_list)).perform(swipeDown())
+        onView(withId(R.id.player_list)).check(RecyclerViewItemCount(13))
     }
 
     @Test
@@ -69,10 +65,10 @@ class GameLobbyActivityTest {
         val activity = activityRule.launchActivity(activityIntent)
 
         activity.runOnUiThread {
-            activity.onFactionChange(PlayerFaction.PREY)
+            activity.onFactionChange(Faction.PREY)
         }
 
-        onView(ViewMatchers.withId(R.id.txt_player_ready)).check(matches(withText(activity.getString(R.string.you_are_not_ready))))
+        onView(withId(R.id.txt_player_ready)).check(matches(withText(activity.getString(R.string.you_are_not_ready))))
 
         val tag = NFCTestHelper.createMockTag("ABBA".byteArrayFromHexString())
         val nfcIntent = NFCTestHelper.createTechDiscovered(tag)
@@ -80,6 +76,6 @@ class GameLobbyActivityTest {
             activity.onNewIntent(nfcIntent)
         }
 
-        onView(ViewMatchers.withId(R.id.txt_player_ready)).check(matches(withText(activity.getString(R.string.you_are_ready))))
+        onView(withId(R.id.txt_player_ready)).check(matches(withText(activity.getString(R.string.you_are_ready))))
     }
 }

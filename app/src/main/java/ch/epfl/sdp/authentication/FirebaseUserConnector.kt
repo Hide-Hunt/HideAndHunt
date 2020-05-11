@@ -2,6 +2,7 @@ package ch.epfl.sdp.authentication
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import ch.epfl.sdp.db.FirebaseConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -28,7 +29,7 @@ class FirebaseUserConnector : IUserConnector {
                 }.addOnFailureListener {
                     LocalUser.profilePic = null
                 }
-                db.collection("user").document(LocalUser.uid).get().addOnSuccessListener { document ->
+                db.collection(FirebaseConstants.USER_COLLECTION).document(LocalUser.uid).get().addOnSuccessListener { document ->
                     if (document != null) {
                         LocalUser.pseudo = document.data!!["pseudo"].toString()
                         LocalUser.connected = true
@@ -37,7 +38,7 @@ class FirebaseUserConnector : IUserConnector {
                         LocalUser.connected = false
                         errorCallback()
                     }
-                }.addOnFailureListener { _ ->
+                }.addOnFailureListener {
                     LocalUser.connected = false
                     errorCallback()
                 }
@@ -55,7 +56,7 @@ class FirebaseUserConnector : IUserConnector {
     override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
         if(pseudo != null){
             val dataToAdd = hashMapOf("pseudo" to pseudo)
-            db.collection("user").document(LocalUser.uid).set(dataToAdd).addOnCompleteListener() {
+            db.collection(FirebaseConstants.USER_COLLECTION).document(LocalUser.uid).set(dataToAdd).addOnCompleteListener {
                 if(it.isSuccessful)
                     successCallback()
                 else
@@ -90,7 +91,7 @@ class FirebaseUserConnector : IUserConnector {
                 LocalUser.uid = authed!!.uid
                 LocalUser.pseudo = pseudo
                 val dataToAdd = hashMapOf("pseudo" to pseudo)
-                db.collection("user").document(LocalUser.uid)
+                db.collection(FirebaseConstants.USER_COLLECTION).document(LocalUser.uid)
                         .set(dataToAdd)
                         .addOnSuccessListener {
                             LocalUser.connected = true

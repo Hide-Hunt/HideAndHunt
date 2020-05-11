@@ -12,7 +12,7 @@ class FirebaseReplayDownloader: IReplayDownloader {
             .getReferenceFromUrl("gs://hidehunt-71e41.appspot.com")
             .child("replays")
 
-    override fun download(gameID: Int,
+    override fun download(gameID: String,
                           file: File,
                           successCallback: UnitCallback,
                           failureCallback: Callback<String>): IReplayDownloader.IReplayDownload {

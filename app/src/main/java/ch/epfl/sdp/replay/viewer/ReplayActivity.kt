@@ -5,13 +5,15 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.ActivityReplayBinding
+import ch.epfl.sdp.replay.LocalReplayStore
 import ch.epfl.sdp.replay.game_history.GameHistory
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import java.io.File
 import java.lang.Exception
 
 class ReplayActivity : AppCompatActivity() {
-    private var replayPath: String? = null
+    private val replayStore = LocalReplayStore(this)
+    private var replayID: String? = null
     private lateinit var binding: ActivityReplayBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +22,7 @@ class ReplayActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         title = "Replay: Error"
-        replayPath =
+        replayID =
                 if (savedInstanceState != null) savedInstanceState.getString(REPLAY_PATH_ARG)
                 else intent.getStringExtra(REPLAY_PATH_ARG)
 
@@ -50,12 +52,12 @@ class ReplayActivity : AppCompatActivity() {
     }
 
     private fun getReplayFile() : File? {
-        if (replayPath == null) {
+        if (replayID == null) {
             binding.errorDetails.text = getString(R.string.missing_replay_path_parameter)
             return null
         }
 
-        val file = File(filesDir.absolutePath + "/replays/" + replayPath!!)
+        val file = replayStore.getFile(replayID!!)
         if (!file.exists() || !file.isFile) {
             binding.errorDetails.text = getString(R.string.file_not_found).format(file.absoluteFile)
             return null
@@ -66,7 +68,7 @@ class ReplayActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
-        outState.putString(REPLAY_PATH_ARG, replayPath)
+        outState.putString(REPLAY_PATH_ARG, replayID)
     }
 
     override fun onDestroy() {

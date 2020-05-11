@@ -2,9 +2,9 @@ package ch.epfl.sdp.game.comm
 
 import ch.epfl.sdp.game.data.Location
 
-class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerID: Int, private val pubSub: RealTimePubSub) : LocationSynchronizer {
+class SimpleLocationSynchronizer(private val gameID: String, private val ownPlayerID: Int, private val pubSub: RealTimePubSub) : LocationSynchronizer {
     var listener : LocationSynchronizer.PlayerUpdateListener? = null
-    private val topicOffset = gameID.toString().length + 1// gameID + char('/')
+    private val topicOffset = gameID.length + 1// gameID + char('/')
 
     init {
         pubSub.setOnPublishListener(object : RealTimePubSub.OnPublishListener {

@@ -1,12 +1,13 @@
 package ch.epfl.sdp.game.data
 
-import ch.epfl.sdp.game.PlayerFaction
-
 data class Participation(
-        var username: String,
+        var userID: String,
+        var faction: Faction,
         var ready: Boolean,
         var tag: String,
-        var playerID: Int,
-        var faction: PlayerFaction,
-        var gameID: Int
-)
+        var score: String
+) {
+    constructor(): this("", Faction.PREDATOR, false, "", "")
+    fun toPlayer(playerID: Int) : Player =
+            if (faction == Faction.PREY) Prey(playerID, tag) else Predator(playerID)
+}

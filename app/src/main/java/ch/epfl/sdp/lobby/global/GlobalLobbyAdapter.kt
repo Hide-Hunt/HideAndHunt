@@ -12,11 +12,11 @@ import ch.epfl.sdp.R
 import ch.epfl.sdp.game.data.Game
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyAdapter.*
+import ch.epfl.sdp.user.IUserRepo
 
-class GlobalLobbyAdapter(var data: List<Game>) :  RecyclerView.Adapter<MyViewHolder>() {
+class GlobalLobbyAdapter(var data: List<Game>, private val userRepo: IUserRepo) :  RecyclerView.Adapter<MyViewHolder>() {
 
     class MyViewHolder(val linearLayout: LinearLayout, val data: List<Game>) : RecyclerView.ViewHolder(linearLayout), View.OnClickListener {
-
         override fun onClick(v: View?) {
             val game = data[adapterPosition]
             Toast.makeText(v?.context, game.name, Toast.LENGTH_SHORT).show()
@@ -24,7 +24,6 @@ class GlobalLobbyAdapter(var data: List<Game>) :  RecyclerView.Adapter<MyViewHol
             intent.putExtra("gameID", game.id)
             v?.context?.startActivity(intent)
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -33,12 +32,13 @@ class GlobalLobbyAdapter(var data: List<Game>) :  RecyclerView.Adapter<MyViewHol
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.itemView.setOnClickListener(holder)
-        (holder.linearLayout.getChildAt(0) as TextView).text = data[position].name
-        (holder.linearLayout.getChildAt(1) as TextView).text = holder.itemView.context.getString(R.string.game_created_by).format(data[position].admin)
-        (holder.linearLayout.getChildAt(2) as TextView).text = holder.itemView.context.getString(R.string.player_in_lobby).format(data[position].participation.size)
+        userRepo.getUsername(data[position].adminID) { admin ->
+            holder.itemView.setOnClickListener(holder)
+            (holder.linearLayout.getChildAt(0) as TextView).text = data[position].name
+            (holder.linearLayout.getChildAt(1) as TextView).text = holder.itemView.context.getString(R.string.game_created_by).format(admin)
+            (holder.linearLayout.getChildAt(2) as TextView).text = holder.itemView.context.getString(R.string.player_in_lobby).format(data[position].participation.size)
+        }
     }
 
     override fun getItemCount() = data.size
-
 }

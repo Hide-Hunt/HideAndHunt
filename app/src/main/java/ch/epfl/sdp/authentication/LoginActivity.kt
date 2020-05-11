@@ -28,7 +28,20 @@ class LoginActivity : AppCompatActivity() {
             signIn(userNameLogin.text, userPasswordLogin.text, connector)
         }
         binding.registerSubmitButton.setOnClickListener {
-            register(userNameLogin.text, userPasswordLogin.text, userPseudoLogin.text, connector)
+            when {
+                userPseudoLogin.text.isEmpty() -> {
+                    userPseudoLogin.error = "Field is empty"
+                }
+                userNameLogin.text.isEmpty() -> {
+                    userNameLogin.error = "Field is empty"
+                }
+                userPasswordLogin.text.isEmpty() -> {
+                    userPasswordLogin.error = "Field is empty"
+                }
+                else -> {
+                    register(userNameLogin.text, userPasswordLogin.text, userPseudoLogin.text, connector)
+                }
+            }
         }
         binding.loginTextResult.text = ""
     }
@@ -45,12 +58,11 @@ class LoginActivity : AppCompatActivity() {
 
     private fun errorLogin() {
         binding.loginTextResult.text = ""
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setMessage("Error: failed to connect")
+        AlertDialog.Builder(this).setMessage("Error: failed to connect")
                 .setCancelable(false)
                 .setPositiveButton("OK",null)
-        val alert: AlertDialog = builder.create()
-        alert.show()
+                .create()
+                .show()
     }
 
     private fun successfulLogin() {
