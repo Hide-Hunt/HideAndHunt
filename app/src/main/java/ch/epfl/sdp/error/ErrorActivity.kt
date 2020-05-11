@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.MainActivity
 import ch.epfl.sdp.databinding.ActivityErrorBinding
 
-import kotlinx.android.synthetic.main.activity_error.*
-
 class ErrorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityErrorBinding
 
