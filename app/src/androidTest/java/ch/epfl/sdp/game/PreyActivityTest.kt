@@ -35,7 +35,7 @@ class PreyActivityTest {
     private val activityIntent = Intent()
     init {
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        activityIntent.putExtra("gameID", 0)
+        activityIntent.putExtra("gameID", "g4m31d")
         activityIntent.putExtra("playerID", 1)
         activityIntent.putExtra("players", players)
         activityIntent.putExtra("initialTime", 2 * 60 * 1000L)
