@@ -101,4 +101,6 @@
     <string name="an_error_occurred">An error occurred</string>
     <string name="unknown_error">Unknown error</string>
     <string name="return_to_main_screen">Return to main screen</string>
+    <string name="registering_pending">Registering…</string>
+    <string name="connecting_pending">Connecting…</string>
 </resources>
