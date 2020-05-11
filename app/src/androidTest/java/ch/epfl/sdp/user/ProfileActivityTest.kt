@@ -97,6 +97,6 @@ class ProfileActivityTest {
         onView(withId(R.id.pseudoText)).perform(ViewActions.clearText())
         onView(withId(R.id.pseudoText)).perform(ViewActions.typeText("REQUESTING_ERROR"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.okButton)).perform(click())
-        onView(withText("Error")).check(matches(isDisplayed()));
+        onView(withText("Error")).check(matches(isDisplayed()))
     }
 }
