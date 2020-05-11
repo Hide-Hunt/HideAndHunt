@@ -1,7 +1,6 @@
 package ch.epfl.sdp.dagger
 
 import android.content.Context
-import android.provider.ContactsContract
 import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.dagger.modules.FakeReplayModule
 import ch.epfl.sdp.dagger.modules.FakeRepoModule
