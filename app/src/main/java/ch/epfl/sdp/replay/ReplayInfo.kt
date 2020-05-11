@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import ch.epfl.sdp.game.data.Faction
+import ch.epfl.sdp.game.data.Game
 
 @Entity(tableName = "replays")
 data class ReplayInfo(
@@ -23,4 +24,19 @@ data class ReplayInfo(
                 score: String,
                 winningFaction: Faction) :
             this(gameID, name, startTimestamp, endTimestamp, score, winningFaction, false)
+
+    companion object {
+        fun fromGame(userID: String, game: Game, localReplayStore: LocalReplayStore): ReplayInfo {
+            val playerInfo = game.participation.first { it.userID == userID }
+            return ReplayInfo(
+                    game.id,
+                    game.name,
+                    game.creationDate.time,
+                    game.endDate.time,
+                    playerInfo.score,
+                    playerInfo.faction,
+                    localReplayStore.getFile(game.id).exists()
+            )
+        }
+    }
 }
