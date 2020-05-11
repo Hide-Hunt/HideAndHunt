@@ -7,6 +7,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import ch.epfl.sdp.R
@@ -99,8 +100,15 @@ class ReplayActivityTest {
         }
     }
 
+    private fun setupMapsforgeMap() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val mapFile = File(ctx.getExternalFilesDir(null), ReplayMapFragment.MAP_FILE)
+        if (mapFile.exists()) return
+
+        mapFile.outputStream().write(Base64.decode(EPFL.MAP, Base64.DEFAULT))
+    }
+
     private fun createFile(filename: String, fileContent: String) {
-        //val prepActivity = launchActivity<ReplayActivity>(activityIntent)
         activityRule.launchActivity(emptyIntent)
         val prepActivity = activityRule.activity
         checkFolderExists()
@@ -124,6 +132,7 @@ class ReplayActivityTest {
 
     @Test
     fun testValidFilePathProvided(){
+        setupMapsforgeMap()
         createFile("4.game", exampleFile)
         activityRule.launchActivity(activityIntent)
         Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("")))
