@@ -77,12 +77,14 @@ class UserCache {
         outputStream.flush()
         outputStream.close()
 
-        val imageStream = context.openFileOutput(imageFilename, Context.MODE_PRIVATE)
-        val byteStream = ByteArrayOutputStream()
-        LocalUser.profilePic!!.compress(Bitmap.CompressFormat.PNG, 90, byteStream)
-        imageStream.write(byteStream.toByteArray())
-        imageStream.flush()
-        imageStream.close()
-        byteStream.close()
+        LocalUser.profilePic?.let { profilePic ->
+            val imageStream = context.openFileOutput(imageFilename, Context.MODE_PRIVATE)
+            val byteStream = ByteArrayOutputStream()
+            profilePic.compress(Bitmap.CompressFormat.PNG, 90, byteStream)
+            imageStream.write(byteStream.toByteArray())
+            imageStream.flush()
+            imageStream.close()
+            byteStream.close()
+        }
     }
 }
