@@ -10,7 +10,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class FirebaseReplayRepository(val context: Context) : IReplayRepository {
@@ -19,21 +18,23 @@ class FirebaseReplayRepository(val context: Context) : IReplayRepository {
 
     @Inject
     lateinit var userRepo: IUserRepo
+
     init {
         (context.applicationContext as HideAndHuntApplication).appComponent.inject(this)
     }
 
     private fun getAllGamesOnline(userID: String, cb: Callback<List<ReplayInfo>>) {
         userRepo.getGameHistory(userID) { gameHistory ->
-            fs.collection(GAME_COLLECTION).whereIn("id", gameHistory).get().addOnSuccessListener { games ->
-                games.map { it.toObject<Game>() }
-                        .map { ReplayInfo.fromGame(userID, it, localReplayStore) }
-                        .let { replays ->
-                            localReplayStore.saveList(replays)
-                            cb(replays)
-                        }
-            }.addOnFailureListener {
+            if (gameHistory.isEmpty()) {
                 cb(emptyList())
+            } else {
+                fs.collection(GAME_COLLECTION).whereIn("id", gameHistory).get().addOnSuccessListener { games ->
+                    games.map { it.toObject<Game>() }.map { ReplayInfo.fromGame(userID, it, localReplayStore) }
+                            .let { replays ->
+                                localReplayStore.saveList(replays)
+                                cb(replays)
+                            }
+                }.addOnFailureListener { cb(emptyList()) }
             }
         }
     }
