@@ -31,7 +31,7 @@ data class ReplayInfo(
             return ReplayInfo(
                     game.id,
                     game.name,
-                    game.creationDate.time,
+                    game.startDate.time,
                     game.endDate.time,
                     playerInfo.score,
                     playerInfo.faction,
