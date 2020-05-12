@@ -21,13 +21,8 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun addLocalParticipation(gameId: String) {
         fs.collection(GAME_COLLECTION).document(gameId)
-                .update(GAME_PARTICIPATION_COLLECTION, FieldValue.arrayUnion(Participation(
-                        LocalUser.uid,
-                        Faction.PREDATOR,
-                        false,
-                        "",
-                        ""
-                )))
+                .update(GAME_PARTICIPATION_COLLECTION, FieldValue.arrayUnion(
+                        Participation(LocalUser.uid, Faction.PREDATOR, false, "", "")))
     }
 
     override fun createGame(gameName: String, gameDuration: Long): String {
@@ -48,15 +43,13 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun getGameName(gameId: String, cb: Callback<String>) {
-        fs.collection(GAME_COLLECTION).document(gameId).get().addOnSuccessListener {
-            cb(it["name"] as String)
-        }
+        fs.collection(GAME_COLLECTION).document(gameId).get()
+                .addOnSuccessListener { cb(it["name"] as String) }
     }
 
     override fun getGameDuration(gameId: String, cb: Callback<Long>) {
-        fs.collection(GAME_COLLECTION).document(gameId).get().addOnSuccessListener {
-            cb(it["duration"] as Long)
-        }
+        fs.collection(GAME_COLLECTION).document(gameId).get()
+                .addOnSuccessListener { cb(it["duration"] as Long) }
     }
 
     override fun getPlayers(gameId: String, cb: Callback<List<Player>>) {
@@ -68,15 +61,12 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     override fun getParticipations(gameId: String, cb: Callback<List<Participation>>) {
         fs.collection(GAME_COLLECTION)
                 .document(gameId).collection(GAME_PARTICIPATION_COLLECTION).get()
-                .addOnSuccessListener { documents ->
-            cb(documents.map { it.toObject<Participation>() })
-        }
+                .addOnSuccessListener { doc -> cb(doc.map { it.toObject<Participation>() }) }
     }
 
     override fun getAdminId(gameId: String, cb: Callback<String>) {
-        fs.collection(GAME_COLLECTION).document(gameId).get().addOnSuccessListener {
-            cb(it.toObject<Game>()!!.adminID)
-        }
+        fs.collection(GAME_COLLECTION).document(gameId).get()
+                .addOnSuccessListener { cb(it.toObject<Game>()!!.adminID) }
     }
 
     override fun changePlayerReady(gameId: String, uid: String) {
@@ -85,7 +75,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun setPlayerReady(gameId: String, uid: String, ready: Boolean) {
         fs.collection(GAME_PARTICIPATION_COLLECTION).whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
-            for(doc in documents) {
+            for (doc in documents) {
                 fs.collection(GAME_PARTICIPATION_COLLECTION).document(doc.id).update("ready", ready)
             }
         }
@@ -93,7 +83,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun setPlayerFaction(gameId: String, uid: String, faction: Faction) {
         fs.collection(GAME_PARTICIPATION_COLLECTION).whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
-            for(doc in documents) {
+            for (doc in documents) {
                 fs.collection(GAME_PARTICIPATION_COLLECTION).document(doc.id).update("faction", faction)
             }
         }
@@ -101,15 +91,14 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun setPlayerTag(gameId: String, uid: String, tag: String) {
         fs.collection(GAME_PARTICIPATION_COLLECTION).whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
-            for(doc in documents) {
+            for (doc in documents) {
                 fs.collection(GAME_PARTICIPATION_COLLECTION).document(doc.id).update("tag", tag)
             }
         }
     }
 
     override fun removeLocalParticipation(gameId: String) {
-        fs.collection(GAME_PARTICIPATION_COLLECTION).whereEqualTo("gameID", gameId).get().addOnSuccessListener {
-            it.forEach { x -> x.reference.delete() }
-        }
+        fs.collection(GAME_PARTICIPATION_COLLECTION).whereEqualTo("gameID", gameId).get()
+                .addOnSuccessListener { it.forEach { x -> x.reference.delete() } }
     }
 }
