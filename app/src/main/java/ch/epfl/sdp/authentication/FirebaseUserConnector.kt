@@ -70,25 +70,20 @@ class FirebaseUserConnector : IUserConnector {
             val uploadTask = profilePics.child(LocalUser.uid + ".png").putBytes(stream.toByteArray(), metadata)
             uploadTask.addOnSuccessListener {
                 successCallback()
-            }.addOnFailureListener {
-                errorCallback()
-            }
+            }.addOnFailureListener { errorCallback() }
         }
-        else if(pseudo == null)
-            successCallback()
+        else if(pseudo == null) { successCallback() }
     }
 
     override fun register(email: String, password: String, pseudo: String, successCallback: () -> Unit, errorCallback: () -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful){
-                val authed = auth.currentUser
                 LocalUser.email = email
-                LocalUser.uid = authed!!.uid
+                LocalUser.uid = auth.currentUser!!.uid
                 LocalUser.pseudo = pseudo
-                val dataToAdd = hashMapOf("pseudo" to pseudo)
                 db.collection(FirebaseConstants.USER_COLLECTION).document(LocalUser.uid)
-                        .set(dataToAdd)
+                        .set(hashMapOf("pseudo" to pseudo))
                         .addOnSuccessListener {
                             LocalUser.connected = true
                             successCallback()
