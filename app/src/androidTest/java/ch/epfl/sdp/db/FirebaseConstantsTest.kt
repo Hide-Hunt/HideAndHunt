@@ -10,10 +10,10 @@ import org.junit.Test
 class FirebaseConstantsTest {
     @Test
     fun constantsShouldHaveCorrectValues() {
-        assertEquals(USER_COLLECTION, "users")
-        assertEquals(USER_GAME_HISTORY_COLLECTION, "game_history")
+        assertEquals("users", USER_COLLECTION)
+        assertEquals("game_history", USER_GAME_HISTORY_COLLECTION)
 
-        assertEquals(GAME_COLLECTION, "games")
-        assertEquals(GAME_PARTICIPATION_COLLECTION, "participation")
+        assertEquals("games", GAME_COLLECTION)
+        assertEquals("participation", GAME_PARTICIPATION_COLLECTION)
     }
 }
