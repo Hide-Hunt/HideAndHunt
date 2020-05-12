@@ -6,6 +6,7 @@ import ch.epfl.sdp.game.data.Faction
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.After
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 
 @InternalCoroutinesApi
@@ -28,6 +29,7 @@ class LocalReplayStoreTest{
         }
     }
 
+    @BeforeClass
     @After
     fun clearDB(){
         val context = InstrumentationRegistry.getInstrumentation().targetContext
