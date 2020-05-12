@@ -15,7 +15,6 @@ import ch.epfl.sdp.replay.ReplayInfoListFragment
 import ch.epfl.sdp.user.ProfileActivity
 import dagger.BindsInstance
 import dagger.Component
-import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Singleton
 
 interface IApplicationComponent
@@ -35,7 +34,6 @@ interface ApplicationComponent : IApplicationComponent {
     fun inject(activity: GlobalLobbyFragment)
     fun inject(activity: ManageReplaysActivity)
     fun inject(activity: ReplayInfoListFragment)
-    @InternalCoroutinesApi
     fun inject(repo: FirebaseReplayRepository)
     fun inject(store: LocalReplayStore)
 }
