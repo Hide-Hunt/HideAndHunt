@@ -10,7 +10,6 @@ import ch.epfl.sdp.replay.FirebaseReplayRepository
 import ch.epfl.sdp.replay.MockReplayRepository
 import ch.epfl.sdp.user.FakeUserRepo
 import ch.epfl.sdp.user.FirebaseUserRepo
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,7 +40,6 @@ class RepoModuleTest{
         assertTrue(repo.providesGlobalLobbyRepo() is MockGlobalLobbyRepository)
     }
 
-    @InternalCoroutinesApi
     @Test
     fun testProvidesIReplayRepository(){
         val repo = RepoModule()

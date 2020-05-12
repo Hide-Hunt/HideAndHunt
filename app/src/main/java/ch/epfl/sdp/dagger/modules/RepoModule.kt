@@ -11,7 +11,6 @@ import ch.epfl.sdp.user.FirebaseUserRepo
 import ch.epfl.sdp.user.IUserRepo
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @Module
 class RepoModule {
@@ -25,7 +24,6 @@ class RepoModule {
         return FirebaseGlobalLobbyRepository()
     }
 
-    @InternalCoroutinesApi
     @Provides
     fun providesIReplayRepository(context: Context): IReplayRepository {
         return FirebaseReplayRepository(context)

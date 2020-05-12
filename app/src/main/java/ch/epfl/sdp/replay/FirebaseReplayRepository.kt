@@ -13,7 +13,6 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-@InternalCoroutinesApi
 class FirebaseReplayRepository(val context: Context) : IReplayRepository {
     private val fs: FirebaseFirestore = Firebase.firestore
     private val localReplayStore = LocalReplayStore(context)

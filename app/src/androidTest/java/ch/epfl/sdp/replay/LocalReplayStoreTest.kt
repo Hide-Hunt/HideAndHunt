@@ -8,9 +8,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+@InternalCoroutinesApi
 class LocalReplayStoreTest{
-
-    @InternalCoroutinesApi
     @Before
     fun initDB(){
 
@@ -23,34 +22,37 @@ class LocalReplayStoreTest{
                 ReplayInfo("5", "Game #5", 8505536244, 8505536244 + 549, "", Faction.PREY, true)
         )
 
-        for (ri in mockReplayList)
-            FakeAppDatabase.instance(InstrumentationRegistry.getInstrumentation().targetContext).replayDao().insert(ri)
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        for (ri in mockReplayList) {
+            FakeAppDatabase.instance(context).replayDao().insert(ri)
+        }
     }
 
-    @InternalCoroutinesApi
     @After
     fun clearDB(){
-        FakeAppDatabase.instance(InstrumentationRegistry.getInstrumentation().targetContext).clearAllTables()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        FakeAppDatabase.instance(context).clearAllTables()
     }
 
-    @InternalCoroutinesApi
     @Test
     fun testGetList(){
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         var check = false
-        LocalReplayStore(InstrumentationRegistry.getInstrumentation().targetContext).getList{l: List<ReplayInfo> -> check = l.size == 6}
+        LocalReplayStore(context).getList{l: List<ReplayInfo> -> check = l.size == 6}
         Thread.sleep(100)
         assert(check)
     }
 
     @Test
     fun testSaveList(){
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         var check = false
         val newReplays = listOf(
                 ReplayInfo("6", "Game #6", 9822112760, 9822112760 + 871, "", Faction.PREDATOR, true),
                 ReplayInfo("7", "Game #7", 8935181550, 8935181550 + 139, "", Faction.PREY, true),
                 ReplayInfo("8", "Game #8", 5055362440, 5055362440 + 549, "", Faction.PREY, true))
-        LocalReplayStore(InstrumentationRegistry.getInstrumentation().targetContext).saveList(newReplays)
-        LocalReplayStore(InstrumentationRegistry.getInstrumentation().targetContext).getList{l: List<ReplayInfo> -> check = l.size == 9}
+        LocalReplayStore(context).saveList(newReplays)
+        LocalReplayStore(context).getList{l: List<ReplayInfo> -> check = l.size == 9}
         Thread.sleep(100)
         assert(check)
     }
