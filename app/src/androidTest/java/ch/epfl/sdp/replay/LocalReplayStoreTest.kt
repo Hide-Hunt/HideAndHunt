@@ -4,15 +4,15 @@ import androidx.test.platform.app.InstrumentationRegistry
 import ch.epfl.sdp.db.FakeAppDatabase
 import ch.epfl.sdp.game.data.Faction
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.junit.After
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
 
 @InternalCoroutinesApi
 class LocalReplayStoreTest{
     @Before
     fun initDB(){
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        FakeAppDatabase.instance(context).clearAllTables()
 
         val mockReplayList = listOf(
                 ReplayInfo("0", "Game #0", 0, 2345, "", Faction.PREDATOR, true),
@@ -23,17 +23,9 @@ class LocalReplayStoreTest{
                 ReplayInfo("5", "Game #5", 8505536244, 8505536244 + 549, "", Faction.PREY, true)
         )
 
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
         for (ri in mockReplayList) {
             FakeAppDatabase.instance(context).replayDao().insert(ri)
         }
-    }
-
-    @BeforeClass
-    @After
-    fun clearDB(){
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        FakeAppDatabase.instance(context).clearAllTables()
     }
 
     @Test
