@@ -2,7 +2,6 @@ package ch.epfl.sdp.replay
 
 import android.content.Context
 import ch.epfl.sdp.dagger.HideAndHuntApplication
-import ch.epfl.sdp.db.AppDatabase
 import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.db.FirebaseConstants.GAME_COLLECTION
 import ch.epfl.sdp.game.data.Game
@@ -25,33 +24,13 @@ class FirebaseReplayRepository(val context: Context) : IReplayRepository {
         (context.applicationContext as HideAndHuntApplication).appComponent.inject(this)
     }
 
-    private fun getAllGamesLocally(cb: Callback<List<ReplayInfo>>) {
-        GlobalScope.launch {
-            AppDatabase.instance(context).replayDao().getAll().let {
-                it.forEach { replayInfo ->
-                    replayInfo.localCopy = localReplayStore.getFile(replayInfo.gameID).exists()
-                }
-                withContext(Dispatchers.Main) {
-                    cb(it)
-                }
-            }
-        }
-    }
-
-    private fun saveAllReplaysLocally(replays: List<ReplayInfo>) {
-        GlobalScope.launch {
-            val dao = AppDatabase.instance(context).replayDao()
-            replays.forEach { dao.insert(it) }
-        }
-    }
-
     private fun getAllGamesOnline(userID: String, cb: Callback<List<ReplayInfo>>) {
         userRepo.getGameHistory(userID) { gameHistory ->
             fs.collection(GAME_COLLECTION).whereIn("id", gameHistory).get().addOnSuccessListener { games ->
                 games.map { it.toObject<Game>() }
                         .map { ReplayInfo.fromGame(userID, it, localReplayStore) }
                         .let { replays ->
-                            saveAllReplaysLocally(replays)
+                            localReplayStore.saveList(replays)
                             cb(replays)
                         }
             }.addOnFailureListener {
@@ -62,7 +41,7 @@ class FirebaseReplayRepository(val context: Context) : IReplayRepository {
 
     override fun getAllGames(userID: String, cb: Callback<List<ReplayInfo>>) {
         if (userID.isEmpty()) {
-            getAllGamesLocally(cb)
+            localReplayStore.getList(cb)
         } else {
             getAllGamesOnline(userID, cb)
         }
