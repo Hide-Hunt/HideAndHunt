@@ -12,12 +12,13 @@ import java.io.File
 import java.lang.Exception
 
 class ReplayActivity : AppCompatActivity() {
-    private val replayStore = LocalReplayStore(this)
+    private lateinit var replayStore : LocalReplayStore
     private var replayID: String? = null
     private lateinit var binding: ActivityReplayBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        replayStore = LocalReplayStore(this)
         binding = ActivityReplayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
