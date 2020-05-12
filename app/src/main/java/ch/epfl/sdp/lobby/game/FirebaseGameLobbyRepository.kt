@@ -53,8 +53,8 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun getPlayers(gameId: String, cb: Callback<List<Player>>) {
-        getParticipations(gameId) {
-            cb(it.withIndex().map { x -> x.value.toPlayer(x.index) })
+        getParticipations(gameId) { list ->
+            cb(list.sortedBy { it.userID }.withIndex().map { x -> x.value.toPlayer(x.index) })
         }
     }
 

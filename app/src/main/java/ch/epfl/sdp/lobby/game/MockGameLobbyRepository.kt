@@ -33,7 +33,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     override fun getParticipations(gameId: String, cb: Callback<List<Participation>>) = cb(players)
 
     override fun getPlayers(gameId: String, cb: Callback<List<Player>>) {
-        cb(players.withIndex().map { p -> p.value.toPlayer(p.index) })
+        cb(players.sortedBy { it.userID }.withIndex().map { p -> p.value.toPlayer(p.index) })
     }
 
     override fun getAdminId(gameId: String, cb: Callback<String>) { cb(players[1].userID) }
