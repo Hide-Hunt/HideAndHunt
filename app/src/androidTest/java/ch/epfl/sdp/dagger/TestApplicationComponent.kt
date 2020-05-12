@@ -8,6 +8,7 @@ import ch.epfl.sdp.dagger.modules.FakeUserConnectorModule
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyFragment
+import ch.epfl.sdp.replay.LocalReplayStore
 import ch.epfl.sdp.replay.ManageReplaysActivity
 import ch.epfl.sdp.replay.ReplayInfoListFragment
 import ch.epfl.sdp.user.ProfileActivity
@@ -30,4 +31,6 @@ interface TestApplicationComponent : ApplicationComponent {
     override fun inject(activity: ReplayInfoListFragment)
     override fun inject(activity: GlobalLobbyFragment)
     override fun inject(activity: ProfileActivity)
+
+    override fun inject(store: LocalReplayStore)
 }
