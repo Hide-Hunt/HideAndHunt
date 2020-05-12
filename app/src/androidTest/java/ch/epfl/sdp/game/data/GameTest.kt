@@ -11,6 +11,18 @@ class GameTest {
 
     @Test
     fun defaultValuesMatchExpectation() {
+        val emptyGame = Game()
+        assertEquals("", emptyGame.id)
+        assertEquals("", emptyGame.name)
+        assertEquals(0, emptyGame.duration)
+        assertTrue(emptyGame.participation.isEmpty())
+        assertEquals("", emptyGame.adminID)
+        assertTrue(emptyGame.params.isEmpty())
+        assertTrue(emptyGame.creationDate.after(Date(0)))
+        assertTrue(emptyGame.startDate.after(Date(0)))
+        assertTrue(emptyGame.endDate.after(Date(0)))
+        assertEquals(GameState.LOBBY, emptyGame.state)
+
         val game = Game("g4m31d", "You lost!", "4dm1n1d", 5, emptyMap(), emptyList(), Date(), Date(), Date(), GameState.LOBBY)
         assertEquals("g4m31d", game.id)
         assertEquals("You lost!", game.name)
