@@ -19,11 +19,9 @@ class FirebaseUserConnector : IUserConnector {
     override fun connect(email: String, password: String, successCallback: () -> Unit, errorCallback: () -> Unit) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val authed = auth.currentUser
                 LocalUser.email = email
-                LocalUser.uid = authed!!.uid
-                val maxSize: Long = 10 * 1024 * 1024
-                storage.reference.child("profilePics").child(LocalUser.uid + ".png").getBytes(maxSize)
+                LocalUser.uid = auth.currentUser!!.uid
+                storage.reference.child("profilePics").child(LocalUser.uid + ".png").getBytes(PROFILE_PIC_MAX_SIZE)
                 .addOnSuccessListener {
                     LocalUser.profilePic = BitmapFactory.decodeByteArray(it, 0, it.size)
                 }.addOnFailureListener {
@@ -42,9 +40,7 @@ class FirebaseUserConnector : IUserConnector {
                     LocalUser.connected = false
                     errorCallback()
                 }
-            } else {
-                errorCallback()
-            }
+            } else { errorCallback() }
         }
     }
 
@@ -106,5 +102,9 @@ class FirebaseUserConnector : IUserConnector {
                 errorCallback()
             }
         }
+    }
+
+    companion object {
+        const val PROFILE_PIC_MAX_SIZE: Long = 10 * 1024 * 1024
     }
 }
