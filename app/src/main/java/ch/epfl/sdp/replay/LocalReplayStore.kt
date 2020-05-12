@@ -2,7 +2,6 @@ package ch.epfl.sdp.replay
 
 import android.content.Context
 import ch.epfl.sdp.dagger.HideAndHuntApplication
-import ch.epfl.sdp.db.AppDatabase
 import ch.epfl.sdp.db.AppDatabaseCompanion
 import ch.epfl.sdp.db.Callback
 import kotlinx.coroutines.*
@@ -20,7 +19,6 @@ class LocalReplayStore(private val context: Context) {
 
     fun getFile(id: String): File = File(getPath(id))
 
-    @InternalCoroutinesApi
     fun getList(cb: Callback<List<ReplayInfo>>) {
         GlobalScope.launch {
             myAppDatabase.instance(context).replayDao().getAll().let {
@@ -34,10 +32,9 @@ class LocalReplayStore(private val context: Context) {
         }
     }
 
-    @InternalCoroutinesApi
     fun saveList(replays: List<ReplayInfo>) {
         GlobalScope.launch {
-            val dao = AppDatabase.instance(context).replayDao()
+            val dao = myAppDatabase.instance(context).replayDao()
             replays.forEach { dao.insert(it) }
         }
     }
