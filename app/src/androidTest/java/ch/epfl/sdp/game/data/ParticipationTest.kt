@@ -17,7 +17,7 @@ class ParticipationTest {
         assertEquals("t4g", part.tag)
         assertEquals("sc0r3", part.score)
 
-        val emptyPart = Participation("u53r1d", Faction.PREY,false, "t4g", "sc0r3")
+        val emptyPart = Participation()
         assertEquals("", emptyPart.userID)
         assertEquals(Faction.PREDATOR, emptyPart.faction)
         assertEquals(false, emptyPart.ready)
