@@ -12,7 +12,11 @@ class FirebaseUserRepo : IUserRepo {
 
     override fun getUsername(userID: String, cb: Callback<String>) {
         fs.collection(FirebaseConstants.USER_COLLECTION).document(userID).get().addOnSuccessListener { result ->
-            cb(result["pseudo"] as String)
+            if (result.data != null) {
+                cb(result["pseudo"] as String)
+            } else {
+                cb("")
+            }
         }
     }
 
@@ -23,9 +27,13 @@ class FirebaseUserRepo : IUserRepo {
 
     override fun getGameHistory(userID: String, cb: Callback<List<String>>) {
         fs.collection(FirebaseConstants.USER_COLLECTION).document(userID).get().addOnSuccessListener { user ->
-            @Suppress("UNCHECKED_CAST")
-            val gameHistory = user[FirebaseConstants.USER_GAME_HISTORY_COLLECTION] as List<String>
-            cb(gameHistory)
+            if (user.data != null) {
+                @Suppress("UNCHECKED_CAST")
+                val gameHistory = user[FirebaseConstants.USER_GAME_HISTORY_COLLECTION] as List<String>
+                cb(gameHistory)
+            } else {
+                cb(emptyList())
+            }
 
         }.addOnFailureListener {
             cb(emptyList())
