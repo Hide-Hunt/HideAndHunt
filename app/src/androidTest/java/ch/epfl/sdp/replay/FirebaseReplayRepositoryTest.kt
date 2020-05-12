@@ -47,7 +47,7 @@ class FirebaseReplayRepositoryTest {
             repo.getAllGames("") { secondReplayList ->
                 callbackCalled = true
                 assertEquals(1, secondReplayList.size)
-                assertEquals(replay, secondReplayList[1])
+                assertEquals(replay, secondReplayList[0])
             }
         }
 
