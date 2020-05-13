@@ -10,6 +10,7 @@ object IDHelper {
 
     /**
      * Get the current users's player id
+     * @return Int : the current users's player id
      */
     fun getPlayerID(): Int {
         return abs(LocalUser.uid.hashCode())

@@ -16,7 +16,9 @@ import ch.epfl.sdp.game.data.PreyState
 import ch.epfl.sdp.game.location.ILocationListener
 import ch.epfl.sdp.game.location.LocationHandler
 
-
+/**
+ *  Activity that shows the in-game predator interface
+ */
 class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocationListener, GameTimerFragment.GameTimeOutListener {
     private lateinit var binding: ActivityPredatorBinding
 
@@ -31,10 +33,10 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     private lateinit var targetSelectionFragment: TargetSelectionFragment
     private lateinit var targetDistanceFragment: TargetDistanceFragment
     private lateinit var preyFragment: PreyFragment
+
     private var catchCount = 0
 
     private lateinit var locationHandler: LocationHandler
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +45,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         // Get game information
         val gameDataAndValidity = GameIntentUnpacker.unpack(intent)
         validGame = gameDataAndValidity.second
-        if(!validGame) {
+        if (!validGame) {
             finish()
             return
         }
@@ -74,7 +76,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         targetSelectionFragment = TargetSelectionFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
         fragmentTransaction.add(binding.targetSelectionPlaceHolder.id, targetSelectionFragment)
 
-        targetDistanceFragment = TargetDistanceFragment.newInstance(arrayListOf(0,10,25,50,75))
+        targetDistanceFragment = TargetDistanceFragment.newInstance(arrayListOf(0, 10, 25, 50, 75))
         fragmentTransaction.add(binding.targetDistancePlaceHolder.id, targetDistanceFragment)
 
         preyFragment = PreyFragment.newInstance(ArrayList(players.values.filterIsInstance<Prey>().toList()))
@@ -107,7 +109,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
     public override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
+        if (NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 preys[it]?.let { preyID ->
                     onPreyCatches(gameData.playerID, preyID)
@@ -136,7 +138,8 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     override fun onLocationChanged(newLocation: Location) {
         if (targetID != TargetSelectionFragment.NO_TARGET) {
             targetDistanceFragment.distance =
-                    players[targetID]?.lastKnownLocation?.distanceTo(newLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
+                    players[targetID]?.lastKnownLocation?.distanceTo(newLocation)?.toInt()
+                            ?: TargetDistanceFragment.NO_DISTANCE
         }
     }
 
@@ -159,7 +162,8 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
             players[playerID]!!.lastKnownLocation = location
             if (playerID == targetID) {
                 targetDistanceFragment.distance =
-                        players[targetID]?.lastKnownLocation?.distanceTo(locationHandler.lastKnownLocation)?.toInt() ?: TargetDistanceFragment.NO_DISTANCE
+                        players[targetID]?.lastKnownLocation?.distanceTo(locationHandler.lastKnownLocation)?.toInt()
+                                ?: TargetDistanceFragment.NO_DISTANCE
             }
         }
     }
@@ -172,7 +176,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
             }
         }
 
-        if(players.values.filterIsInstance<Prey>().none { p -> p.state != PreyState.DEAD }) {
+        if (players.values.filterIsInstance<Prey>().none { p -> p.state != PreyState.DEAD }) {
             EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
         }
     }

@@ -12,7 +12,7 @@ import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.FragmentGameTimerBinding
 
 /**
- * Fragment handling the game timer
+ * [Fragment] handling the in-game timer
  */
 class GameTimerFragment : Fragment() {
 
@@ -72,6 +72,7 @@ class GameTimerFragment : Fragment() {
     companion object {
         private const val ARG_TIME = "time"
         private const val COUNTDOWN_INTERVAL = 1000
+
         @JvmStatic
         fun create(time: Long): GameTimerFragment {
             val fragment = GameTimerFragment()

@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import ch.epfl.sdp.R
 import ch.epfl.sdp.databinding.FragmentTargetDistanceBinding
 
-
 private const val ARG_RANGES = "ranges"
 
 /**
@@ -18,13 +17,18 @@ private const val ARG_RANGES = "ranges"
  * create an instance of this fragment.
  */
 class TargetDistanceFragment : Fragment() {
+
     private var _binding: FragmentTargetDistanceBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var ranges: ArrayList<Int>
     var distance = DISABLED
         set(value) {
-            field = if (value >= 0 || value == NO_DISTANCE || value == DISABLED) { value } else { NO_DISTANCE }
+            field = if (value >= 0 || value == NO_DISTANCE || value == DISABLED) {
+                value
+            } else {
+                NO_DISTANCE
+            }
             updateDistanceDisplay()
         }
 
@@ -49,7 +53,7 @@ class TargetDistanceFragment : Fragment() {
         if (distance >= 0) {
             val index = ranges.indexOfFirst { i -> i > distance }
             if (index != -1) {
-                binding.distanceLabel.text = "%d - %d".format(ranges[index-1], ranges[index])
+                binding.distanceLabel.text = "%d - %d".format(ranges[index - 1], ranges[index])
                 binding.distanceImage.setImageResource(
                         when (index) {
                             1 -> R.drawable.ic_signal_4
@@ -87,7 +91,7 @@ class TargetDistanceFragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param ranges Parameter 1.
+         * @param ranges ArrayList<Int>: Parameter 1.
          * @return A new instance of fragment TargetDistanceFragment.
          */
         @JvmStatic
