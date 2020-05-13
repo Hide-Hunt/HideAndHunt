@@ -13,6 +13,7 @@ import kotlin.collections.ArrayList
 
 /**
  * Repository for Firestore database interactions with the global lobby
+ * Implements [IGlobalLobbyRepository]
  */
 class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
 
@@ -21,7 +22,7 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
     override fun getAllGames(cb: Callback<List<Game>>) {
         val games: MutableList<Game> = ArrayList()
         fs.collection("games").get().addOnSuccessListener { result ->
-            for((i, doc) in result.withIndex()) {
+            for ((i, doc) in result.withIndex()) {
                 getParticipations((doc["id"] as Long).toInt()) { participations ->
                     val g = Game(
                             (doc["id"] as Long).toInt(),
@@ -35,23 +36,23 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
                             (doc["adminID"] as Long).toInt()
                     )
                     games.add(g)
-                    if(i == result.size() - 1) //The last game calls the callback
+                    if (i == result.size() - 1) //The last game calls the callback
                         cb(games.filter { p -> p.state == GameState.LOBBY })
                 }
             }
-            if(result.size() == 0) {
+            if (result.size() == 0) {
                 // no games found
                 cb(emptyList())
             }
         }
     }
 
-    fun getParticipations(gameId: Int, cb: Callback<List<Participation>>) {
+    private fun getParticipations(gameId: Int, cb: Callback<List<Participation>>) {
         val players: MutableList<Participation> = java.util.ArrayList()
         fs.collection("participations").whereEqualTo("gameID", gameId).get().addOnSuccessListener { documents ->
 
-            for(doc in documents) {
-                if(players.none { p -> p.playerID == (doc["playerID"] as Long).toInt() }) {
+            for (doc in documents) {
+                if (players.none { p -> p.playerID == (doc["playerID"] as Long).toInt() }) {
                     players.add(Participation(
                             doc["username"] as String,
                             doc["ready"] as Boolean,
@@ -65,6 +66,4 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
             cb(players)
         }
     }
-
-
 }

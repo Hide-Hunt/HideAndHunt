@@ -12,11 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ch.epfl.sdp.R
-import ch.epfl.sdp.authentication.LocalUser
-import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
 import ch.epfl.sdp.dagger.HideAndHuntApplication
+import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
 import ch.epfl.sdp.game.*
-import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import javax.inject.Inject
 
@@ -28,7 +26,9 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
     private var adminId = 0
-    @Inject lateinit var repository : IGameLobbyRepository
+
+    @Inject
+    lateinit var repository: IGameLobbyRepository
     private var gameID: Int = 0
     private var playerID: Int = 0
     private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
@@ -68,7 +68,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
     public override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
+        if (NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 myTag = it
                 repository.setPlayerReady(gameID, playerID, true)
@@ -103,7 +103,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     private fun updateLocalPlayerState() {
-        if(myFaction == PlayerFaction.PREY && myTag == null) {
+        if (myFaction == PlayerFaction.PREY && myTag == null) {
             gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_not_ready)
             repository.setPlayerReady(gameID, playerID, false)
         } else {
