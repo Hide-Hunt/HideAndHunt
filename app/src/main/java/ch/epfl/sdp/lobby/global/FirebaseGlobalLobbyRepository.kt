@@ -47,7 +47,7 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
         }
     }
 
-    private fun getParticipations(gameId: Int, cb: Callback<List<Participation>>) {
+    fun getParticipations(gameId: Int, cb: Callback<List<Participation>>) {
         val players: MutableList<Participation> = java.util.ArrayList()
         fs.collection("participations").whereEqualTo("gameID", gameId).get().addOnSuccessListener { documents ->
 

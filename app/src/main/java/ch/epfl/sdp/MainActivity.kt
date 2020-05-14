@@ -19,7 +19,8 @@ import ch.epfl.sdp.user.UserCache
  * Main app activity, where the user can start a game, create a game and login
  */
 class MainActivity : AppCompatActivity() {
-    private val cache: UserCache = UserCache()
+
+    val cache: UserCache = UserCache()
     private lateinit var binding: ActivityMainBinding
 
     private fun buttonToActivity(button: Button, cls: Class<*>, intentFiller: (Intent) -> Unit = {}) {
