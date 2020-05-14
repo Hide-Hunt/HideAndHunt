@@ -9,6 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:gravity="center_horizontal|center_vertical"
-            android:text="@string/gameCreation_title" />
+            android:text="@string/gameCreation_title"
+            android:textSize="36sp" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -30,9 +32,9 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="139dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="20dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -41,7 +43,8 @@
                     android:layout_height="wrap_content"
                     android:height="45dp"
                     android:gravity="center_vertical|end"
-                    android:text="@string/gameCreation_game_name" />
+                    android:text="@string/gameCreation_game_name"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/gameDurationLabel"
@@ -49,19 +52,21 @@
                     android:layout_height="wrap_content"
                     android:height="45dp"
                     android:gravity="center_vertical|end"
-                    android:text="@string/gameCreation_duration" />
+                    android:text="@string/gameCreation_duration"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/gameModeLabel"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:gravity="center_vertical|end"
+                    android:textSize="18sp"
                     tools:text="@string/gameCreation_mode" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="185dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="50dp"
@@ -100,11 +105,16 @@
 
         </LinearLayout>
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
         <Button
             android:id="@+id/create_button"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:text="@string/gameCreation_create" />
+            android:text="@string/gameCreation_create"
+            android:textSize="18sp" />
 
     </LinearLayout>
 

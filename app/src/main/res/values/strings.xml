@@ -46,7 +46,7 @@
     <!-- Game Creation Activity -->
     <string name="gameCreation_title">New Game</string>
     <string name="gameCreation_game_name">Game Name</string>
-    <string name="gameCreation_duration">Duration</string>
+    <string name="gameCreation_duration">Duration (minutes)</string>
     <string name="gameCreation_mode">Game mode</string>
     <string name="gameCreation_create">Create !</string>
     <string name="gameCreation_placeholderName">Name</string>
