@@ -4,7 +4,7 @@
 
     <string name="loginButtonText">Login</string>
     <string name="loginPlaceholderName">Email</string>
-    <string name="loginPlaceholderPseudo">Pseudo</string>
+    <string name="loginPlaceholderPseudo">Pseudo (only for registration)</string>
     <string name="loginPlaceholderPassword">Password</string>
 
     <string name="profileButtonText">Profile</string>

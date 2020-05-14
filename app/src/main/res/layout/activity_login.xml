@@ -7,11 +7,12 @@
 
     <TextView
         android:id="@+id/loginTextView"
-        android:layout_width="122dp"
-        android:layout_height="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/loginButtonText"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/userPseudoLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -31,8 +32,8 @@
 
     <EditText
         android:id="@+id/userNameLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="257dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="16dp"
         android:autofillHints="email"
         android:ems="10"
@@ -44,8 +45,8 @@
 
     <EditText
         android:id="@+id/userPasswordLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="255dp"
+        android:layout_height="49dp"
         android:layout_marginBottom="32dp"
         android:autofillHints="password"
         android:ems="10"
@@ -57,21 +58,21 @@
 
     <EditText
         android:id="@+id/userPseudoLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="259dp"
+        android:layout_height="46dp"
         android:layout_marginBottom="16dp"
+        android:autofillHints="Pseudo"
         android:ems="10"
         android:hint="@string/loginPlaceholderPseudo"
         android:inputType="textPersonName"
-        android:autofillHints="Pseudo"
         app:layout_constraintBottom_toTopOf="@+id/userNameLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/loginSubmitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="249dp"
+        android:layout_height="53dp"
         android:layout_marginBottom="16dp"
         android:text="@string/loginButtonText"
         app:layout_constraintBottom_toTopOf="@+id/registerSubmitButton"
@@ -80,8 +81,8 @@
 
     <Button
         android:id="@+id/registerSubmitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="32dp"
         android:text="@string/register_button"
         app:layout_constraintBottom_toTopOf="@+id/loginTextResult"
