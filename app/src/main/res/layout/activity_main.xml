@@ -10,16 +10,16 @@
 
     <Button
         android:id="@+id/playButton"
-        android:layout_width="168dp"
-        android:layout_height="52dp"
+        android:layout_width="150dp"
+        android:layout_height="90dp"
         android:text="@string/play_button_text"
-        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintHorizontal_bias="0.135"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.223" />
+        app:layout_constraintVertical_bias="0.223"
+        android:background="@drawable/game_button_shape"/>
 
     <TextView
         android:id="@+id/textView"
@@ -47,20 +47,21 @@
         app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginButton"
-        app:layout_constraintVertical_bias="0.047" />
+        app:layout_constraintVertical_bias="0.047"
+        android:background="@drawable/menu_button_shape"/>
 
     <Button
         android:id="@+id/newGame_button"
-        android:layout_width="168dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="161dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="162dp"
+        android:layout_width="150dp"
+        android:layout_height="90dp"
         android:text="@string/new_game_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playButton" />
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintStart_toEndOf="@id/playButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.223"
+        android:background="@drawable/game_button_shape"/>
 
     <Button
         android:id="@+id/loginButton"
@@ -73,7 +74,8 @@
         app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newGame_button"
-        app:layout_constraintVertical_bias="0.052" />
+        app:layout_constraintVertical_bias="0.352"
+        android:background="@drawable/menu_button_shape"/>
 
     <Button
         android:id="@+id/profileButton"
@@ -84,6 +86,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/replayButton" />
+        app:layout_constraintTop_toBottomOf="@+id/replayButton"
+        android:background="@drawable/menu_button_shape"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
