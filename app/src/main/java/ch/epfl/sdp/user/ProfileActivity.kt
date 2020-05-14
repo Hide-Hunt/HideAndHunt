@@ -13,20 +13,22 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import ch.epfl.sdp.authentication.IUserConnector
+import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityProfileBinding
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
-import ch.epfl.sdp.authentication.LocalUser
 
-
-class ProfileActivity: AppCompatActivity(), Callback {
+/**
+ * Activity that shows the current user profile
+ */
+class ProfileActivity : AppCompatActivity(), Callback {
     private lateinit var binding: ActivityProfileBinding
     private var newProfilePic: Bitmap? = null
-    @Inject lateinit var connector: IUserConnector
+    @Inject
+    lateinit var connector: IUserConnector
     private val cache = UserCache()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +36,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.profilePictureView.setOnClickListener() {
+        binding.profilePictureView.setOnClickListener {
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
@@ -67,7 +69,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            val picturePath: Uri = if(data.data != null) data.data!! else data.extras!!.get("picturePath") as Uri
+            val picturePath: Uri = if (data.data != null) data.data!! else data.extras!!.get("picturePath") as Uri
             Picasso.with(this)
                     .load(picturePath)
                     .fit().centerCrop()
@@ -75,35 +77,34 @@ class ProfileActivity: AppCompatActivity(), Callback {
         }
     }
 
-    fun setInformations() {
+    private fun setInformations() {
         binding.pseudoText.text = Editable.Factory().newEditable(LocalUser.pseudo)
-        if(LocalUser.profilePic == null) {
+        if (LocalUser.profilePic == null) {
             Picasso.with(this)
                     .load("https://cdn0.iconfinder.com/data/icons/seo-marketing-glyphs-vol-7/52/user__avatar__man__profile__Person__target__focus-512.png")
                     .into(binding.profilePictureView)
-        }
-        else
+        } else
             binding.profilePictureView.setImageBitmap(LocalUser.profilePic)
     }
 
-    fun validateInformations() {
+    private fun validateInformations() {
         val bmp = binding.profilePictureView.drawable.toBitmap()
         val ps = binding.pseudoText.text.toString()
         var pseudoModify: String? = null
         var picModify: Bitmap? = null
-        if(LocalUser.profilePic == null || !LocalUser.profilePic!!.sameAs(newProfilePic)) {
+        if (LocalUser.profilePic == null || !LocalUser.profilePic!!.sameAs(newProfilePic)) {
             LocalUser.profilePic = bmp
             picModify = bmp
         }
-        if(LocalUser.pseudo != ps) {
+        if (LocalUser.pseudo != ps) {
             LocalUser.pseudo = ps
             pseudoModify = ps
         }
         cache.put(this)
         connector.modify(pseudoModify, picModify, {
-            if(picModify != null) showSuccessAndKill()
+            if (picModify != null) showSuccessAndKill()
             else finish()
-        }, {onError()})
+        }, { onError() })
     }
 
     private fun showSuccessAndKill() {
@@ -111,8 +112,8 @@ class ProfileActivity: AppCompatActivity(), Callback {
         builder.setTitle("Success")
                 .setMessage("Successfully uploaded profile pic")
                 .setCancelable(false)
-                .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ -> finish()})
-                .setOnDismissListener {finish()}
+                .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ -> finish() })
+                .setOnDismissListener { finish() }
         val alertDialog = builder.create()
         alertDialog.show()
     }
@@ -127,7 +128,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
                 .setMessage("Error uploading profile picture")
                 .setCancelable(false)
                 .setPositiveButton("OK", null)
-                .setOnDismissListener {finish()}
+                .setOnDismissListener { finish() }
         val alertDialog = builder.create()
         alertDialog.show()
     }

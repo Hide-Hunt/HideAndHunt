@@ -2,6 +2,7 @@ package ch.epfl.sdp.game.comm
 
 /**
  * Interface that provides methods to link with a [SimpleLocationSynchronizer]
+ * Provides methods required for the real time publishing / subscribing
  */
 interface RealTimePubSub {
     interface OnPublishListener {
