@@ -19,14 +19,15 @@ import java.util.*
  * Use the [TargetSelectionFragment.newInstance] factory method to create an instance of this fragment.
  */
 class TargetSelectionFragment : Fragment() {
+
     interface OnTargetSelectedListener {
         fun onTargetSelected(targetID: Int)
     }
 
     private var _binding: FragmentTargetSelectionBinding? = null
-    private val binding get() = _binding!!
-
+    private val binding get() =_binding!!
     private var targetSelectionDialog: AlertDialog? = null
+
     var listener: OnTargetSelectedListener? = null
 
     // TODO use a ViewModel / Model to share this state with activity and other models
@@ -109,6 +110,7 @@ class TargetSelectionFragment : Fragment() {
         const val NO_TARGET = -1
         private const val ARG_TARGETS = "targets"
         private const val ARG_SELECTED_TARGET_ID = "selectedTargetID"
+
         /**
          * Use this factory method to create a new instance of this fragment using the provided parameters.
          *

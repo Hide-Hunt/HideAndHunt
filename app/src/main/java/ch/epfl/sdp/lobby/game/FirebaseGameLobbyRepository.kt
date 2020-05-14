@@ -20,11 +20,13 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     /**
      * Get the game associated to a given id
+     * @param gameID Int: the game id
+     * @param cb Callback<String>: a callback operating on the name
      */
     private fun getFirebaseGameWithID(gameID: Int, cb: Callback<String>) {
         fs.collection("games").get().addOnSuccessListener { result ->
             val match = result.filter { x -> (x["id"] as Long).toInt() == gameID }
-            if(match.isEmpty()) {
+            if (match.isEmpty()) {
                 //no game matches the given id
                 cb("")
             } else {
@@ -87,7 +89,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
         getParticipations(gameId) {
             cb(it.map { x ->
                 //callback to the right instance of Player
-                if(x.faction == PlayerFaction.PREY)
+                if (x.faction == PlayerFaction.PREY)
                     Prey(x.playerID, x.tag)
                 else
                     Predator(x.playerID)
@@ -99,8 +101,8 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
         val players: MutableList<Participation> = ArrayList()
         fs.collection("participations").whereEqualTo("gameID", gameId).get().addOnSuccessListener { documents ->
 
-            for(doc in documents) {
-                if(players.none { p -> p.playerID == (doc["playerID"] as Long).toInt() }) {
+            for (doc in documents) {
+                if (players.none { p -> p.playerID == (doc["playerID"] as Long).toInt() }) {
                     players.add(Participation(
                             doc["username"] as String,
                             doc["ready"] as Boolean,
@@ -129,7 +131,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun setPlayerReady(gameId: Int, uid: Int, ready: Boolean) {
         fs.collection("participations").whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
-            for(doc in documents) {
+            for (doc in documents) {
                 fs.collection("participations").document(doc.id).update("ready", ready)
             }
         }
@@ -137,7 +139,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun setPlayerFaction(gameId: Int, uid: Int, faction: PlayerFaction) {
         fs.collection("participations").whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
-            for(doc in documents) {
+            for (doc in documents) {
                 fs.collection("participations").document(doc.id).update("faction", faction)
             }
         }
@@ -145,7 +147,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun setPlayerTag(gameId: Int, uid: Int, tag: String) {
         fs.collection("participations").whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
-            for(doc in documents) {
+            for (doc in documents) {
                 fs.collection("participations").document(doc.id).update("tag", tag)
             }
         }

@@ -10,10 +10,14 @@ import ch.epfl.sdp.user.UserCache
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
+/**
+ * Shows the login menu where the user can connect or register
+ */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    @Inject lateinit var connector:IUserConnector
+    @Inject
+    lateinit var connector: IUserConnector
     private val cache: UserCache = UserCache()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,14 +37,14 @@ class LoginActivity : AppCompatActivity() {
         binding.loginTextResult.text = ""
     }
 
-    private fun register(email:Editable, password:Editable, pseudo:Editable, connector:IUserConnector) {
+    private fun register(email: Editable, password: Editable, pseudo: Editable, connector: IUserConnector) {
         binding.loginTextResult.text = "Registering..."
-        connector.register(email.toString(), password.toString(), pseudo.toString(), {successfulLogin()}, {errorLogin()})
+        connector.register(email.toString(), password.toString(), pseudo.toString(), { successfulLogin() }, { errorLogin() })
     }
 
-    private fun signIn(email:Editable, password:Editable, connector: IUserConnector) {
+    private fun signIn(email: Editable, password: Editable, connector: IUserConnector) {
         binding.loginTextResult.text = "Connecting..."
-        connector.connect(email.toString(), password.toString(), {successfulLogin()}, {errorLogin()})
+        connector.connect(email.toString(), password.toString(), { successfulLogin() }, { errorLogin() })
     }
 
     private fun errorLogin() {
@@ -48,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setMessage("Error: failed to connect")
                 .setCancelable(false)
-                .setPositiveButton("OK",null)
+                .setPositiveButton("OK", null)
         val alert: AlertDialog = builder.create()
         alert.show()
     }
