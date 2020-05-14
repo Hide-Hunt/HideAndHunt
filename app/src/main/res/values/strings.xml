@@ -88,7 +88,7 @@
     <string name="file_not_found">File not found %s</string>
     <string name="closest_predator">The closest predator is %6.2f meters away</string>
     <string name="predator_around">There are %d predators less than %d meters away</string>
-    <string name="you_are_a_prey">You are a prey, Hide !</string>
+    <string name="you_are_a_prey">You are a Prey, Hide !</string>
     <string name="distance">distance</string>
     <string name="you_are_not_ready">You are not ready, scan your NFC tag</string>
     <string name="you_are_ready">You are ready</string>
