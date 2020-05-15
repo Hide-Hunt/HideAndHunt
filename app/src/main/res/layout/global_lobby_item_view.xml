@@ -15,24 +15,32 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="130dp"
     android:orientation="vertical"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:layout_marginTop="15dp"
+    android:background="@drawable/global_lobby_game">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp" />
+        android:textColor= "#feb743"
+        android:textSize="32sp"
+        android:textStyle="italic"/>
 
     <TextView
         android:id="@+id/txt_admin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="#b2bbcf"
+        android:textSize="24sp"/>
 
     <TextView
         android:id="@+id/txt_players"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="#b2bbcf"
+        android:textSize="24sp"/>
 
 </LinearLayout>

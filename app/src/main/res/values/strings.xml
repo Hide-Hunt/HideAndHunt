@@ -78,7 +78,7 @@
 
     <string name="player_in_lobby">Players in the lobby: %d</string>
     <string name="game_created_by">Created by: %s</string>
-    <string name="available_games">Available Games</string>
+    <string name="available_games">Available Games :</string>
 
     <string name="replay_button_text">Replay</string>
     <string name="stop_button_text">Stop</string>
