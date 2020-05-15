@@ -10,12 +10,13 @@ import ch.epfl.sdp.authentication.LoginActivity
 import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
-import ch.epfl.sdp.user.ProfileActivity
-import ch.epfl.sdp.user.UserCache
 import ch.epfl.sdp.replay.ManageReplaysActivity
 
-
+/**
+ * Main app activity, where the user can start a game, create a game and login
+ */
 class MainActivity : AppCompatActivity() {
+
     val cache: UserCache = UserCache()
     private lateinit var binding: ActivityMainBinding
 
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun activateProfile() {
-        if(!LocalUser.connected)
+        if (!LocalUser.connected)
             binding.profileButton.visibility = View.INVISIBLE
         else
             binding.profileButton.visibility = View.VISIBLE

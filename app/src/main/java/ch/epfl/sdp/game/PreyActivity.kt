@@ -12,8 +12,7 @@ import ch.epfl.sdp.game.location.ILocationListener
 import ch.epfl.sdp.game.location.LocationHandler
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Activity shown as a prey during the game
  */
 class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.GameTimeOutListener {
 
@@ -25,9 +24,11 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
     private var validGame: Boolean = false
 
+    //TODO : Should they be private ?
     val players: HashMap<Int, Player> = HashMap()
     val ranges: List<Int> = listOf(10, 20, 50, 100, 100000)
     val rangePopulation: HashMap<Int, Int> = HashMap()
+
     private var mostDangerousManDistance: Float = 10e+9f
 
     lateinit var locationHandler: LocationHandler
@@ -38,7 +39,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
         setContentView(binding.root)
         val gameDataAndValidity = GameIntentUnpacker.unpack(intent)
         validGame = gameDataAndValidity.second
-        if(!validGame) {
+        if (!validGame) {
             val error = Error(ErrorCode.INVALID_ACTIVITY_PARAMETER, "Invalid intent")
             ErrorActivity.startWith(this, error)
             finish()
@@ -53,7 +54,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
     private fun loadPlayers(lst: List<Player>) {
         for (p: Player in lst) {
             players[p.id] = p
-            if(p is Predator) {
+            if (p is Predator) {
                 locationHandler.subscribeToPlayer(p.id)
             }
         }
@@ -77,14 +78,14 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
 
     private fun updateThreat() {
         resetRange()
-        for(p in players.values) {
-            if(p is Predator && p.lastKnownLocation != null) {
+        for (p in players.values) {
+            if (p is Predator && p.lastKnownLocation != null) {
                 val dist = p.lastKnownLocation!!.distanceTo(locationHandler.lastKnownLocation)
-                if(dist < mostDangerousManDistance) {
+                if (dist < mostDangerousManDistance) {
                     mostDangerousManDistance = dist
                 }
-                for(i in ranges.indices) {
-                    if(dist <= ranges[i]) {
+                for (i in ranges.indices) {
+                    if (dist <= ranges[i]) {
                         rangePopulation[ranges[i]] = ((rangePopulation[ranges[i]]) ?: 0) + 1
                         break
                     }
@@ -97,7 +98,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
 
     private fun resetRange() {
         mostDangerousManDistance = 10e+9f
-        for(i in ranges.indices) {
+        for (i in ranges.indices) {
             rangePopulation[ranges[i]] = 0
         }
     }
@@ -149,7 +150,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
                 preyFragment.setPreyState(preyID, PreyState.DEAD)
                 Toast.makeText(this@PreyActivity, "Predator $predatorID caught prey $preyID", Toast.LENGTH_LONG).show()
 
-                if(it.id == gameData.playerID) {
+                if (it.id == gameData.playerID) {
                     //I've been caught
                     EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
                 }
@@ -164,5 +165,4 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
     override fun onBackPressed() {
         //No code
     }
-
 }

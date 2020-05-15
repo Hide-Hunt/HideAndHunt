@@ -11,6 +11,9 @@ import com.google.firebase.storage.ktx.storage
 import com.google.firebase.storage.ktx.storageMetadata
 import java.io.ByteArrayOutputStream
 
+/**
+ * Connector to Firebase, implements [IUserConnector]
+ */
 class FirebaseUserConnector : IUserConnector {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db = Firebase.firestore
@@ -50,7 +53,7 @@ class FirebaseUserConnector : IUserConnector {
     }
 
     override fun modify(pseudo: String?, profilePic: Bitmap?, successCallback: () -> Unit, errorCallback: () -> Unit) {
-        if(pseudo != null){
+        if (pseudo != null) {
             val dataToAdd = hashMapOf("pseudo" to pseudo)
             db.collection(FirebaseConstants.USER_COLLECTION).document(LocalUser.uid).set(dataToAdd).addOnCompleteListener {
                 if(it.isSuccessful)
@@ -59,14 +62,14 @@ class FirebaseUserConnector : IUserConnector {
                     errorCallback()
             }
         }
-        if(profilePic != null) {
+        if (profilePic != null) {
             val metadata = storageMetadata {
                 contentType = "image/png"
             }
 
             val profilePics = storage.reference.child("profilePics")
             val stream = ByteArrayOutputStream()
-            profilePic.compress(Bitmap.CompressFormat.PNG, 90,  stream)
+            profilePic.compress(Bitmap.CompressFormat.PNG, 90, stream)
             val uploadTask = profilePics.child(LocalUser.uid + ".png").putBytes(stream.toByteArray(), metadata)
             uploadTask.addOnSuccessListener {
                 successCallback()

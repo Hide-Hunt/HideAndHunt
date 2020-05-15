@@ -12,6 +12,9 @@ import ch.epfl.sdp.databinding.FragmentGlobalLobbyBinding
 import ch.epfl.sdp.user.IUserRepo
 import javax.inject.Inject
 
+/**
+ * A [Fragment] showing a list of all available games
+ */
 class GlobalLobbyFragment : Fragment() {
     private var _binding: FragmentGlobalLobbyBinding? = null
     private val binding get() = _binding!!
@@ -54,9 +57,7 @@ class GlobalLobbyFragment : Fragment() {
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance() = GlobalLobbyFragment().apply {
-        }
+        fun newInstance() = GlobalLobbyFragment().apply{}
     }
 }

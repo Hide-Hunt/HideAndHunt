@@ -12,9 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ch.epfl.sdp.R
-import ch.epfl.sdp.authentication.LocalUser
-import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
 import ch.epfl.sdp.dagger.HideAndHuntApplication
+import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
 import ch.epfl.sdp.game.*
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.lobby.PlayerParametersFragment
@@ -70,7 +69,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
     public override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        if(NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
+        if (NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 myTag = it
                 repository.setPlayerReady(gameID, userID, true)

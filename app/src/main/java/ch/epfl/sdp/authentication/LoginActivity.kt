@@ -11,12 +11,13 @@ import ch.epfl.sdp.user.UserCache
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
+/**
+ * Shows the login menu where the user can connect or register
+ */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-
-    @Inject
-    lateinit var connector: IUserConnector
+    @Inject lateinit var connector: IUserConnector
     private val cache: UserCache = UserCache()
 
     override fun onCreate(savedInstanceState: Bundle?) {

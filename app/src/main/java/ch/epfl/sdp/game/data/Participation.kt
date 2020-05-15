@@ -1,5 +1,8 @@
 package ch.epfl.sdp.game.data
 
+/**
+ * Data class containing information about a player in a game
+ */
 data class Participation(
         var userID: String,
         var faction: Faction,

@@ -5,14 +5,20 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityGameCreationBinding
+import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import ch.epfl.sdp.lobby.game.IGameLobbyRepository
 import javax.inject.Inject
-import ch.epfl.sdp.lobby.game.GameLobbyActivity
 
+/**
+ * A simple [AppCompatActivity] to create a new game.
+ * Redirect the user to [GameLobbyActivity] when the form is validated
+ */
 class GameCreationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGameCreationBinding
-    @Inject lateinit var lobbyRepo: IGameLobbyRepository
+
+    @Inject
+    lateinit var lobbyRepo: IGameLobbyRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // We have to handle the dependency injection before the call to super.onCreate

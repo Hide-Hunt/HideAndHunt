@@ -13,9 +13,9 @@ import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
 
 /**
  * Adapter for the game lobby recyclerView
- * @param participations list of player participations
- * @param playerId current player's id
- * @param adminId  game admin'is id
+ * @param participations List<Participation>: list of player participations
+ * @param playerId Int: current player's id
+ * @param adminId  Int: game admin'is id
  */
 class GameLobbyAdapter(
         private val participations: List<Participation>,
@@ -41,9 +41,9 @@ class GameLobbyAdapter(
 
     /**
      * View holder for players in the game lobby
-     * @param itemView viewHolder's view for the cell
-     * @param playerId current player's id
-     * @param adminId  game admin'is id
+     * @param itemView View: viewHolder's view for the cell
+     * @param playerId Int: current player's id
+     * @param adminId  Int: game admin'is id
      */
     class GameLobbyViewHolder(itemView: View,
                               private val playerId: String,
@@ -51,6 +51,10 @@ class GameLobbyAdapter(
                               private val userRepo: IUserRepo
     ) : RecyclerView.ViewHolder(itemView) {
 
+        /**
+         * Displays a given [Participation] in the [GameLobbyViewHolder]
+         * @param participation Participation: the [Participation] to display
+         */
         fun display(participation: Participation) {
             userRepo.getUsername(participation.userID) {username ->
                 //set text views

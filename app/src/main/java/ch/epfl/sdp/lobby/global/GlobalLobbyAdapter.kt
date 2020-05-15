@@ -14,6 +14,10 @@ import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyAdapter.*
 import ch.epfl.sdp.user.IUserRepo
 
+/**
+ * Adapter for the global lobby recyclerView
+ * @param data List<Game>: the list of game to show in the view
+ */
 class GlobalLobbyAdapter(var data: List<Game>, private val userRepo: IUserRepo) :  RecyclerView.Adapter<MyViewHolder>() {
 
     class MyViewHolder(val linearLayout: LinearLayout, val data: List<Game>) : RecyclerView.ViewHolder(linearLayout), View.OnClickListener {

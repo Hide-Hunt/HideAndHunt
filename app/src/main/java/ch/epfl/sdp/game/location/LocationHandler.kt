@@ -14,6 +14,14 @@ import ch.epfl.sdp.game.comm.MQTTRealTimePubSub
 import ch.epfl.sdp.game.comm.SimpleLocationSynchronizer
 import ch.epfl.sdp.game.data.Location
 
+/**
+ * Handles the location processing for an [AppCompatActivity] and a game
+ * @param activity AppCompatActivity: The Activity on which the location tracking must be enables
+ * @param listener ILocationListener: An [ILocationListener] to listen to updates
+ * @param gameID Int: The game ID
+ * @param playerID Int: The current player's ID
+ * @param URI String: MQTT server URI
+ */
 class LocationHandler(val activity: AppCompatActivity, val listener: ILocationListener, val gameID: String, val playerID: Int, private val URI: String?) {
 
     companion object {
@@ -24,15 +32,14 @@ class LocationHandler(val activity: AppCompatActivity, val listener: ILocationLi
 
     private val context = activity.applicationContext
     val lastKnownLocation: Location = Location(0.0, 0.0)
-    val locationSynchronizer: LocationSynchronizer =  SimpleLocationSynchronizer(gameID, playerID, MQTTRealTimePubSub(context, URI))
+    val locationSynchronizer: LocationSynchronizer = SimpleLocationSynchronizer(gameID, playerID, MQTTRealTimePubSub(context, URI))
     val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
     val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: android.location.Location) {
             lastKnownLocation.latitude = location.latitude
             lastKnownLocation.longitude = location.longitude
-
             locationSynchronizer.updateOwnLocation(lastKnownLocation)
-
             listener.onLocationChanged(lastKnownLocation)
         }
 
@@ -61,18 +68,30 @@ class LocationHandler(val activity: AppCompatActivity, val listener: ILocationLi
         })
     }
 
+    /**
+     * Unsubscribe a player to the location updates
+     * @param playerID Int: The player's ID
+     */
     fun unsubscribeFromPlayer(playerID: Int) {
         locationSynchronizer.unsubscribeFromPlayer(playerID)
     }
 
+    /**
+     * Subscribe a player to the location updates
+     * @param playerID Int: The player's ID
+     */
     fun subscribeToPlayer(playerID: Int) {
         locationSynchronizer.subscribeToPlayer(playerID)
     }
 
+    //TODO: Cette function n'est jamais utilisée ?
     fun declareCatch(preyID: Int) {
         locationSynchronizer.declareCatch(preyID)
     }
 
+    /**
+     * Enable the context authorization to get GPS updates
+     */
     fun enableRequestUpdates() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -90,10 +109,16 @@ class LocationHandler(val activity: AppCompatActivity, val listener: ILocationLi
         }
     }
 
+    /**
+     * Remove the context authorization to get GPS updates
+     */
     fun removeUpdates() {
         locationManager.removeUpdates(locationListener)
     }
 
+    /**
+     * Stop the location updates
+     */
     fun stop() {
         locationSynchronizer.stop()
     }

@@ -11,6 +11,7 @@ import com.google.firebase.ktx.Firebase
 
 /**
  * Repository for Firestore database interactions with the global lobby
+ * Implements [IGlobalLobbyRepository]
  */
 class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
     private var fs: FirebaseFirestore = Firebase.firestore
