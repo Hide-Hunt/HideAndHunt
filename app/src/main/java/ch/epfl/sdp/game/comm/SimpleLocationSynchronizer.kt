@@ -2,8 +2,15 @@ package ch.epfl.sdp.game.comm
 
 import ch.epfl.sdp.game.data.Location
 
+/**
+ * Create an object that provides functions called when the players locations are updated
+ * @param gameID Int: The game ID on which the synchronizer must be enabled
+ * @param ownPlayerID Int: The current player ID
+ * @param pubSub RealTimePubSub: The [RealTimePubSub] associated with the synchronizer
+ */
 class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerID: Int, private val pubSub: RealTimePubSub) : LocationSynchronizer {
-    var listener : LocationSynchronizer.PlayerUpdateListener? = null
+
+    var listener: LocationSynchronizer.PlayerUpdateListener? = null
     private val topicOffset = gameID.toString().length + 1// gameID + char('/')
 
     init {
@@ -24,7 +31,8 @@ class SimpleLocationSynchronizer(private val gameID: Int, private val ownPlayerI
                         val playerID = channel.toInt()
                         val protoLoc = LocationOuterClass.Location.parseFrom(payload)
                         listener?.onPlayerLocationUpdate(playerID, Location(protoLoc.latitude, protoLoc.longitude))
-                    } catch (_: NumberFormatException) {}
+                    } catch (_: NumberFormatException) {
+                    }
                 }
             }
         })

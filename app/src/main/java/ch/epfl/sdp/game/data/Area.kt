@@ -2,6 +2,12 @@ package ch.epfl.sdp.game.data
 
 import java.io.Serializable
 
+/**
+ * Describe a map area by giving two point, the top right corner and the bottom left one.
+ * The top right and bottom left corner are automatically deduced from the points themselves
+ * @param p1 Location: The [Location] of the first point
+ * @param p1 Location: The [Location] of the second point
+ */
 class Area(p1: Location, p2: Location) : Serializable {
     val bottomLeft = Location(
             if (p1.latitude < p2.latitude) p1.latitude else p2.latitude,
@@ -20,12 +26,23 @@ class Area(p1: Location, p2: Location) : Serializable {
         )
     }
 
-    fun contains(point: Location) =
+    /**
+     * Indicates if a point is in the Area
+     * @param point Location: the [Location] to test
+     * @return Boolean: True if the point is in the Area, False otherwise
+     */
+    fun contains(point: Location): Boolean =
             point.latitude >= bottomLeft.latitude &&
                     point.latitude <= topRight.latitude &&
                     point.longitude >= bottomLeft.longitude &&
                     point.longitude <= topRight.longitude
 
+    /**
+     * Increase the area by giving a new point, the top right or bottom left corner is
+     * automatically replaced.
+     * @param point Location: The [Location] of the new point describing the top right or bottom left corner
+     * @return Area: The new calculated area
+     */
     fun increase(point: Location): Area {
         val newBottomLeft =
                 if (point.latitude < bottomLeft.latitude || point.longitude < bottomLeft.longitude)

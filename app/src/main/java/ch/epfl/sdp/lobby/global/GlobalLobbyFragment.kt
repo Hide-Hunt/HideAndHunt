@@ -11,13 +11,18 @@ import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.FragmentGlobalLobbyBinding
 import javax.inject.Inject
 
+/**
+ * A [Fragment] showing a list of all available games
+ */
 class GlobalLobbyFragment : Fragment() {
 
     private var _binding: FragmentGlobalLobbyBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewAdapter: GlobalLobbyAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-    @Inject lateinit var repo: IGlobalLobbyRepository
+
+    @Inject
+    lateinit var repo: IGlobalLobbyRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // We have to handle the dependency injection before the call to super.onCreate
@@ -45,7 +50,6 @@ class GlobalLobbyFragment : Fragment() {
 
         }
 
-
         return binding.root
     }
 
@@ -55,9 +59,7 @@ class GlobalLobbyFragment : Fragment() {
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance() = GlobalLobbyFragment().apply {
-        }
+        fun newInstance() = GlobalLobbyFragment().apply{}
     }
 }

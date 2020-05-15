@@ -5,6 +5,11 @@ import android.util.Log
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
+/**
+ * MQTT implementation of [RealTimePubSub]
+ * @param context Context: The [Context] of the current Activity
+ * @param uri String: The MQTT server uri
+ */
 class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : RealTimePubSub {
     private var listener: RealTimePubSub.OnPublishListener? = null
     private val mqttAndroidClient: MqttAndroidClient
@@ -22,6 +27,7 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
                 Log.w("mqtt", "connection lost")
                 listener?.onConnectionLost()
             }
+
             override fun messageArrived(topic: String, mqttMessage: MqttMessage) {
                 Log.w("mqtt", mqttMessage.toString())
                 listener?.onPublish(topic, mqttMessage.payload)
@@ -50,7 +56,7 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
                     disconnectedBufferOptions.isPersistBuffer = false
                     disconnectedBufferOptions.isDeleteOldestMessages = false
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions)
-                    for(s in pendingSub) {
+                    for (s in pendingSub) {
                         subscribe(s)
                     }
                 }
@@ -94,6 +100,7 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
         this.listener = listener
     }
 
+    //TODO : Hide password in a gitignore file
     companion object {
         private val CLIENT_ID = "Hide&Hunt" + System.currentTimeMillis()
         private const val SERVER_URI = "tcp://kangaroo.rmq.cloudamqp.com:1883"

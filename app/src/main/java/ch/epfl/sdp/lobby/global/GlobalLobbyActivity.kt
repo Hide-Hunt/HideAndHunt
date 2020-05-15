@@ -4,8 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.R
 
+/**
+ * A simple [AppCompatActivity]
+ * Used to contain the [GlobalLobbyFragment]
+ */
 class GlobalLobbyActivity : AppCompatActivity() {
-
 
     private lateinit var glf: GlobalLobbyFragment
 
