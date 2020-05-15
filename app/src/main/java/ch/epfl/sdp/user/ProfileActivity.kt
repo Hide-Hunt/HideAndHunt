@@ -22,7 +22,9 @@ import com.squareup.picasso.Picasso
 import javax.inject.Inject
 import ch.epfl.sdp.authentication.LocalUser
 
-
+/**
+ * Activity that shows the current user profile
+ */
 class ProfileActivity: AppCompatActivity(), Callback {
     private lateinit var binding: ActivityProfileBinding
     private var newProfilePic: Bitmap? = null

@@ -2,7 +2,10 @@ package ch.epfl.sdp.game.data
 
 import java.util.*
 
-data class Game (
+/**
+ * Data class containing information about a create game
+ */
+data class Game(
         var id: Int,
         var name: String,
         var admin: String,
