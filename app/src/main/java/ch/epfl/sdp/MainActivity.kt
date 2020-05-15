@@ -11,6 +11,8 @@ import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.replay.ManageReplaysActivity
+import ch.epfl.sdp.user.ProfileActivity
+import ch.epfl.sdp.user.UserCache
 
 /**
  * Main app activity, where the user can start a game, create a game and login

@@ -31,8 +31,7 @@ class SimpleLocationSynchronizer(private val gameID: String, private val ownPlay
                         val playerID = channel.toInt()
                         val protoLoc = LocationOuterClass.Location.parseFrom(payload)
                         listener?.onPlayerLocationUpdate(playerID, Location(protoLoc.latitude, protoLoc.longitude))
-                    } catch (_: NumberFormatException) {
-                    }
+                    } catch (_: NumberFormatException) {}
                 }
             }
         })
