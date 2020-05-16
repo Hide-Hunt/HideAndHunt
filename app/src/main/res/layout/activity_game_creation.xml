@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".lobby.GameCreationActivity">
+    tools:context=".lobby.GameCreationActivity"
+    android:background="@drawable/globallobbybackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +23,8 @@
             android:layout_height="46dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/gameCreation_title"
-            android:textSize="36sp" />
+            android:textSize="36sp"
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -55,13 +57,6 @@
                     android:text="@string/gameCreation_duration"
                     android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/gameModeLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:gravity="center_vertical|end"
-                    android:textSize="18sp"
-                    tools:text="@string/gameCreation_mode" />
 
             </LinearLayout>
 
@@ -95,12 +90,6 @@
                     android:labelFor="@id/gameDurationLabel"
                     android:text="@string/gameCreation_placeholderDuration" />
 
-                <Spinner
-                    android:id="@+id/gameMode"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:entries="@array/gameCreation_gameModes" />
-
             </LinearLayout>
 
         </LinearLayout>
@@ -114,7 +103,8 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:text="@string/gameCreation_create"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:background="@drawable/menu_button_shape"/>
 
     </LinearLayout>
 
