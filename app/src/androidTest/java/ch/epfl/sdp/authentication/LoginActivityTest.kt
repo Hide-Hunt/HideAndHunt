@@ -35,6 +35,7 @@ class LoginActivityTest {
     @Test
     fun registeringNewUserWorksAndConnectsIt() {
         launchActivity<LoginActivity>()
+        onView(withId(R.id.userPseudoLogin)).perform(typeText("testnew"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userNameLogin)).perform(typeText("testnew@test.com"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.userPasswordLogin)).perform(typeText("passwordNew"), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.registerSubmitButton)).perform(click())

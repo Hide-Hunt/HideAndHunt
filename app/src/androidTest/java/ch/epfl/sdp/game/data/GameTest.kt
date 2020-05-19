@@ -11,17 +11,28 @@ class GameTest {
 
     @Test
     fun defaultValuesMatchExpectation() {
-        val game = Game(0, "", "", 0, emptyMap(), GameState.LOBBY, emptyList(), Date(), Date(), Date(), 0)
-        assertEquals(0, game.id)
-        assertEquals("", game.admin)
-        assertEquals("", game.name)
-        assertEquals(0, game.duration)
-        assertEquals(GameState.LOBBY, game.state)
+        val emptyGame = Game()
+        assertEquals("", emptyGame.id)
+        assertEquals("", emptyGame.name)
+        assertEquals(0, emptyGame.duration)
+        assertTrue(emptyGame.participation.isEmpty())
+        assertEquals("", emptyGame.adminID)
+        assertTrue(emptyGame.params.isEmpty())
+        assertTrue(emptyGame.creationDate.after(Date(0)))
+        assertTrue(emptyGame.startDate.after(Date(0)))
+        assertTrue(emptyGame.endDate.after(Date(0)))
+        assertEquals(GameState.LOBBY, emptyGame.state)
+
+        val game = Game("g4m31d", "You lost!", "4dm1n1d", 5, emptyMap(), emptyList(), Date(), Date(), Date(), GameState.LOBBY)
+        assertEquals("g4m31d", game.id)
+        assertEquals("You lost!", game.name)
+        assertEquals(5, game.duration)
         assertTrue(game.participation.isEmpty())
-        assertEquals(0, game.adminID)
+        assertEquals("4dm1n1d", game.adminID)
         assertTrue(game.params.isEmpty())
-        assertTrue(game.startDate.after(Date(0)))
         assertTrue(game.creationDate.after(Date(0)))
+        assertTrue(game.startDate.after(Date(0)))
         assertTrue(game.endDate.after(Date(0)))
+        assertEquals(GameState.LOBBY, game.state)
     }
 }

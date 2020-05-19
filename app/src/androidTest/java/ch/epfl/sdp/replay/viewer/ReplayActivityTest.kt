@@ -100,7 +100,6 @@ class ReplayActivityTest {
     }
 
     private fun createFile(filename: String, fileContent: String) {
-        //val prepActivity = launchActivity<ReplayActivity>(activityIntent)
         activityRule.launchActivity(emptyIntent)
         val prepActivity = activityRule.activity
         checkFolderExists()

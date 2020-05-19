@@ -38,12 +38,12 @@ class ReplayInfoRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position].also {
-            holder.mIdView.text = it.gameID.toString()
+            holder.mIdView.text = it.gameID
             holder.mContentView.text = it.startTimestamp.toString()
 
-            holder.mView.gameName.text = "Game #${it.gameID}"
+            holder.mView.gameName.text = it.name
             holder.mView.playerFaction.text = it.winningFaction.toString()
-            holder.mView.score.text = "WIN/LOOSE"
+            holder.mView.score.text = it.score
             with(it.endTimestamp - it.startTimestamp) {
                 holder.mView.game_duration.text = String.format("%d:%02d:%02d",
                         this / 3600,

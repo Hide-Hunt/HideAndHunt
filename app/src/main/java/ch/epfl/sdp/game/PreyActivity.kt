@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityPreyBinding
+import ch.epfl.sdp.error.Error
+import ch.epfl.sdp.error.ErrorActivity
+import ch.epfl.sdp.error.ErrorCode
 import ch.epfl.sdp.game.data.*
 import ch.epfl.sdp.game.location.ILocationListener
 import ch.epfl.sdp.game.location.LocationHandler
@@ -21,7 +24,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
     private var validGame: Boolean = false
 
-    //TODO : Should they be private ? 
+    //TODO : Should they be private ?
     val players: HashMap<Int, Player> = HashMap()
     val ranges: List<Int> = listOf(10, 20, 50, 100, 100000)
     val rangePopulation: HashMap<Int, Int> = HashMap()
@@ -37,6 +40,8 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
         val gameDataAndValidity = GameIntentUnpacker.unpack(intent)
         validGame = gameDataAndValidity.second
         if (!validGame) {
+            val error = Error(ErrorCode.INVALID_ACTIVITY_PARAMETER, "Invalid intent")
+            ErrorActivity.startWith(this, error)
             finish()
             return
         }

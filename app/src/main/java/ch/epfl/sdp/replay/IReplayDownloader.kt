@@ -9,7 +9,7 @@ interface IReplayDownloader {
         fun cancel()
     }
 
-    fun download(gameID: Int,
+    fun download(gameID: String,
                  file: File,
                  successCallback: UnitCallback,
                  failureCallback: Callback<String>): IReplayDownload

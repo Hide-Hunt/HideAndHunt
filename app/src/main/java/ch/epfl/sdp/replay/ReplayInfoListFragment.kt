@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.FragmentReplayInfoListBinding
 import javax.inject.Inject
@@ -33,14 +34,16 @@ class ReplayInfoListFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         _binding = FragmentReplayInfoListBinding.inflate(inflater)
 
-        repo.getAllGames { games ->
+        val userID = if (LocalUser.connected) LocalUser.uid else ""
+
+        repo.getAllGames(userID) { games ->
             viewAdapter = ReplayInfoRecyclerViewAdapter(games, listener)
             binding.replayInfoListRecycler.layoutManager = LinearLayoutManager(context)
             binding.replayInfoListRecycler.adapter = viewAdapter
         }
 
         binding.replayInfoListSwiperefresh.setOnRefreshListener {
-            repo.getAllGames { games ->
+            repo.getAllGames(userID) { games ->
                 viewAdapter.mValues = games
                 viewAdapter.notifyDataSetChanged()
                 binding.replayInfoListSwiperefresh.isRefreshing = false
@@ -77,7 +80,7 @@ class ReplayInfoListFragment : Fragment() {
         fun onListFragmentInteraction(game: ReplayInfo)
     }
 
-    fun setDownloadedGame(gameID: Int) {
+    fun setDownloadedGame(gameID: String) {
         val index = viewAdapter.mValues.indexOfFirst { it.gameID == gameID }
         if (index != -1) {
             viewAdapter.mValues[index].localCopy = true

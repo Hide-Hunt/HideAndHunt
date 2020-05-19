@@ -10,6 +10,9 @@ class GameOptionTest {
 
     @Test
     fun defaultTest() {
+        object : GameOption() {
+            val distancesOn = false
+        }
         Assert.assertTrue(true)
     }
 

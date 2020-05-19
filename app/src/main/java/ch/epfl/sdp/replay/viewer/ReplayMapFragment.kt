@@ -96,7 +96,7 @@ class ReplayMapFragment : Fragment() {
                 mapView.setZoomLevel(zoomForBounds(mapView.dimension, history.bounds.toBoundingBox(), mapView.model.displayModel.tileSize))
             }
         } catch (e: Exception) {
-            Toast.makeText(context, "Error while loading the map", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Error while loading the map: ${e.message}", Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
     }
@@ -178,7 +178,7 @@ class ReplayMapFragment : Fragment() {
 
     companion object {
         private const val ARG_HISTORY = "history"
-        private const val MAP_FILE = "cache.map"
+        const val MAP_FILE = "cache.map"
 
         fun newInstance(history: GameHistory) = ReplayMapFragment().apply {
             arguments = Bundle().apply {

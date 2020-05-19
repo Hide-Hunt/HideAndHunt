@@ -7,6 +7,8 @@ import java.io.Serializable
  * @param id Int: the player's ID
  */
 open class Player(val id: Int) : Serializable {
+    class WrongPlayerFormat: Exception()
+
     var lastKnownLocation: Location? = null
 
     override fun toString(): String {
