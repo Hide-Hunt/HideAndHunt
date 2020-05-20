@@ -30,8 +30,12 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
     private lateinit var adminId: String
-    @Inject lateinit var repository : IGameLobbyRepository
-    @Inject lateinit var userRepo: IUserRepo
+
+    @Inject
+    lateinit var repository: IGameLobbyRepository
+
+    @Inject
+    lateinit var userRepo: IUserRepo
     private lateinit var gameID: String
     private val userID: String = LocalUser.uid
     private var playerID: Int = 0
@@ -109,14 +113,14 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     private fun updateLocalPlayerState() {
-        var newReadyState by Delegates.notNull<Boolean>()
-        if(myFaction == Faction.PREY && myTag == null) {
-            gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_not_ready)
-            newReadyState = false
-        } else {
-            gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_ready)
-            newReadyState = true
-        }
+        val newReadyState =
+                if (myFaction == Faction.PREY && myTag == null) {
+                    gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_not_ready)
+                    false
+                } else {
+                    gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_ready)
+                    true
+                }
         repository.setPlayerReady(gameID, userID, newReadyState) {
             refreshPlayerList()
         }
