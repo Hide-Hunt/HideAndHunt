@@ -22,7 +22,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation("Neymar Jr", Faction.PREDATOR, false, "C000", "")
     )
     var gameState = GameState.LOBBY
-    val gameStartListeners = HashMap<String, IGameLobbyRepository.OnGameStartListener>()
+    val gameStartListeners = HashMap<String, IGameLobbyRepository.OnGameStartListener?>()
 
     override fun addLocalParticipation(gameId: String) = Unit //No code
 
@@ -56,7 +56,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         }
     }
 
-    override fun setOnGameStartListener(gameId: String, listener: IGameLobbyRepository.OnGameStartListener) {
+    override fun setOnGameStartListener(gameId: String, listener: IGameLobbyRepository.OnGameStartListener?) {
         gameStartListeners[gameId] = listener
     }
 
