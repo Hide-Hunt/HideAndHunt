@@ -1,6 +1,7 @@
 package ch.epfl.sdp.lobby.game
 
 import ch.epfl.sdp.db.Callback
+import ch.epfl.sdp.db.UnitCallback
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
@@ -63,32 +64,36 @@ interface IGameLobbyRepository {
      * Change the ready attribute of a player
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
+     * @param cb UnitCallback: The callback function to call when done changing player
      */
-    fun changePlayerReady(gameId: String, uid: String)
+    fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback)
 
     /**
      * Sets the ready attribute to a given value
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
      * @param ready Boolean: the new state of the attribute
+     * @param cb UnitCallback: The callback function to call when done changing player
      */
-    fun setPlayerReady(gameId: String, uid: String, ready: Boolean)
+    fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback)
 
     /**
      * Sets the faction of the player to the given value
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
      * @param faction PlayerFaction: the new player's faction
+     * @param cb UnitCallback: The callback function to call when done changing player
      */
-    fun setPlayerFaction(gameId: String, uid: String, faction: Faction)
+    fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback)
 
     /**
      * Sets the nfc tag of the player to the given value
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
      * @param tag String: the new player's tag
+     * @param cb UnitCallback: The callback function to call when done changing player
      */
-    fun setPlayerTag(gameId: String, uid: String, tag: String)
+    fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback)
 
     /**
      * Remove a participation from a game lobby

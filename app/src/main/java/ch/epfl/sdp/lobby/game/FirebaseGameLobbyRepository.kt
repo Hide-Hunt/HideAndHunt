@@ -4,6 +4,7 @@ import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.db.FirebaseConstants.GAME_COLLECTION
 import ch.epfl.sdp.db.FirebaseConstants.GAME_PARTICIPATION_COLLECTION
+import ch.epfl.sdp.db.UnitCallback
 import ch.epfl.sdp.game.data.*
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -11,6 +12,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.util.*
+
+typealias participationModifier = (Participation) -> Unit
 
 /**
  * Repository for Firestore database interactions with the game lobby
@@ -59,9 +62,10 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun getParticipations(gameId: String, cb: Callback<List<Participation>>) {
-        fs.collection(GAME_COLLECTION)
-                .document(gameId).collection(GAME_PARTICIPATION_COLLECTION).get()
-                .addOnSuccessListener { doc -> cb(doc.map { it.toObject<Participation>() }) }
+        fs.collection(GAME_COLLECTION).document(gameId).get()
+            .addOnSuccessListener { doc ->
+                cb(doc.toObject<Game>()!!.participation)
+            }
     }
 
     override fun getAdminId(gameId: String, cb: Callback<String>) {
@@ -69,36 +73,36 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                 .addOnSuccessListener { cb(it.toObject<Game>()!!.adminID) }
     }
 
-    override fun changePlayerReady(gameId: String, uid: String) {
-        setPlayerReady(gameId, uid, true)
+    override fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback) {
+        setPlayerReady(gameId, uid, true, cb)
     }
 
-    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean) {
-        fs.collection(GAME_PARTICIPATION_COLLECTION).whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
-            for (doc in documents) {
-                fs.collection(GAME_PARTICIPATION_COLLECTION).document(doc.id).update("ready", ready)
-            }
-        }
+    private fun updateUserParticipation(gameId: String, uid: String, cb: UnitCallback, modifier: participationModifier){
+        fs.collection(GAME_COLLECTION).document(gameId).get()
+                .addOnSuccessListener { doc ->
+                    val participation = doc.toObject<Game>()!!.participation
+                    val myParticipationIndex = participation.indexOfFirst { act_participation -> act_participation.userID == uid }
+                    modifier(participation[myParticipationIndex])
+                    fs.collection(GAME_COLLECTION).document(gameId)
+                            .update(GAME_PARTICIPATION_COLLECTION, participation)
+                    cb()
+                }
     }
 
-    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction) {
-        fs.collection(GAME_PARTICIPATION_COLLECTION).whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
-            for (doc in documents) {
-                fs.collection(GAME_PARTICIPATION_COLLECTION).document(doc.id).update("faction", faction)
-            }
-        }
-    }
+    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback) { updateUserParticipation(gameId, uid, cb){it.ready = ready} }
 
-    override fun setPlayerTag(gameId: String, uid: String, tag: String) {
-        fs.collection(GAME_PARTICIPATION_COLLECTION).whereEqualTo("playerID", uid).get().addOnSuccessListener { documents ->
-            for (doc in documents) {
-                fs.collection(GAME_PARTICIPATION_COLLECTION).document(doc.id).update("tag", tag)
-            }
-        }
-    }
+    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback) { updateUserParticipation(gameId, uid, cb){it.faction = faction} }
+
+    override fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback) {updateUserParticipation(gameId, uid, cb){it.tag = tag}}
 
     override fun removeLocalParticipation(gameId: String) {
-        fs.collection(GAME_PARTICIPATION_COLLECTION).whereEqualTo("gameID", gameId).get()
-                .addOnSuccessListener { it.forEach { x -> x.reference.delete() } }
+        fs.collection(GAME_COLLECTION).document(gameId).get()
+                .addOnSuccessListener { doc ->
+                    val participation = doc.toObject<Game>()!!.participation
+                    val myParticipation = participation.first { act_participation -> act_participation.userID == LocalUser.uid }
+                    fs.collection(GAME_COLLECTION).document(gameId)
+                            .update(GAME_PARTICIPATION_COLLECTION, FieldValue.arrayRemove(
+                                    myParticipation))
+                }
     }
 }
