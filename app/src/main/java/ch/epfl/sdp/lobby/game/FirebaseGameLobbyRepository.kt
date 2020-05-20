@@ -88,7 +88,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
         ))
     }
 
-    override fun setOnGameStartListener(gameId: String, listener: IGameLobbyRepository.OnGameStartListener) {
+    override fun setOnGameStartListener(gameId: String, listener: IGameLobbyRepository.OnGameStartListener?) {
         gameStartSnapshotRegistration?.remove()
         gameStartSnapshotRegistration = null
         gameStartListener = listener
