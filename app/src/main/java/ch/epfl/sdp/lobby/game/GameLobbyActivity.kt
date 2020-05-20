@@ -20,7 +20,6 @@ import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import ch.epfl.sdp.user.IUserRepo
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 /**
  * Game Lobby Activity showing the list of players and game info
@@ -165,6 +164,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     override fun finish() {
+        repository.setOnGameStartListener(gameID, null)
         //Remove player from lobby on finish
         repository.removeLocalParticipation(gameID)
         super.finish()

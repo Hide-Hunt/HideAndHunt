@@ -82,7 +82,7 @@ interface IGameLobbyRepository {
      * @param gameId Int: the id of the game to monitor
      * @param listener OnGameStartListener: the object to notify on game start
      */
-    fun setOnGameStartListener(gameId: String, listener: OnGameStartListener)
+    fun setOnGameStartListener(gameId: String, listener: OnGameStartListener?)
 
     /**
      * Sets the ready attribute to a given value
