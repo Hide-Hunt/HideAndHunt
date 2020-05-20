@@ -41,17 +41,21 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback) {
         players.first { it.userID == uid }.let { it.ready = !it.ready }
+        cb()
     }
 
     override fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback) {
         players.first { it.userID == uid }.ready = ready
+        cb()
     }
 
     override fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback) {
         players.first { it.userID == uid }.faction = faction
+        cb()
     }
 
     override fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback) {
         players.first { it.userID == uid }.tag = tag
+        cb()
     }
 }
