@@ -2,12 +2,14 @@ package ch.epfl.sdp.lobby.game
 
 import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.db.Callback
+import ch.epfl.sdp.db.FirebaseConstants.GAME_ACTION_QUEUE_COLLECTION
 import ch.epfl.sdp.db.FirebaseConstants.GAME_COLLECTION
 import ch.epfl.sdp.db.FirebaseConstants.GAME_PARTICIPATION_COLLECTION
 import ch.epfl.sdp.db.UnitCallback
 import ch.epfl.sdp.game.data.*
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -19,8 +21,9 @@ typealias participationModifier = (Participation) -> Unit
  * Repository for Firestore database interactions with the game lobby
  */
 class FirebaseGameLobbyRepository : IGameLobbyRepository {
-
     private var fs: FirebaseFirestore = Firebase.firestore
+    private var gameStartListener: IGameLobbyRepository.OnGameStartListener? = null
+    private var gameStartSnapshotRegistration: ListenerRegistration? = null
 
     override fun addLocalParticipation(gameId: String) {
         fs.collection(GAME_COLLECTION).document(gameId)
@@ -75,6 +78,33 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback) {
         setPlayerReady(gameId, uid, true, cb)
+    }
+
+    override fun requestGameLaunch(gameId: String) {
+        fs.collection(GAME_ACTION_QUEUE_COLLECTION).add(hashMapOf(
+                "timestamp" to FieldValue.serverTimestamp(),
+                "action" to "start_game",
+                "game_id" to gameId
+        ))
+    }
+
+    override fun setOnGameStartListener(gameId: String, listener: IGameLobbyRepository.OnGameStartListener?) {
+        gameStartSnapshotRegistration?.remove()
+        gameStartSnapshotRegistration = null
+        gameStartListener = listener
+
+        if (gameStartListener == null) {
+            return
+        }
+
+        val gameRef = fs.collection(GAME_COLLECTION).document(gameId)
+        gameStartSnapshotRegistration = gameRef.addSnapshotListener { snapshot, e ->
+            if (e != null) return@addSnapshotListener
+
+            if (snapshot != null && snapshot.exists() && snapshot.toObject<Game>()!!.state == GameState.STARTED) {
+                gameStartListener?.onGameStart()
+            }
+        }
     }
 
     private fun updateUserParticipation(gameId: String, uid: String, cb: UnitCallback, modifier: participationModifier){

@@ -10,6 +10,9 @@ import ch.epfl.sdp.game.data.Player
  * A base interface for the game lobby interactions
  */
 interface IGameLobbyRepository {
+    interface OnGameStartListener {
+        fun onGameStart()
+    }
 
     /**
      * Register the current user in the game associated to the given id
@@ -67,6 +70,19 @@ interface IGameLobbyRepository {
      * @param cb UnitCallback: The callback function to call when done changing player
      */
     fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback)
+
+    /**
+     * Requests the game to be launched on the server
+     * @param gameId Int: the id of the game to start
+     */
+    fun requestGameLaunch(gameId: String)
+
+    /**
+     * Registers a listener for a game start
+     * @param gameId Int: the id of the game to monitor
+     * @param listener OnGameStartListener: the object to notify on game start
+     */
+    fun setOnGameStartListener(gameId: String, listener: OnGameStartListener?)
 
     /**
      * Sets the ready attribute to a given value

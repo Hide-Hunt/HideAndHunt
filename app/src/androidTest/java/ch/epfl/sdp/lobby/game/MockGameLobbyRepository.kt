@@ -3,6 +3,7 @@ package ch.epfl.sdp.lobby.game
 import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.db.UnitCallback
 import ch.epfl.sdp.game.data.Faction
+import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
 
@@ -20,6 +21,8 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation("Spiderman", Faction.PREDATOR, false, "A0AA", ""),
             Participation("Neymar Jr", Faction.PREDATOR, false, "C000", "")
     )
+    var gameState = GameState.LOBBY
+    val gameStartListeners = HashMap<String, IGameLobbyRepository.OnGameStartListener?>()
 
     override fun addLocalParticipation(gameId: String) = Unit //No code
 
@@ -42,6 +45,19 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     override fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback) {
         players.first { it.userID == uid }.let { it.ready = !it.ready }
         cb()
+    }
+
+    override fun requestGameLaunch(gameId: String) {
+        if (gameState == GameState.LOBBY) {
+            gameState = GameState.STARTED
+            if (gameStartListeners.containsKey(gameId)) {
+                gameStartListeners[gameId]?.onGameStart()
+            }
+        }
+    }
+
+    override fun setOnGameStartListener(gameId: String, listener: IGameLobbyRepository.OnGameStartListener?) {
+        gameStartListeners[gameId] = listener
     }
 
     override fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback) {

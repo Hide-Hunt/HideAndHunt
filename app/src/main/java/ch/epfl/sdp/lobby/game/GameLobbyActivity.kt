@@ -20,12 +20,12 @@ import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import ch.epfl.sdp.user.IUserRepo
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 /**
  * Game Lobby Activity showing the list of players and game info
  */
-class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, PlayerParametersFragment.OnFactionChangeListener {
+class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
+        PlayerParametersFragment.OnFactionChangeListener, IGameLobbyRepository.OnGameStartListener {
 
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
@@ -66,6 +66,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
                 rv.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
             }
         }
+        repository.setOnGameStartListener(gameID, this)
 
         //set game info views
         setGameLobbyViews()
@@ -150,8 +151,10 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             mSwipeRefreshLayout = gameLobbyBinding.swipeContainer
             mSwipeRefreshLayout.setOnRefreshListener(this)
 
-            //add intents to start button
-            setIntent(gameDuration)
+            gameLobbyBinding.startButton.setOnClickListener {
+                gameLobbyBinding.startButton.isEnabled = false
+                repository.requestGameLaunch(gameID)
+            }
         }
         gameLobbyBinding.startButton.setBackgroundColor(Color.GREEN)
         gameLobbyBinding.leaveButton.setOnClickListener {
@@ -160,14 +163,21 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         gameLobbyBinding.leaveButton.setBackgroundColor(Color.RED)
     }
 
-    private fun setIntent(gameDuration: Long) {
-        gameLobbyBinding.startButton.setOnClickListener {
-            val intent = if (myFaction == Faction.PREDATOR) {
-                Intent(this, PredatorActivity::class.java)
-            } else {
-                Intent(this, PreyActivity::class.java)
-            }
+    override fun finish() {
+        repository.setOnGameStartListener(gameID, null)
+        //Remove player from lobby on finish
+        repository.removeLocalParticipation(gameID)
+        super.finish()
+    }
 
+    override fun onGameStart() {
+        val intent = if (myFaction == Faction.PREDATOR) {
+            Intent(this, PredatorActivity::class.java)
+        } else {
+            Intent(this, PreyActivity::class.java)
+        }
+
+        repository.getGameDuration(gameID) { gameDuration ->
             intent.putExtra("initialTime", gameDuration * 1000L)
             intent.putExtra("gameID", gameID)
             userRepo.addGameToHistory(LocalUser.uid, gameID)
@@ -180,13 +190,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
                     startActivity(intent)
                 }
             }
-
         }
-    }
-
-    override fun finish() {
-        //Remove player from lobby on finish
-        repository.removeLocalParticipation(gameID)
-        super.finish()
     }
 }
