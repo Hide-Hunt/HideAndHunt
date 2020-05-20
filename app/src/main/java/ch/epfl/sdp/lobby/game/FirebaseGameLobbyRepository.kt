@@ -77,11 +77,11 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
         setPlayerReady(gameId, uid, true, cb)
     }
 
-    private fun setHelper(gameId: String, cb: UnitCallback, modifier: participationModifier){
+    private fun updateUserParticipation(gameId: String, uid: String, cb: UnitCallback, modifier: participationModifier){
         fs.collection(GAME_COLLECTION).document(gameId).get()
                 .addOnSuccessListener { doc ->
                     val participation = doc.toObject<Game>()!!.participation
-                    val myParticipationIndex = participation.indexOfFirst { act_participation -> act_participation.userID == LocalUser.uid }
+                    val myParticipationIndex = participation.indexOfFirst { act_participation -> act_participation.userID == uid }
                     modifier(participation[myParticipationIndex])
                     fs.collection(GAME_COLLECTION).document(gameId)
                             .update(GAME_PARTICIPATION_COLLECTION, participation)
@@ -89,11 +89,11 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                 }
     }
 
-    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback) { setHelper(gameId, cb){it.ready = ready} }
+    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback) { updateUserParticipation(gameId, uid, cb){it.ready = ready} }
 
-    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback) { setHelper(gameId, cb){it.faction = faction} }
+    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback) { updateUserParticipation(gameId, uid, cb){it.faction = faction} }
 
-    override fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback) {setHelper(gameId, cb){it.tag = tag}}
+    override fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback) {updateUserParticipation(gameId, uid, cb){it.tag = tag}}
 
     override fun removeLocalParticipation(gameId: String) {
         fs.collection(GAME_COLLECTION).document(gameId).get()
