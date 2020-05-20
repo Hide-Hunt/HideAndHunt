@@ -56,8 +56,8 @@ class MockGameLobbyRepositoryTest {
         }
         val player1IsReady = playerList[3].ready
         val player2IsReady = playerList[4].ready
-        glr.changePlayerReady("0", playerList[3].userID)
-        glr.changePlayerReady("0", playerList[4].userID)
+        glr.changePlayerReady("0", playerList[3].userID){}
+        glr.changePlayerReady("0", playerList[4].userID){}
 
         glr.getParticipations("0") {
             players -> playerList = players
@@ -78,13 +78,13 @@ class MockGameLobbyRepositoryTest {
             players -> playerList = players
         }
 
-        glr.setPlayerFaction("0", playerList[1].userID, Faction.PREDATOR)
+        glr.setPlayerFaction("0", playerList[1].userID, Faction.PREDATOR){}
         glr.getParticipations("0") {
             players -> playerList = players
         }
         assertEquals(playerList[1].faction, Faction.PREDATOR)
 
-        glr.setPlayerFaction("0", playerList[1].userID, Faction.PREY)
+        glr.setPlayerFaction("0", playerList[1].userID, Faction.PREY){}
         glr.getParticipations("0") {
             players -> playerList = players
         }
@@ -98,8 +98,8 @@ class MockGameLobbyRepositoryTest {
             players -> playerList = players
         }
 
-        glr.setPlayerReady("0", playerList[3].userID, false)
-        glr.setPlayerReady("0", playerList[4].userID, true)
+        glr.setPlayerReady("0", playerList[3].userID, false){}
+        glr.setPlayerReady("0", playerList[4].userID, true){}
 
         glr.getParticipations("0") {
             players -> playerList = players

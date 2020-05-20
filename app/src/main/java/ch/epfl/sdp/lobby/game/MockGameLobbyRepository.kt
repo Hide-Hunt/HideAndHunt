@@ -1,6 +1,7 @@
 package ch.epfl.sdp.lobby.game
 
 import ch.epfl.sdp.db.Callback
+import ch.epfl.sdp.db.UnitCallback
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
@@ -38,19 +39,19 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun getAdminId(gameId: String, cb: Callback<String>) { cb(players[1].userID) }
 
-    override fun changePlayerReady(gameId: String, uid: String) {
+    override fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback) {
         players.first { it.userID == uid }.let { it.ready = !it.ready }
     }
 
-    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean) {
+    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback) {
         players.first { it.userID == uid }.ready = ready
     }
 
-    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction) {
+    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback) {
         players.first { it.userID == uid }.faction = faction
     }
 
-    override fun setPlayerTag(gameId: String, uid: String, tag: String) {
+    override fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback) {
         players.first { it.userID == uid }.tag = tag
     }
 }

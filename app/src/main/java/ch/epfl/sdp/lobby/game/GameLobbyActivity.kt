@@ -20,6 +20,7 @@ import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import ch.epfl.sdp.user.IUserRepo
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 /**
  * Game Lobby Activity showing the list of players and game info
@@ -54,7 +55,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         repository.addLocalParticipation(gameID)
 
         //repository interactions
-        repository.setPlayerFaction(gameID, userID, Faction.PREDATOR)
+        repository.setPlayerFaction(gameID, userID, Faction.PREDATOR) {}
         repository.getAdminId(gameID) { id ->
             adminId = id
             repository.getParticipations(gameID) { playerList ->
@@ -73,9 +74,11 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 myTag = it
-                repository.setPlayerReady(gameID, userID, true)
-                repository.setPlayerTag(gameID, userID, it)
-                updateLocalPlayerState()
+                repository.setPlayerReady(gameID, userID, true) {
+                    repository.setPlayerTag(gameID, userID, it) {
+                        updateLocalPlayerState()
+                    }
+                }
             }
         }
     }
@@ -99,20 +102,24 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     override fun onFactionChange(newFaction: Faction) {
         //player id is hardcoded for now
-        repository.setPlayerFaction(gameID, userID, newFaction)
-        myFaction = newFaction
-        updateLocalPlayerState()
+        repository.setPlayerFaction(gameID, userID, newFaction) {
+            myFaction = newFaction
+            updateLocalPlayerState()
+        }
     }
 
     private fun updateLocalPlayerState() {
+        var newReadyState by Delegates.notNull<Boolean>()
         if(myFaction == Faction.PREY && myTag == null) {
             gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_not_ready)
-            repository.setPlayerReady(gameID, userID, false)
+            newReadyState = false
         } else {
             gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_ready)
-            repository.setPlayerReady(gameID, userID, true)
+            newReadyState = true
         }
-        refreshPlayerList()
+        repository.setPlayerReady(gameID, userID, newReadyState) {
+            refreshPlayerList()
+        }
     }
 
     private fun refreshPlayerList(then: () -> Unit = {}) {
