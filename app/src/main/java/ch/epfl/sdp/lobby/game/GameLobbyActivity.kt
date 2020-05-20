@@ -62,6 +62,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
                 rv.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
             }
         }
+        repository.setOnGameStartListener(gameID, this)
 
         //set game info views
         setGameLobbyViews()
