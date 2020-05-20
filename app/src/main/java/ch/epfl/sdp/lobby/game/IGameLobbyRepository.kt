@@ -64,6 +64,7 @@ interface IGameLobbyRepository {
      * Change the ready attribute of a player
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
+     * @param cb UnitCallback: The callback function to call when done changing player
      */
     fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback)
 
@@ -72,6 +73,7 @@ interface IGameLobbyRepository {
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
      * @param ready Boolean: the new state of the attribute
+     * @param cb UnitCallback: The callback function to call when done changing player
      */
     fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback)
 
@@ -80,6 +82,7 @@ interface IGameLobbyRepository {
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
      * @param faction PlayerFaction: the new player's faction
+     * @param cb UnitCallback: The callback function to call when done changing player
      */
     fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback)
 
@@ -88,6 +91,7 @@ interface IGameLobbyRepository {
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
      * @param tag String: the new player's tag
+     * @param cb UnitCallback: The callback function to call when done changing player
      */
     fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback)
 
