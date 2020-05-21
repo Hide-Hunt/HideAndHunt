@@ -12,6 +12,7 @@
         android:layout_marginStart="8dp"
         android:text="Game"
         android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,6 +24,7 @@
         android:layout_marginStart="8dp"
         android:text="@string/predator_faction_name"
         android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/gameName"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,6 +36,7 @@
         android:layout_marginStart="8dp"
         android:text="WIN"
         android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/playerFaction"
         app:layout_constraintTop_toTopOf="parent" />
