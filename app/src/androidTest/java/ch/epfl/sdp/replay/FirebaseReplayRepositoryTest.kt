@@ -28,10 +28,7 @@ class FirebaseReplayRepositoryTest {
             callbackCalled = true
         }
 
-        for (x in 0..10) {
-            if (callbackCalled) break
-            Thread.sleep(100)
-        }
+        wait(1000, {callbackCalled})
         assertTrue(callbackCalled)
     }
 
@@ -48,16 +45,13 @@ class FirebaseReplayRepositoryTest {
             localReplayStore.saveList(listOf(replay))
 
             repo.getAllGames("") { secondReplayList ->
-                callbackCalled = true
                 assertEquals(1, secondReplayList.size)
                 assertEquals(replay, secondReplayList[0])
+                callbackCalled = true
             }
         }
 
-        for (x in 0..10) {
-            if (callbackCalled) break
-            Thread.sleep(100)
-        }
+        wait(1000, {callbackCalled})
         assertTrue(callbackCalled)
     }
 
