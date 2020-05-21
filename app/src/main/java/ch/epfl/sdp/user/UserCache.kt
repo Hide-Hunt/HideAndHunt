@@ -36,7 +36,7 @@ class UserCache {
      * @return Boolean: True if the cache exists, False otherwise
      */
     fun doesExist(context: Context): Boolean {
-        return File(cacheFilename).exists()
+        return File(context.filesDir.absolutePath + "/" + cacheFilename).exists()
     }
 
     /**
@@ -45,7 +45,7 @@ class UserCache {
      * @return Bitmap?: The Bitmap of the profile pic cached, or null if none is found
      */
     private fun retrieveProfilePic(context: Context): Bitmap? {
-        if(!File(imageFilename).exists())
+        if(!File(context.filesDir.absolutePath + "/" + imageFilename).exists())
             return null
         return try {
             BitmapFactory.decodeFile(context.filesDir.absolutePath + "/" + imageFilename)
