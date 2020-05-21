@@ -35,15 +35,7 @@ class UserCache {
      * @return Boolean: True if the cache exists, False otherwise
      */
     fun doesExist(context: Context): Boolean {
-        try {
-            val inputStream = InputStreamReader(context.openFileInput(cacheFilename))
-            inputStream.close()
-            val imageStream = InputStreamReader(context.openFileInput(imageFilename))
-            imageStream.close()
-        } catch (e: Exception) {
-            return false
-        }
-        return true
+        return File(cacheFilename).exists()
     }
 
     /**
@@ -52,10 +44,9 @@ class UserCache {
      * @return Bitmap?: The Bitmap of the profile pic cached, or null if none is found
      */
     private fun retrieveProfilePic(context: Context): Bitmap? {
+        if(!File(imageFilename).exists())
+            return null
         return try {
-            val imageStream = InputStreamReader(context.openFileInput(imageFilename))
-            imageStream.close()
-
             BitmapFactory.decodeFile(context.filesDir.absolutePath + "/" + imageFilename)
         } catch (e: Exception) {
             null
