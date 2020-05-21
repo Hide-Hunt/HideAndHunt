@@ -6,15 +6,19 @@ import java.util.*
  * Data class containing information about a create game
  */
 data class Game(
-        var id: Int,
+        var id: String,
         var name: String,
-        var admin: String,
+        var adminID: String,
         var duration: Long,
         val params: Map<String, GameOption>,
-        var state: GameState,
         var participation: List<Participation>,
+        var creationDate: Date,
         var startDate: Date,
         var endDate: Date,
-        var creationDate: Date,
-        var adminID: Int
-)
+        var state: GameState
+) {
+    // Empty constructor for injection
+    constructor(): this("","", "", 0,
+            emptyMap(), emptyList(),
+            Date(), Date(), Date(), GameState.LOBBY)
+}

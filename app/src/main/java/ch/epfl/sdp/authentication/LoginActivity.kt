@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import ch.epfl.sdp.R
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityLoginBinding
 import ch.epfl.sdp.user.UserCache
@@ -16,8 +17,7 @@ import javax.inject.Inject
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    @Inject
-    lateinit var connector: IUserConnector
+    @Inject lateinit var connector: IUserConnector
     private val cache: UserCache = UserCache()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,32 +29,40 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.loginSubmitButton.setOnClickListener {
-            signIn(userNameLogin.text, userPasswordLogin.text, connector)
+            when {
+                userNameLogin.text.isEmpty() -> userNameLogin.error = "Field is empty"
+                userPasswordLogin.text.isEmpty() -> userPasswordLogin.error = "Field is empty"
+                else -> signIn(userNameLogin.text, userPasswordLogin.text, connector)
+            }
         }
         binding.registerSubmitButton.setOnClickListener {
-            register(userNameLogin.text, userPasswordLogin.text, userPseudoLogin.text, connector)
+            when {
+                userPseudoLogin.text.isEmpty() -> userPseudoLogin.error = "Field is empty"
+                userNameLogin.text.isEmpty() -> userNameLogin.error = "Field is empty"
+                userPasswordLogin.text.isEmpty() -> userPasswordLogin.error = "Field is empty"
+                else -> register(userNameLogin.text, userPasswordLogin.text, userPseudoLogin.text, connector)
+            }
         }
         binding.loginTextResult.text = ""
     }
 
     private fun register(email: Editable, password: Editable, pseudo: Editable, connector: IUserConnector) {
-        binding.loginTextResult.text = "Registering..."
+        binding.loginTextResult.text = getString(R.string.registering_pending)
         connector.register(email.toString(), password.toString(), pseudo.toString(), { successfulLogin() }, { errorLogin() })
     }
 
     private fun signIn(email: Editable, password: Editable, connector: IUserConnector) {
-        binding.loginTextResult.text = "Connecting..."
+        binding.loginTextResult.text = getString(R.string.connecting_pending)
         connector.connect(email.toString(), password.toString(), { successfulLogin() }, { errorLogin() })
     }
 
     private fun errorLogin() {
         binding.loginTextResult.text = ""
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setMessage("Error: failed to connect")
+        AlertDialog.Builder(this).setMessage("Error: failed to connect")
                 .setCancelable(false)
                 .setPositiveButton("OK", null)
-        val alert: AlertDialog = builder.create()
-        alert.show()
+                .create()
+                .show()
     }
 
     private fun successfulLogin() {

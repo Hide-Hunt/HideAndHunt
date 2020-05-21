@@ -11,7 +11,6 @@ import ch.epfl.sdp.databinding.ActivityMainBinding
 import ch.epfl.sdp.lobby.GameCreationActivity
 import ch.epfl.sdp.lobby.global.GlobalLobbyActivity
 import ch.epfl.sdp.replay.ManageReplaysActivity
-import ch.epfl.sdp.replay.viewer.ReplayActivity
 import ch.epfl.sdp.user.ProfileActivity
 import ch.epfl.sdp.user.UserCache
 
@@ -43,9 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         buttonToActivity(binding.profileButton, ProfileActivity::class.java)
 
-        buttonToActivity(binding.replayButton, ManageReplaysActivity::class.java) {
-            it.putExtra(ReplayActivity.REPLAY_PATH_ARG, "0.game")
-        }
+        buttonToActivity(binding.replayButton, ManageReplaysActivity::class.java)
+
         buttonToActivity(binding.newGameButton, GameCreationActivity::class.java)
 
         cache.get(this)

@@ -19,7 +19,7 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
     @Inject
     lateinit var downloader: IReplayDownloader
     private lateinit var replayInfoListFragment: ReplayInfoListFragment
-    private val downloads = HashMap<Int, IReplayDownloader.IReplayDownload>()
+    private val downloads = HashMap<String, IReplayDownloader.IReplayDownload>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +76,7 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
      * @param gameID The id of the game we want to download the replay
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun downloadReplay(gameID: Int) {
+    fun downloadReplay(gameID: String) {
         if (downloads.containsKey(gameID)) {
             Toast.makeText(this, "Already downloading replay", Toast.LENGTH_LONG).show()
             return

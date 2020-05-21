@@ -5,8 +5,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -23,7 +23,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".game.EndGameActivity"/>
+        <activity
+            android:name=".error.ErrorActivity"
+            android:label="@string/title_activity_error"/>
+        <activity android:name=".game.EndGameActivity" />
         <activity android:name=".replay.viewer.ReplayActivity" />
         <activity android:name=".replay.ManageReplaysActivity" />
         <activity android:name=".lobby.global.GlobalLobbyActivity" />
@@ -43,7 +46,7 @@
             tools:ignore="LockedOrientationActivity" />
         <activity android:name=".lobby.GameCreationActivity" />
         <activity android:name=".lobby.LobbyActivity" />
-        <activity android:name=".lobby.game.GameLobbyActivity"/>
+        <activity android:name=".lobby.game.GameLobbyActivity" android:noHistory="true" />
         <activity android:name=".authentication.LoginActivity" />
         <activity android:name=".user.ProfileActivity" />
         <activity android:name=".MainActivity">

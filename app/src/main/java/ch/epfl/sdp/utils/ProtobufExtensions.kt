@@ -12,7 +12,6 @@ import ch.epfl.sdp.replay.game_history.LocationEvent
 
 
 fun GameEventOuterClass.GameEvent.protoToGameEvent(): GameEvent {
-    class WrongGameEventFormat : Exception()
     return when (payloadCase) {
         GameEventOuterClass.GameEvent.PayloadCase.CATCH_EVENT -> catchEvent.let {
             CatchEvent(timestamp, it.predatorID, it.preyID)
@@ -22,16 +21,14 @@ fun GameEventOuterClass.GameEvent.protoToGameEvent(): GameEvent {
             LocationEvent(timestamp, it.playerID, Location(it.location.latitude, it.location.longitude))
         }
 
-        else -> throw WrongGameEventFormat()
+        else -> throw GameEvent.WrongGameEventFormat()
     }
 }
 
 fun GameOuterClass.Player.protoToPlayer(): Player {
-    class WrongPlayerFormat : Exception()
-
     return when (faction) {
         GameOuterClass.Faction.PREY -> Prey(id)
         GameOuterClass.Faction.PREDATOR -> Predator(id)
-        else -> throw WrongPlayerFormat()
+        else -> throw Player.WrongPlayerFormat()
     }
 }

@@ -56,7 +56,7 @@ class SimpleLocationSynchronizerTest {
                 .setLongitude(location.longitude)
                 .build()
 
-        val locationEmitter = SimpleLocationSynchronizer(12, 34, pubSub)
+        val locationEmitter = SimpleLocationSynchronizer("12", 34, pubSub)
         pubSub.expectedTopic = "12/34"
         pubSub.expectedPayload = payload.toByteArray()
         locationEmitter.updateOwnLocation(location)
@@ -65,7 +65,7 @@ class SimpleLocationSynchronizerTest {
     @Test
     fun subscribeToPlayer() {
         val pubSub = FakePubSub(12)
-        val locationEmitter = SimpleLocationSynchronizer(12, 34, pubSub)
+        val locationEmitter = SimpleLocationSynchronizer("12", 34, pubSub)
         pubSub.expectedTopic = "12/34"
         locationEmitter.subscribeToPlayer(34)
     }
@@ -73,7 +73,7 @@ class SimpleLocationSynchronizerTest {
     @Test
     fun unsubscribeFromPlayer() {
         val pubSub = FakePubSub(12)
-        val locationEmitter = SimpleLocationSynchronizer(12, 34, pubSub)
+        val locationEmitter = SimpleLocationSynchronizer("12", 34, pubSub)
         pubSub.expectedTopic = "12/34"
         locationEmitter.unsubscribeFromPlayer(34)
     }
@@ -81,7 +81,7 @@ class SimpleLocationSynchronizerTest {
     @Test
     fun onPlayerLocationUpdateShouldBeCalledOnPlayerLocationUpdate() {
         val pubSub = FakePubSub(12)
-        val locationEmitter = SimpleLocationSynchronizer(12, 34, pubSub)
+        val locationEmitter = SimpleLocationSynchronizer("12", 34, pubSub)
 
         var gotExpectedMessage = false
         val expectedLocation = Location(42.0, 24.0)
@@ -107,7 +107,7 @@ class SimpleLocationSynchronizerTest {
     @Test
     fun onPreyCatchesShouldBeCalledOnCatchPublish() {
         val pubSub = FakePubSub(12)
-        val locationEmitter = SimpleLocationSynchronizer(12, 34, pubSub)
+        val locationEmitter = SimpleLocationSynchronizer("12", 34, pubSub)
 
         var gotExpectedMessage = false
 

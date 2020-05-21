@@ -22,7 +22,7 @@ import ch.epfl.sdp.game.data.Location
  * @param playerID Int: The current player's ID
  * @param URI String: MQTT server URI
  */
-class LocationHandler(val activity: AppCompatActivity, val listener: ILocationListener, val gameID: Int, val playerID: Int, private val URI: String?) {
+class LocationHandler(val activity: AppCompatActivity, val listener: ILocationListener, val gameID: String, val playerID: Int, private val URI: String?) {
 
     companion object {
         private const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10

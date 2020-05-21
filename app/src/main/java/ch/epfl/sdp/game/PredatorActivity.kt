@@ -8,6 +8,9 @@ import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityPredatorBinding
+import ch.epfl.sdp.error.ErrorActivity
+import ch.epfl.sdp.error.ErrorCode
+import ch.epfl.sdp.error.Error
 import ch.epfl.sdp.game.TargetSelectionFragment.OnTargetSelectedListener
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Player
@@ -45,7 +48,9 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         // Get game information
         val gameDataAndValidity = GameIntentUnpacker.unpack(intent)
         validGame = gameDataAndValidity.second
-        if (!validGame) {
+        if(!validGame) {
+            val error = Error(ErrorCode.INVALID_ACTIVITY_PARAMETER, "Invalid intent")
+            ErrorActivity.startWith(this, error)
             finish()
             return
         }
