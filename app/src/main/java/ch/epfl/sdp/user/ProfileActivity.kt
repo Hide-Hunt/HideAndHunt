@@ -44,7 +44,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
 
         }
         binding.okButton.setOnClickListener {
-            validateInformations()
+            validateInformation()
         }
 
         if (Build.VERSION.SDK_INT >= 23 &&
@@ -88,7 +88,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
             binding.profilePictureView.setImageBitmap(LocalUser.profilePic)
     }
 
-    fun validateInformations() {
+    private fun validateInformation() {
         val bmp = binding.profilePictureView.drawable.toBitmap()
         val ps = binding.pseudoText.text.toString()
         var pseudoModify: String? = null

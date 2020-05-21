@@ -23,10 +23,10 @@ class UserCache {
      * @param context Context: The [Context] from which the call is operated
      */
     fun invalidateCache(context: Context) {
-        if (doesExist(context)) {
+        if (doesExist(context))
             context.deleteFile(cacheFilename)
+        if(retrieveProfilePic(context) == null)
             context.deleteFile(imageFilename)
-        }
     }
 
     /**
@@ -44,6 +44,22 @@ class UserCache {
             return false
         }
         return true
+    }
+
+    /**
+     * Check if a profile pic is cached, returns the corresponding bitmap if it exists or null otherwise
+     * @param context Context: The [Context] from which the call is operated
+     * @return Bitmap?: The Bitmap of the profile pic cached, or null if none is found
+     */
+    private fun retrieveProfilePic(context: Context): Bitmap? {
+        return try {
+            val imageStream = InputStreamReader(context.openFileInput(imageFilename))
+            imageStream.close()
+
+            BitmapFactory.decodeFile(context.filesDir.absolutePath + "/" + imageFilename)
+        } catch (e: Exception) {
+            null
+        }
     }
 
     /**
@@ -83,7 +99,7 @@ class UserCache {
             line = reader.readLine()
         }
         LocalUser.connected = true
-        LocalUser.profilePic = BitmapFactory.decodeFile(context.filesDir.absolutePath + "/" + imageFilename)
+        LocalUser.profilePic = retrieveProfilePic(context)
     }
 
     /**
