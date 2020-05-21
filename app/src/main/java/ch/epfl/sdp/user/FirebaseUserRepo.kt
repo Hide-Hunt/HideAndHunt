@@ -27,7 +27,7 @@ class FirebaseUserRepo : IUserRepo {
 
     override fun getGameHistory(userID: String, cb: Callback<List<String>>) {
         fs.collection(FirebaseConstants.USER_COLLECTION).document(userID).get().addOnSuccessListener { user ->
-            if (user.data != null) {
+            if (user.data != null && user.contains(FirebaseConstants.USER_GAME_HISTORY_COLLECTION)) {
                 @Suppress("UNCHECKED_CAST")
                 val gameHistory = user[FirebaseConstants.USER_GAME_HISTORY_COLLECTION] as List<String>
                 cb(gameHistory)
