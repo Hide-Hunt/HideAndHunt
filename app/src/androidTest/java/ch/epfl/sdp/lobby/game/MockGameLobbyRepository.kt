@@ -24,35 +24,33 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     var gameState = GameState.LOBBY
     val gameStartListeners = HashMap<String, IGameLobbyRepository.OnGameStartListener?>()
 
-    override fun addLocalParticipation(gameId: String) = Unit //No code
+    override fun addLocalParticipation(gameId: String, successCallback: UnitCallback, failureCallback: UnitCallback) = Unit //No code
 
-    override fun removeLocalParticipation(gameId: String) = Unit //No code
+    override fun removeLocalParticipation(gameId: String, successCallback: UnitCallback, failureCallback: UnitCallback) = Unit //No code
 
     override fun createGame(gameName: String, gameDuration: Long): String = "42"
 
-    override fun getGameName(gameId: String, cb: Callback<String>) = cb("My mock game")
+    override fun getGameName(gameId: String, successCallback: Callback<String>, failureCallback: UnitCallback) = successCallback("My mock game")
 
-    override fun getGameDuration(gameId: String, cb: Callback<Long>) = cb(1200L)
+    override fun getGameDuration(gameId: String, successCallback: Callback<Long>, failureCallback: UnitCallback) = successCallback(1200L)
 
-    override fun getParticipations(gameId: String, cb: Callback<List<Participation>>) = cb(players)
+    override fun getParticipations(gameId: String, successCallback: Callback<List<Participation>>, failureCallback: UnitCallback) = successCallback(players)
 
-    override fun getPlayers(gameId: String, cb: Callback<List<Player>>) {
-        cb(players.sortedBy { it.userID }.withIndex().map { p -> p.value.toPlayer(p.index) })
+    override fun getPlayers(gameId: String, successCallback: Callback<List<Player>>, failureCallback: UnitCallback) {
+        successCallback(players.sortedBy { it.userID }.withIndex().map { p -> p.value.toPlayer(p.index) })
     }
 
-    override fun getAdminId(gameId: String, cb: Callback<String>) { cb(players[1].userID) }
+    override fun getAdminId(gameId: String, successCallback: Callback<String>, failureCallback: UnitCallback) { successCallback(players[1].userID) }
 
-    override fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback) {
-        players.first { it.userID == uid }.let { it.ready = !it.ready }
-        cb()
-    }
-
-    override fun requestGameLaunch(gameId: String) {
+    override fun requestGameLaunch(gameId: String, successCallback: UnitCallback, failureCallback: UnitCallback) {
         if (gameState == GameState.LOBBY) {
+            successCallback()
             gameState = GameState.STARTED
             if (gameStartListeners.containsKey(gameId)) {
                 gameStartListeners[gameId]?.onGameStart()
             }
+        } else {
+            failureCallback()
         }
     }
 
@@ -60,18 +58,21 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         gameStartListeners[gameId] = listener
     }
 
-    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback) {
+    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean,
+                                   successCallback: UnitCallback, failureCallback: UnitCallback) {
         players.first { it.userID == uid }.ready = ready
-        cb()
+        successCallback()
     }
 
-    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback) {
+    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction,
+                                   successCallback: UnitCallback, failureCallback: UnitCallback) {
         players.first { it.userID == uid }.faction = faction
-        cb()
+        successCallback()
     }
 
-    override fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback) {
+    override fun setPlayerTag(gameId: String, uid: String, tag: String,
+                                   successCallback: UnitCallback, failureCallback: UnitCallback) {
         players.first { it.userID == uid }.tag = tag
-        cb()
+        successCallback()
     }
 }

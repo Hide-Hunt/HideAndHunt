@@ -25,10 +25,25 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     private var gameStartListener: IGameLobbyRepository.OnGameStartListener? = null
     private var gameStartSnapshotRegistration: ListenerRegistration? = null
 
-    override fun addLocalParticipation(gameId: String) {
+    private fun getGame(gameId: String, successCallback: Callback<Game>, failureCallback: UnitCallback) {
+        fs.collection(GAME_COLLECTION).document(gameId).get()
+                .addOnSuccessListener { doc ->
+                    if (doc.exists()) {
+                        doc.toObject<Game>().let {
+                            if (it == null) failureCallback()
+                            else successCallback(doc.toObject<Game>()!!)
+                        }
+                    } else { failureCallback() }
+                }
+                .addOnFailureListener { failureCallback() }
+    }
+
+    override fun addLocalParticipation(gameId: String, successCallback: UnitCallback, failureCallback: UnitCallback) {
         fs.collection(GAME_COLLECTION).document(gameId)
                 .update(GAME_PARTICIPATION_COLLECTION, FieldValue.arrayUnion(
                         Participation(LocalUser.uid, Faction.PREDATOR, false, "", "")))
+                .addOnSuccessListener { successCallback() }
+                .addOnFailureListener { failureCallback() }
     }
 
     override fun createGame(gameName: String, gameDuration: Long): String {
@@ -48,44 +63,39 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
         return newGameRef.id
     }
 
-    override fun getGameName(gameId: String, cb: Callback<String>) {
-        fs.collection(GAME_COLLECTION).document(gameId).get()
-                .addOnSuccessListener { cb(it["name"] as String) }
+    override fun getGameName(gameId: String, successCallback: Callback<String>, failureCallback: UnitCallback) {
+        getGame(gameId, { successCallback(it.name) }, failureCallback)
     }
 
-    override fun getGameDuration(gameId: String, cb: Callback<Long>) {
-        fs.collection(GAME_COLLECTION).document(gameId).get()
-                .addOnSuccessListener { cb(it["duration"] as Long) }
+    override fun getGameDuration(gameId: String, successCallback: Callback<Long>, failureCallback: UnitCallback) {
+        getGame(gameId, { successCallback(it.duration) }, failureCallback)
     }
 
-    override fun getPlayers(gameId: String, cb: Callback<List<Player>>) {
-        getParticipations(gameId) { list ->
-            cb(list.sortedBy { it.userID }.withIndex().map { x -> x.value.toPlayer(x.index) })
-        }
+    override fun getPlayers(gameId: String, successCallback: Callback<List<Player>>, failureCallback: UnitCallback) {
+        getParticipations(gameId, { list ->
+            successCallback(list.sortedBy { it.userID }.withIndex().map { x -> x.value.toPlayer(x.index) })
+        }, failureCallback)
     }
 
-    override fun getParticipations(gameId: String, cb: Callback<List<Participation>>) {
-        fs.collection(GAME_COLLECTION).document(gameId).get()
-            .addOnSuccessListener { doc ->
-                cb(doc.toObject<Game>()!!.participation)
-            }
+    override fun getParticipations(gameId: String, successCallback: Callback<List<Participation>>, failureCallback: UnitCallback) {
+        getGame(gameId, { successCallback(it.participation) }, failureCallback)
     }
 
-    override fun getAdminId(gameId: String, cb: Callback<String>) {
-        fs.collection(GAME_COLLECTION).document(gameId).get()
-                .addOnSuccessListener { cb(it.toObject<Game>()!!.adminID) }
+    override fun getAdminId(gameId: String, successCallback: Callback<String>, failureCallback: UnitCallback) {
+        getGame(gameId, { successCallback(it.adminID) }, failureCallback)
     }
 
-    override fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback) {
-        setPlayerReady(gameId, uid, true, cb)
-    }
-
-    override fun requestGameLaunch(gameId: String) {
-        fs.collection(GAME_ACTION_QUEUE_COLLECTION).add(hashMapOf(
-                "timestamp" to FieldValue.serverTimestamp(),
-                "action" to "start_game",
-                "game_id" to gameId
-        ))
+    override fun requestGameLaunch(gameId: String, successCallback: UnitCallback, failureCallback: UnitCallback) {
+        getGame(gameId, { game ->
+            if (game.participation.all { p -> p.ready }) {
+                fs.collection(GAME_ACTION_QUEUE_COLLECTION).add(hashMapOf(
+                        "timestamp" to FieldValue.serverTimestamp(),
+                        "action" to "start_game",
+                        "game_id" to gameId))
+                        .addOnSuccessListener { successCallback() }
+                        .addOnFailureListener { failureCallback() }
+            } else { failureCallback() }
+        }, failureCallback)
     }
 
     override fun setOnGameStartListener(gameId: String, listener: IGameLobbyRepository.OnGameStartListener?) {
@@ -107,32 +117,40 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
         }
     }
 
-    private fun updateUserParticipation(gameId: String, uid: String, cb: UnitCallback, modifier: participationModifier){
-        fs.collection(GAME_COLLECTION).document(gameId).get()
-                .addOnSuccessListener { doc ->
-                    val participation = doc.toObject<Game>()!!.participation
-                    val myParticipationIndex = participation.indexOfFirst { act_participation -> act_participation.userID == uid }
-                    modifier(participation[myParticipationIndex])
-                    fs.collection(GAME_COLLECTION).document(gameId)
-                            .update(GAME_PARTICIPATION_COLLECTION, participation)
-                    cb()
-                }
+    private fun updateUserParticipation(gameId: String, uid: String, modifier: participationModifier,
+                                        successCallback: UnitCallback, failureCallback: UnitCallback) {
+        getParticipations(gameId, { participation ->
+            val myParticipationIndex = participation.indexOfFirst { act_participation -> act_participation.userID == uid }
+            modifier(participation[myParticipationIndex])
+            fs.collection(GAME_COLLECTION).document(gameId)
+                    .update(GAME_PARTICIPATION_COLLECTION, participation)
+                    .addOnSuccessListener { successCallback() }
+                    .addOnFailureListener { failureCallback() }
+        }, failureCallback)
     }
 
-    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback) { updateUserParticipation(gameId, uid, cb){it.ready = ready} }
+    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean,
+                                successCallback: UnitCallback, failureCallback: UnitCallback) {
+        updateUserParticipation(gameId, uid, {it.ready = ready}, successCallback, failureCallback)
+    }
 
-    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback) { updateUserParticipation(gameId, uid, cb){it.faction = faction} }
+    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction,
+                                  successCallback: UnitCallback, failureCallback: UnitCallback) {
+        updateUserParticipation(gameId, uid, {it.faction = faction}, successCallback, failureCallback)
+    }
 
-    override fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback) {updateUserParticipation(gameId, uid, cb){it.tag = tag}}
+    override fun setPlayerTag(gameId: String, uid: String, tag: String,
+                              successCallback: UnitCallback, failureCallback: UnitCallback) {
+        updateUserParticipation(gameId, uid, {it.tag = tag}, successCallback, failureCallback)
+    }
 
-    override fun removeLocalParticipation(gameId: String) {
-        fs.collection(GAME_COLLECTION).document(gameId).get()
-                .addOnSuccessListener { doc ->
-                    val participation = doc.toObject<Game>()!!.participation
-                    val myParticipation = participation.first { act_participation -> act_participation.userID == LocalUser.uid }
-                    fs.collection(GAME_COLLECTION).document(gameId)
-                            .update(GAME_PARTICIPATION_COLLECTION, FieldValue.arrayRemove(
-                                    myParticipation))
-                }
+    override fun removeLocalParticipation(gameId: String, successCallback: UnitCallback, failureCallback: UnitCallback) {
+        getParticipations(gameId, { participation ->
+            val myParticipation = participation.first { act_participation -> act_participation.userID == LocalUser.uid }
+            fs.collection(GAME_COLLECTION).document(gameId)
+                    .update(GAME_PARTICIPATION_COLLECTION, FieldValue.arrayRemove(myParticipation))
+                    .addOnSuccessListener { successCallback() }
+                    .addOnFailureListener { failureCallback() }
+        }, failureCallback)
     }
 }
