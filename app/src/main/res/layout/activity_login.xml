@@ -35,40 +35,10 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/userNameLogin"
-        android:layout_width="257dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="16dp"
-        android:autofillHints="email"
-        android:ems="10"
-        android:hint="@string/loginPlaceholderName"
-        android:inputType="textPersonName"
-        android:textColor="@color/colorAccent"
-        android:textColorHint="@color/colorHint"
-        app:layout_constraintBottom_toTopOf="@+id/userPasswordLogin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/userPasswordLogin"
-        android:layout_width="255dp"
-        android:layout_height="49dp"
-        android:layout_marginBottom="32dp"
-        android:autofillHints="password"
-        android:ems="10"
-        android:hint="@string/loginPlaceholderPassword"
-        android:inputType="textPassword"
-        android:textColor="@color/colorAccent"
-        android:textColorHint="@color/colorHint"
-        app:layout_constraintBottom_toTopOf="@+id/loginSubmitButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
         android:id="@+id/userPseudoLogin"
         android:layout_width="257dp"
         android:layout_height="46dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
         android:autofillHints="Pseudo"
         android:ems="10"
         android:hint="@string/loginPlaceholderPseudo"
@@ -77,6 +47,39 @@
         android:textColorHint="@color/colorHint"
         app:layout_constraintBottom_toTopOf="@+id/userNameLogin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.525"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/userNameLogin"
+        android:layout_width="257dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="20dp"
+        android:autofillHints="email"
+        android:ems="10"
+        android:hint="@string/loginPlaceholderName"
+        android:inputType="textPersonName"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorHint"
+        app:layout_constraintBottom_toTopOf="@+id/userPasswordLogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.525"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/userPasswordLogin"
+        android:layout_width="255dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="72dp"
+        android:autofillHints="password"
+        android:ems="10"
+        android:hint="@string/loginPlaceholderPassword"
+        android:inputType="textPassword"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorHint"
+        app:layout_constraintBottom_toTopOf="@+id/loginSubmitButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.525"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
