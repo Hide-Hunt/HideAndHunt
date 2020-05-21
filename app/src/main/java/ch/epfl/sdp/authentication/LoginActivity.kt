@@ -29,7 +29,11 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.loginSubmitButton.setOnClickListener {
-            signIn(userNameLogin.text, userPasswordLogin.text, connector)
+            when {
+                userNameLogin.text.isEmpty() -> userNameLogin.error = "Field is empty"
+                userPasswordLogin.text.isEmpty() -> userPasswordLogin.error = "Field is empty"
+                else -> signIn(userNameLogin.text, userPasswordLogin.text, connector)
+            }
         }
         binding.registerSubmitButton.setOnClickListener {
             when {
