@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryVeryDark">
 
     <TextView
         android:id="@+id/loginTextView"
@@ -12,7 +13,9 @@
         android:text="@string/loginButtonText"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorAccent"
         android:textSize="36sp"
+        android:typeface="normal"
         app:layout_constraintBottom_toTopOf="@+id/userPseudoLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -26,6 +29,7 @@
         android:layout_marginBottom="80dp"
         android:text="@string/dummy_content"
         android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -39,6 +43,8 @@
         android:ems="10"
         android:hint="@string/loginPlaceholderName"
         android:inputType="textPersonName"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorHint"
         app:layout_constraintBottom_toTopOf="@+id/userPasswordLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -52,19 +58,23 @@
         android:ems="10"
         android:hint="@string/loginPlaceholderPassword"
         android:inputType="textPassword"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorHint"
         app:layout_constraintBottom_toTopOf="@+id/loginSubmitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/userPseudoLogin"
-        android:layout_width="259dp"
+        android:layout_width="257dp"
         android:layout_height="46dp"
         android:layout_marginBottom="16dp"
         android:autofillHints="Pseudo"
         android:ems="10"
         android:hint="@string/loginPlaceholderPseudo"
         android:inputType="textPersonName"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorHint"
         app:layout_constraintBottom_toTopOf="@+id/userNameLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -74,7 +84,9 @@
         android:layout_width="249dp"
         android:layout_height="53dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/menu_button_shape"
         android:text="@string/loginButtonText"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/registerSubmitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -84,7 +96,9 @@
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginBottom="32dp"
+        android:background="@drawable/menu_button_shape"
         android:text="@string/register_button"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/loginTextResult"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
