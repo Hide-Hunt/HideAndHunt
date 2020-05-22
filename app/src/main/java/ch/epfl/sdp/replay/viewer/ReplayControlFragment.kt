@@ -49,6 +49,12 @@ class ReplayControlFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        playSpeed = 0
+        playHandler.removeCallbacks(playRunnable)
+    }
+
     private fun timeSelectionAndDateDisplaySetup() {
         binding.timeSelectionBar.max = lastTimestamp - firstTimestamp
         binding.timeSelectionBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
