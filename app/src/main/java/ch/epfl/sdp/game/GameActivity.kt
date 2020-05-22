@@ -3,6 +3,7 @@ package ch.epfl.sdp.game
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.error.ErrorActivity
 import ch.epfl.sdp.error.ErrorCode
@@ -18,15 +19,17 @@ import ch.epfl.sdp.game.location.LocationHandler
  */
 abstract class GameActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.GameTimeOutListener {
     protected lateinit var gameData: GameIntentUnpacker.GameIntentData
-    private var validGame: Boolean = false
+    protected var validGame: Boolean = false
 
-    protected var players = HashMap<Int, Player>()
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+    var players = HashMap<Int, Player>()
     protected var preys = HashMap<String, Int>()
 
     private val heartbeatHandler = Handler()
     private val heartbeatRunnable = Runnable { onHeartbeat() }
 
-    protected lateinit var locationHandler: LocationHandler
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+    lateinit var locationHandler: LocationHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

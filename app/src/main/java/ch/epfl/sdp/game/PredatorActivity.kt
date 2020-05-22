@@ -78,7 +78,7 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-    override fun onNewIntent(intent: Intent?) {
+    public override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
