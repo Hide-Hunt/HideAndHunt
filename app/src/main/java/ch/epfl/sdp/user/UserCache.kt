@@ -17,7 +17,7 @@ import java.util.*
  */
 class UserCache {
     companion object {
-        private const val CACHE_EXPIRATION = 60
+        private const val CACHE_EXPIRATION = 3600
         private const val CACHE_FILENAME = "user_cache"
         private const val IMAGE_FILENAME = "user_image"
     }
@@ -36,6 +36,15 @@ class UserCache {
     }
 
     /**
+     * Check whether the cache currently exists
+     * @param context Context: The [Context] from which the call is operated
+     * @return Boolean: true if the cache is set
+     */
+    fun doesExist(context: Context): Boolean {
+        return File(context.cacheDir, CACHE_FILENAME).exists()
+    }
+
+    /**s
      * Check if a profile pic is cached, returns the corresponding bitmap if it exists or null otherwise
      * @param context Context: The [Context] from which the call is operated
      * @return Bitmap?: The Bitmap of the profile pic cached, or null if none is found
