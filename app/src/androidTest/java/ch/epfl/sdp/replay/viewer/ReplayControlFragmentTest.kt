@@ -151,7 +151,7 @@ class ReplayControlFragmentTest {
             scenario.onFragment {
                 it.speedSelection.progress = 0
 
-                assertEquals(expectedProgress, it.timeSelectionBar.progress.toDouble(), expectedProgress / 10)
+                assertEquals(expectedProgress, it.timeSelectionBar.progress.toDouble(), expectedProgress / 8)
             }
         }
     }
