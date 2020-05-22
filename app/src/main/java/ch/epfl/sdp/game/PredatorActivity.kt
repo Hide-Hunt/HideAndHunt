@@ -118,6 +118,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 preys[it]?.let { preyID ->
                     onPreyCatches(gameData.playerID, preyID)
+                    locationHandler.declareCatch(preyID)
                 }
             }
         }
