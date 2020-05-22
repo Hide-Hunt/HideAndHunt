@@ -173,7 +173,6 @@ class ReplayMapFragment : Fragment() {
                 it.tileCache.purge()
             }
         }
-        binding.map.destroyAll()
     }
 
     companion object {
