@@ -1,7 +1,6 @@
 package ch.epfl.sdp.lobby.game
 
 import android.content.Intent
-import android.graphics.Color
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.widget.TextView
@@ -31,52 +30,39 @@ import javax.inject.Inject
  */
 class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         PlayerParametersFragment.OnFactionChangeListener, IGameLobbyRepository.OnGameStartListener {
+    private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
 
+    @Inject lateinit var repository: IGameLobbyRepository
+    @Inject lateinit var userRepo: IUserRepo
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var rv: RecyclerView
+    private lateinit var recyclerView: RecyclerView
 
-    @Inject
-    lateinit var repository: IGameLobbyRepository
-
-    @Inject
-    lateinit var userRepo: IUserRepo
     private lateinit var gameID: String
     private val userID: String = LocalUser.uid
     private var playerID: Int = 0
     private var adminId: String = ""
-    private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
     private var myFaction: Faction = Faction.PREDATOR
     private var myTag: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        (applicationContext as HideAndHuntApplication).appComponent.inject(this)
+    private fun joiningGameError() {
+        val msg = "Unable to join lobby for game {}".format(gameID)
+        ErrorActivity.startWith(this, Error(ErrorCode.OPERATION_FAILURE, msg))
+    }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (applicationContext as HideAndHuntApplication).appComponent.inject(this)
         gameLobbyBinding = ActivityGameLobbyBinding.inflate(layoutInflater)
         setContentView(gameLobbyBinding.root)
 
-        // TODO In case of error, start ErrorActivity
-        gameID = intent.getStringExtra("gameID")!!
+        intent.getStringExtra("gameID").let {
+            if (it == null) joiningGameError()
+            else gameID = it
+        }
 
-        rv = gameLobbyBinding.playerList
-        rv.layoutManager = LinearLayoutManager(this)
-
-        repository.addLocalParticipation(gameID, UnitSuccFailCallback({
-            repository.setOnGameStartListener(gameID, this)
-        }, {
-            ErrorActivity.startWith(this, Error(ErrorCode.OPERATION_FAILURE, "Unable to join lobby for game {}".format(gameID)))
-        }))
-
-        //repository interactions
-        repository.getAdminId(gameID, SuccFailCallback({ id ->
-            adminId = id
-            repository.getParticipation(gameID, SuccFailCallback({ playerList ->
-                rv.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
-            }))
-        }))
-
-        //set game info views
+        setLobbyDataFromRepo()
         setGameLobbyViews()
+        setGameLobbyInteractiveElements()
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
@@ -125,6 +111,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
                     gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_ready)
                     true
                 }
+
         repository.setPlayerReady(gameID, userID, newReadyState, UnitSuccFailCallback({
             refreshPlayerList()
         }))
@@ -133,40 +120,55 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private fun refreshPlayerList(then: () -> Unit = {}) {
         repository.getParticipation(gameID, SuccFailCallback({ playerList ->
             playerID = playerList.indexOfFirst { it.userID == userID }
-            rv.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
+            recyclerView.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
             mSwipeRefreshLayout.isRefreshing = false
             then()
         }))
     }
 
+    private fun setLobbyDataFromRepo() {
+        repository.addLocalParticipation(gameID, UnitSuccFailCallback({
+            repository.setOnGameStartListener(gameID, this)
+        }, { joiningGameError() }))
+
+        repository.getAdminId(gameID, SuccFailCallback({ id ->
+            adminId = id
+            repository.getParticipation(gameID, SuccFailCallback({ playerList ->
+                recyclerView.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
+            }))
+        }))
+    }
+
     private fun setGameLobbyViews() {
+        recyclerView = gameLobbyBinding.playerList
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
         val gameInfo = gameLobbyBinding.gameInfo
         repository.getGameName(gameID, SuccFailCallback({ name ->
-            val text = getText(R.string.game_name).toString() + " " + name
-            (gameInfo.getChildAt(0) as TextView).text = text
+            (gameInfo.getChildAt(0) as TextView).text = getString(R.string.game_name).format(name)
         }))
         repository.getGameDuration(gameID, SuccFailCallback({ gameDuration ->
-            val text = getText(R.string.game_duration).toString() + " " + gameDuration + " seconds"
-            (gameInfo.getChildAt(1) as TextView).text = text
-            supportFragmentManager.beginTransaction().add(R.id.faction_selection, PlayerParametersFragment()).commit()
-
-            //SwipeRefreshLayout
-            mSwipeRefreshLayout = gameLobbyBinding.swipeContainer
-            mSwipeRefreshLayout.setOnRefreshListener(this)
-
-            gameLobbyBinding.startButton.setOnClickListener {
-                gameLobbyBinding.startButton.isEnabled = false
-                repository.requestGameLaunch(gameID, UnitSuccFailCallback({}, {
-                    this@GameLobbyActivity.gameLobbyBinding.startButton.isEnabled = true
-                    Toast.makeText(applicationContext, "Unable to start game", Toast.LENGTH_LONG).show()
-                }))
-            }
+            (gameInfo.getChildAt(1) as TextView).text = getString(R.string.game_duration).format(gameDuration)
         }))
-        gameLobbyBinding.startButton.setBackgroundColor(Color.GREEN)
+        supportFragmentManager.beginTransaction().add(R.id.faction_selection, PlayerParametersFragment()).commit()
+    }
+
+    private fun setGameLobbyInteractiveElements() {
+        //SwipeRefreshLayout
+        mSwipeRefreshLayout = gameLobbyBinding.swipeContainer
+        mSwipeRefreshLayout.setOnRefreshListener(this)
+
+        gameLobbyBinding.startButton.setOnClickListener {
+            gameLobbyBinding.startButton.isEnabled = false
+            repository.requestGameLaunch(gameID, UnitSuccFailCallback({}, {
+                this@GameLobbyActivity.gameLobbyBinding.startButton.isEnabled = true
+                Toast.makeText(applicationContext, "Unable to start game", Toast.LENGTH_LONG).show()
+            }))
+        }
+
         gameLobbyBinding.leaveButton.setOnClickListener {
             finish() //Goes back to previous activity
         }
-        gameLobbyBinding.leaveButton.setBackgroundColor(Color.RED)
     }
 
     override fun onDestroy() {

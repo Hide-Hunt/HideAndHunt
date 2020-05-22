@@ -30,8 +30,8 @@
     <string name="leave">Leave</string>
     <string name="start">Start</string>
 
-    <string name="game_name">Game name : </string>
-    <string name="game_duration">Game duration : </string>
+    <string name="game_name">Game name : {}</string>
+    <string name="game_duration">Game duration : {} seconds</string>
 
     <!-- Prey catching fragment -->
     <string name="prey_alive">Your prey is alive</string>
