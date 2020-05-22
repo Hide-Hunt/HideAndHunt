@@ -18,20 +18,22 @@
         android:typeface="normal"
         app:layout_constraintBottom_toTopOf="@+id/userPseudoLogin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.653" />
 
     <TextView
         android:id="@+id/loginTextResult"
         android:layout_width="205dp"
         android:layout_height="32dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/dummy_content"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -70,7 +72,7 @@
         android:id="@+id/userPasswordLogin"
         android:layout_width="255dp"
         android:layout_height="49dp"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="28dp"
         android:autofillHints="password"
         android:ems="10"
         android:hint="@string/loginPlaceholderPassword"
@@ -79,7 +81,7 @@
         android:textColorHint="@color/colorHint"
         app:layout_constraintBottom_toTopOf="@+id/loginSubmitButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.525"
+        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -98,7 +100,7 @@
         android:id="@+id/registerSubmitButton"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/menu_button_shape"
         android:text="@string/register_button"
         android:textColor="@color/colorPrimaryDark"
