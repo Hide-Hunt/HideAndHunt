@@ -1,11 +1,11 @@
 package ch.epfl.sdp.lobby.game
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,10 +15,15 @@ import ch.epfl.sdp.R
 import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
+import ch.epfl.sdp.db.SuccFailCallbacks.*
+import ch.epfl.sdp.error.Error
+import ch.epfl.sdp.error.ErrorActivity
+import ch.epfl.sdp.error.ErrorCode
 import ch.epfl.sdp.game.*
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import ch.epfl.sdp.user.IUserRepo
+import ch.epfl.sdp.utils.NFCHelper
 import javax.inject.Inject
 
 /**
@@ -29,7 +34,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
-    private lateinit var adminId: String
 
     @Inject
     lateinit var repository: IGameLobbyRepository
@@ -39,6 +43,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private lateinit var gameID: String
     private val userID: String = LocalUser.uid
     private var playerID: Int = 0
+    private var adminId: String = ""
     private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
     private var myFaction: Faction = Faction.PREDATOR
     private var myTag: String? = null
@@ -56,21 +61,22 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         rv = gameLobbyBinding.playerList
         rv.layoutManager = LinearLayoutManager(this)
 
-        repository.addLocalParticipation(gameID)
+        repository.addLocalParticipation(gameID, UnitSuccFailCallback({
+            repository.setOnGameStartListener(gameID, this)
+        }, {
+            ErrorActivity.startWith(this, Error(ErrorCode.OPERATION_FAILURE, "Unable to join lobby for game {}".format(gameID)))
+        }))
 
         //repository interactions
-        repository.setPlayerFaction(gameID, userID, Faction.PREDATOR) {}
-        repository.getAdminId(gameID) { id ->
+        repository.getAdminId(gameID, SuccFailCallback({ id ->
             adminId = id
-            repository.getParticipations(gameID) { playerList ->
+            repository.getParticipation(gameID, SuccFailCallback({ playerList ->
                 rv.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
-            }
-        }
-        repository.setOnGameStartListener(gameID, this)
+            }))
+        }))
 
         //set game info views
         setGameLobbyViews()
-
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
@@ -79,26 +85,23 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 myTag = it
-                repository.setPlayerReady(gameID, userID, true) {
-                    repository.setPlayerTag(gameID, userID, it) {
+                repository.setPlayerReady(gameID, userID, true, UnitSuccFailCallback({
+                    repository.setPlayerTag(gameID, userID, it, UnitSuccFailCallback({
                         updateLocalPlayerState()
-                    }
-                }
+                    }))
+                }))
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-        val adapter = NfcAdapter.getDefaultAdapter(this)
-        adapter?.enableForegroundDispatch(this, pendingIntent, null, null)
+        NFCHelper.enableForegroundDispatch(this)
     }
 
     override fun onPause() {
         super.onPause()
-        NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
+        NFCHelper.disableForegroundDispatch(this)
     }
 
     override fun onRefresh() {
@@ -107,10 +110,10 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     override fun onFactionChange(newFaction: Faction) {
         //player id is hardcoded for now
-        repository.setPlayerFaction(gameID, userID, newFaction) {
+        repository.setPlayerFaction(gameID, userID, newFaction, UnitSuccFailCallback({
             myFaction = newFaction
             updateLocalPlayerState()
-        }
+        }))
     }
 
     private fun updateLocalPlayerState() {
@@ -122,27 +125,27 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
                     gameLobbyBinding.txtPlayerReady.text = getString(R.string.you_are_ready)
                     true
                 }
-        repository.setPlayerReady(gameID, userID, newReadyState) {
+        repository.setPlayerReady(gameID, userID, newReadyState, UnitSuccFailCallback({
             refreshPlayerList()
-        }
+        }))
     }
 
     private fun refreshPlayerList(then: () -> Unit = {}) {
-        repository.getParticipations(gameID) { playerList ->
+        repository.getParticipation(gameID, SuccFailCallback({ playerList ->
             playerID = playerList.indexOfFirst { it.userID == userID }
             rv.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
             mSwipeRefreshLayout.isRefreshing = false
             then()
-        }
+        }))
     }
 
     private fun setGameLobbyViews() {
         val gameInfo = gameLobbyBinding.gameInfo
-        repository.getGameName(gameID) { name ->
+        repository.getGameName(gameID, SuccFailCallback({ name ->
             val text = getText(R.string.game_name).toString() + " " + name
             (gameInfo.getChildAt(0) as TextView).text = text
-        }
-        repository.getGameDuration(gameID) { gameDuration ->
+        }))
+        repository.getGameDuration(gameID, SuccFailCallback({ gameDuration ->
             val text = getText(R.string.game_duration).toString() + " " + gameDuration + " seconds"
             (gameInfo.getChildAt(1) as TextView).text = text
             supportFragmentManager.beginTransaction().add(R.id.faction_selection, PlayerParametersFragment()).commit()
@@ -153,9 +156,11 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
             gameLobbyBinding.startButton.setOnClickListener {
                 gameLobbyBinding.startButton.isEnabled = false
-                repository.requestGameLaunch(gameID)
+                repository.requestGameLaunch(gameID, UnitSuccFailCallback({}, {
+                    Toast.makeText(applicationContext, "Unable to start game", Toast.LENGTH_LONG).show()
+                }))
             }
-        }
+        }))
         gameLobbyBinding.startButton.setBackgroundColor(Color.GREEN)
         gameLobbyBinding.leaveButton.setOnClickListener {
             finish() //Goes back to previous activity
@@ -166,7 +171,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     override fun finish() {
         repository.setOnGameStartListener(gameID, null)
         //Remove player from lobby on finish
-        repository.removeLocalParticipation(gameID)
+        repository.removeLocalParticipation(gameID, UnitSuccFailCallback())
         super.finish()
     }
 
@@ -177,7 +182,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             Intent(this, PreyActivity::class.java)
         }
 
-        repository.getGameDuration(gameID) { gameDuration ->
+        repository.getGameDuration(gameID, SuccFailCallback({ gameDuration ->
             intent.putExtra("initialTime", gameDuration * 1000L)
             intent.putExtra("gameID", gameID)
             userRepo.addGameToHistory(LocalUser.uid, gameID)
@@ -185,11 +190,11 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             refreshPlayerList {
                 intent.putExtra("playerID", playerID)
                 //TODO: Fetch MQTT URI from somewhere ? and add to the intent
-                repository.getPlayers(gameID) { pl ->
+                repository.getPlayers(gameID, SuccFailCallback({ pl ->
                     intent.putExtra("players", ArrayList(pl))
                     startActivity(intent)
-                }
+                }))
             }
-        }
+        }))
     }
 }
