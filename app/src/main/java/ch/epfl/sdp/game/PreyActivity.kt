@@ -1,6 +1,7 @@
 package ch.epfl.sdp.game
 
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityPreyBinding
@@ -20,6 +21,8 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
     private lateinit var preyFragment: PreyFragment
     private lateinit var gameTimerFragment: GameTimerFragment
     private lateinit var predatorRadarFragment: PredatorRadarFragment
+    private val heartbeatHandler = Handler()
+    private val heartbeatRunnable = Runnable { onHeartbeat() }
 
     private lateinit var gameData: GameIntentUnpacker.GameIntentData
     private var validGame: Boolean = false
@@ -49,6 +52,12 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
         locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
         loadPlayers(gameData.playerList)
         loadFragments()
+        onHeartbeat()
+    }
+
+    private fun onHeartbeat() {
+        heartbeatHandler.postDelayed(heartbeatRunnable,1000)
+        locationHandler.emitLocation()
     }
 
     private fun loadPlayers(lst: List<Player>) {
@@ -125,6 +134,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
     override fun onDestroy() {
         super.onDestroy()
         if (validGame) {
+            heartbeatHandler.removeCallbacks(heartbeatRunnable)
             locationHandler.stop()
         }
     }
@@ -153,6 +163,7 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
                 if (it.id == gameData.playerID) {
                     //I've been caught
                     EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
+                    gameTimerFragment.stop()
                 }
             }
         }
