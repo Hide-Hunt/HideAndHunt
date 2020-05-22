@@ -3,7 +3,6 @@ package ch.epfl.sdp.lobby.game
 import android.content.Intent
 import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
@@ -143,12 +142,11 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     private fun setGameLobbyViews() {
-        val gameInfo = gameLobbyBinding.gameInfo
         repository.getGameName(gameID, SuccFailCallback({ name ->
-            (gameInfo.getChildAt(0) as TextView).text = getString(R.string.game_name).format(name)
+            gameLobbyBinding.gameName.text = getString(R.string.game_name).format(name)
         }))
         repository.getGameDuration(gameID, SuccFailCallback({ gameDuration ->
-            (gameInfo.getChildAt(1) as TextView).text = getString(R.string.game_duration).format(gameDuration)
+            gameLobbyBinding.gameDuration.text = getString(R.string.game_duration).format(gameDuration)
         }))
         supportFragmentManager.beginTransaction().add(R.id.faction_selection, PlayerParametersFragment()).commit()
     }
