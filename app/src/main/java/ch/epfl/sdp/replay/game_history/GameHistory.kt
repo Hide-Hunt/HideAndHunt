@@ -10,8 +10,8 @@ import java.io.Serializable
 import java.lang.Exception
 
 data class GameHistory(
-        val gameID: Int,
-        val adminID: Int,
+        val gameID: String,
+        val adminID: String,
         val players: List<Player>,
         val bounds: Area,
         val events: List<GameEvent>) : Serializable {
@@ -31,8 +31,8 @@ data class GameHistory(
         }
 
         private fun fromProtobufObject(game: GameOuterClass.Game): GameHistory {
-            if (game.id < 0) throw InvalidGameFormat("Invalid game id")
-            if (game.adminID < 0) throw InvalidGameFormat("Invalid admin id")
+            if (game.id.isEmpty()) throw InvalidGameFormat("Invalid game id")
+            if (game.adminID.isEmpty()) throw InvalidGameFormat("Invalid admin id")
 
             val players = game.playersList.map { it.protoToPlayer() }
             if (players.isEmpty()) throw InvalidGameFormat("No player")
