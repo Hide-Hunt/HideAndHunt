@@ -42,17 +42,8 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
 
     private fun connect() {
         try {
-            val disconnectedBufferOptions = DisconnectedBufferOptions()
-            disconnectedBufferOptions.isBufferEnabled = true
-            disconnectedBufferOptions.bufferSize = 100
-            disconnectedBufferOptions.isPersistBuffer = false
-            disconnectedBufferOptions.isDeleteOldestMessages = false
-
-            val mqttConnectOptions = MqttConnectOptions()
-            mqttConnectOptions.isAutomaticReconnect = true
-            mqttConnectOptions.isCleanSession = false
-            mqttConnectOptions.userName = USERNAME
-            mqttConnectOptions.password = PASSWORD.toCharArray()
+            val disconnectedBufferOptions = disconnectedBufferOptions()
+            val mqttConnectOptions = mqttConnectOptions()
             mqttAndroidClient.connect(mqttConnectOptions, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken) {
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions)
@@ -64,6 +55,24 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
                 }
             })
         } catch (ex: MqttException) { ex.printStackTrace() }
+    }
+
+    private fun mqttConnectOptions(): MqttConnectOptions {
+        val mqttConnectOptions = MqttConnectOptions()
+        mqttConnectOptions.isAutomaticReconnect = true
+        mqttConnectOptions.isCleanSession = false
+        mqttConnectOptions.userName = USERNAME
+        mqttConnectOptions.password = PASSWORD.toCharArray()
+        return mqttConnectOptions
+    }
+
+    private fun disconnectedBufferOptions(): DisconnectedBufferOptions {
+        val disconnectedBufferOptions = DisconnectedBufferOptions()
+        disconnectedBufferOptions.isBufferEnabled = true
+        disconnectedBufferOptions.bufferSize = 100
+        disconnectedBufferOptions.isPersistBuffer = false
+        disconnectedBufferOptions.isDeleteOldestMessages = false
+        return disconnectedBufferOptions
     }
 
     override fun stop() {
