@@ -1,16 +1,13 @@
 package ch.epfl.sdp.dagger.modules
 
-import ch.epfl.sdp.replay.FakeReplayDownloader
+import ch.epfl.sdp.replay.FirebaseReplayDownloader
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ReplayModuleTest {
-
     @Test
     fun testProvidesFirebaseDownloader() {
-        val replay = FakeReplayModule()
-        val gottenDownloader = replay.providesFirebaseDownloader()
-        assertTrue(gottenDownloader is FakeReplayDownloader)
+        val repo = ReplayModule()
+        assertTrue(repo.providesFirebaseDownloader() is FirebaseReplayDownloader)
     }
-
 }
