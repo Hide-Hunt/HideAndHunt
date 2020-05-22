@@ -2,18 +2,23 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryVeryDark">
 
     <EditText
         android:id="@+id/pseudoText"
         android:layout_width="265dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:autofillHints="pseudo"
         android:ems="10"
         android:hint="@string/loginPlaceholderPseudo"
         android:inputType="textPersonName"
         android:text="@string/loginPlaceholderPseudo"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorHint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profilePictureView" />
@@ -22,7 +27,7 @@
         android:id="@+id/profilePictureView"
         android:layout_width="265dp"
         android:layout_height="265dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="68dp"
         android:contentDescription="@string/profilePicPlaceholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,12 +36,16 @@
 
     <Button
         android:id="@+id/okButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="263dp"
+        android:layout_height="57dp"
         android:layout_marginTop="16dp"
+        android:background="@drawable/menu_button_shape"
         android:text="@android:string/ok"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pseudoText" />
+        app:layout_constraintTop_toBottomOf="@+id/pseudoText"
+        app:layout_constraintVertical_bias="0.346" />
 </androidx.constraintlayout.widget.ConstraintLayout>
