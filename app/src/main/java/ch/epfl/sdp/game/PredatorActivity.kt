@@ -4,78 +4,34 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.os.Handler
-import android.widget.Toast
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityPredatorBinding
-import ch.epfl.sdp.error.ErrorActivity
-import ch.epfl.sdp.error.ErrorCode
-import ch.epfl.sdp.error.Error
 import ch.epfl.sdp.game.TargetSelectionFragment.OnTargetSelectedListener
 import ch.epfl.sdp.game.data.Location
-import ch.epfl.sdp.game.data.Player
 import ch.epfl.sdp.game.data.Prey
 import ch.epfl.sdp.game.data.PreyState
-import ch.epfl.sdp.game.location.ILocationListener
-import ch.epfl.sdp.game.location.LocationHandler
 
 /**
  *  Activity that shows the in-game predator interface
  */
-class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocationListener, GameTimerFragment.GameTimeOutListener {
+class PredatorActivity : GameActivity(), OnTargetSelectedListener {
     private lateinit var binding: ActivityPredatorBinding
 
-    private lateinit var gameData: GameIntentUnpacker.GameIntentData
-    private var validGame: Boolean = false
     private var targetID: Int = TargetSelectionFragment.NO_TARGET
-
-    private var players = HashMap<Int, Player>()
-    private var preys = HashMap<String, Int>()
 
     private lateinit var gameTimerFragment: GameTimerFragment
     private lateinit var targetSelectionFragment: TargetSelectionFragment
     private lateinit var targetDistanceFragment: TargetDistanceFragment
     private lateinit var preyFragment: PreyFragment
-    private val heartbeatHandler = Handler()
-    private val heartbeatRunnable = Runnable { onHeartbeat() }
 
     private var catchCount = 0
-
-    private lateinit var locationHandler: LocationHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPredatorBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        // Get game information
-        val gameDataAndValidity = GameIntentUnpacker.unpack(intent)
-        validGame = gameDataAndValidity.second
-        if(!validGame) {
-            val error = Error(ErrorCode.INVALID_ACTIVITY_PARAMETER, "Invalid intent")
-            ErrorActivity.startWith(this, error)
-            finish()
-            return
-        }
-        gameData = gameDataAndValidity.first
-        locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
-
-        if (savedInstanceState == null) { // First load
-            for (p in gameData.playerList) {
-                players[p.id] = p
-                if (p is Prey) {
-                    preys[p.NFCTag] = p.id
-                }
-            }
-        }
 
         loadFragments()
-        onHeartbeat()
-    }
-
-    private fun onHeartbeat() {
-        heartbeatHandler.postDelayed(heartbeatRunnable,1000)
-        locationHandler.emitLocation()
     }
 
     private fun loadFragments() { // create a FragmentManager
@@ -105,7 +61,6 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
         val adapter = NfcAdapter.getDefaultAdapter(this)
         adapter?.enableForegroundDispatch(this, pendingIntent, null, null)
-        locationHandler.enableRequestUpdates()
     }
 
     override fun onTargetSelected(targetID: Int) {
@@ -121,11 +76,12 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-    public override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 preys[it]?.let { preyID ->
+                    catchCount++
                     onPreyCatches(gameData.playerID, preyID)
                     locationHandler.declareCatch(preyID)
                 }
@@ -133,22 +89,9 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        locationHandler.onRequestPermissionsResult(requestCode)
-    }
-
     override fun onPause() {
         super.onPause()
-        locationHandler.removeUpdates()
         NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (validGame) {
-            heartbeatHandler.removeCallbacks(heartbeatRunnable)
-            locationHandler.stop()
-        }
     }
 
     override fun onLocationChanged(newLocation: Location) {
@@ -157,10 +100,6 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
                     players[targetID]?.lastKnownLocation?.distanceTo(newLocation)?.toInt()
                             ?: TargetDistanceFragment.NO_DISTANCE
         }
-    }
-
-    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-        Toast.makeText(applicationContext, "Location: onStatusChanged: $status", Toast.LENGTH_LONG).show()
     }
 
     override fun onProviderEnabled(provider: String) {
@@ -174,13 +113,10 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     }
 
     override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
-        if (players.containsKey(playerID)) {
-            players[playerID]!!.lastKnownLocation = location
-            if (playerID == targetID) {
-                targetDistanceFragment.distance =
-                        players[targetID]?.lastKnownLocation?.distanceTo(locationHandler.lastKnownLocation)?.toInt()
-                                ?: TargetDistanceFragment.NO_DISTANCE
-            }
+        if (players.containsKey(playerID) && playerID == targetID) {
+            targetDistanceFragment.distance =
+                    players[targetID]?.lastKnownLocation?.distanceTo(locationHandler.lastKnownLocation)?.toInt()
+                            ?: TargetDistanceFragment.NO_DISTANCE
         }
     }
 
@@ -200,9 +136,5 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
 
     override fun onTimeOut() {
         EndGameHelper.startEndGameActivity(this, gameData.initialTime, catchCount)
-    }
-
-    override fun onBackPressed() {
-        //No code to avoid leaving the activity and returning to the game lobby
     }
 }
