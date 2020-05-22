@@ -25,6 +25,12 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     private var gameStartListener: IGameLobbyRepository.OnGameStartListener? = null
     private var gameStartSnapshotRegistration: ListenerRegistration? = null
 
+    /**
+     * Fetches a field for a given game
+     * @param gameId    Id of the game to look in
+     * @param fieldName Name of the field to fetch
+     * @param cb        callback to be called with the field's value
+     */
     private fun <T> getField(gameId: String, fieldName: String, cb: Callback<T>) {
         fs.collection(GAME_COLLECTION).document(gameId).get().addOnSuccessListener {
             @Suppress("UNCHECKED_CAST")
