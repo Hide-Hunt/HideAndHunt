@@ -21,9 +21,9 @@ class GameHistoryTest {
      */
 
     /*
-        id: 42
+        id: "42"
         name: "Some game name"
-        adminID: 1
+        adminID: "1"
         start_timestamp: 1583
         end_timestamp: 2494
         players: [
@@ -36,13 +36,13 @@ class GameHistoryTest {
             { timestamp: 2494; catch_event:    { predatorID: 1; preyID: 0 } }
         }
      */
-    private val veryShortGame = "CCoSDlNvbWUgZ2FtZSBuYW1lGAElLwYAAC2+CQAAUgBSBAgBEAFaGw0vBgAAWhQSEgk9CtejcD1H" +
-            "QBE9CtejcD0aQFodDTAGAABaFggBEhIJ4XoUrkdBR0ARCtejcD0KGkBaCQ2+CQAAUgIIAQ=="
+    private val veryShortGame = "CgI0MhIOU29tZSBnYW1lIG5hbWUaATElLwYAAC2+CQAAUgBSBAgBEAFaGw0vBgAAWhQSEgk9Ctej\n" +
+            "cD1HQBE9CtejcD0aQFodDTAGAABaFggBEhIJ4XoUrkdBR0ARCtejcD0KGkBaCQ2+CQAAUgIIAQ=="
 
     /*
-        id: 37
+        id: "37"
         name: "Some game name"
-        adminID: 4
+        adminID: "4"
         start_timestamp: 8315
         end_timestamp: 9424
         players: [
@@ -55,8 +55,8 @@ class GameHistoryTest {
                 { timestamp: 9424; catch_event:    { predatorID: 0; preyID: 1 } }
         ]
      */
-    private val veryShortGame2 = "CCUSDlNvbWUgZ2FtZSBuYW1lGAQleyAAAC3QJAAAUgIQAVICCAFaHQ17IAAAWhYIARISCfYoXI/C" +
-            "VUdAEQrXo3A9ChpAWhsNfCAAAFoUEhIJ4XoUrkdBR0ARPQrXo3A9GkBaCQ3QJAAAUgIQAQ=="
+    private val veryShortGame2 = "CgIzNxIOU29tZSBnYW1lIG5hbWUaATQleyAAAC3QJAAAUgIQAVICCAFaHQ17IAAAWhYIARISCfYo" +
+            "XI/CVUdAEQrXo3A9ChpAWhsNfCAAAFoUEhIJ4XoUrkdBR0ARPQrXo3A9GkBaCQ3QJAAAUgIQAQ=="
 
     private fun gameAsInputStream(b64Game: String): InputStream =
             ByteArrayInputStream(Base64.decode(b64Game, Base64.DEFAULT))
@@ -65,9 +65,9 @@ class GameHistoryTest {
     val exception: ExpectedException = ExpectedException.none()
 
     @Test
-    fun fileWithNegativeIDShouldRaiseInvalidGameFormatException() {
+    fun fileWithEmptyIDShouldRaiseInvalidGameFormatException() {
         /*
-        id: -13
+        id: ""
         name: "Some game name"
         adminID: 1
         start_timestamp: 1583
@@ -76,27 +76,25 @@ class GameHistoryTest {
         events: [ { timestamp: 1583; location_event: { playerID: 0; location: { latitude: 46.48; longitude: 6.56 } } } ]
          */
         val invalidGameID =
-                "CPP//////////wESDlNvbWUgZ2FtZSBuYW1lGAElLwYAAC2+CQAAUgBaGw0vBgAAWhQSEgk9Ctej" +
-                "cD1HQBE9CtejcD0aQA=="
+                "Eg5Tb21lIGdhbWUgbmFtZRoBMSUvBgAALb4JAABSAFobDS8GAABaFBISCT0K16NwPUdAET0K16NwPRpA"
         exception.expect(GameHistory.InvalidGameFormat::class.java)
         exception.expectMessage("Invalid game id")
         GameHistory.fromFile(gameAsInputStream(invalidGameID))
     }
 
     @Test
-    fun fileWithNegativeAdminIDShouldRaiseInvalidGameFormatException() {
+    fun fileWithEmptyAdminIDShouldRaiseInvalidGameFormatException() {
         /*
-        id: 42
+        id: "42"
         name: "Some game name"
-        adminID: -7
+        adminID: ""
         start_timestamp: 1583
         end_timestamp: 2494
         players: [ { id: 0; faction: PREY } ]
         events: [ { timestamp: 1583; location_event: { playerID: 0; location: { latitude: 46.48; longitude: 6.56 } } } ]
          */
         val invalidGameID =
-                "CCoSDlNvbWUgZ2FtZSBuYW1lGPn//////////wElLwYAAC2+CQAAUgBaGw0vBgAAWhQSEgk9Ctej" +
-                "cD1HQBE9CtejcD0aQA=="
+                "CgI0MhIOU29tZSBnYW1lIG5hbWUlLwYAAC2+CQAAUgBaGw0vBgAAWhQSEgk9CtejcD1HQBE9CtejcD0aQA=="
         exception.expect(GameHistory.InvalidGameFormat::class.java)
         exception.expectMessage("Invalid admin id")
         GameHistory.fromFile(gameAsInputStream(invalidGameID))
@@ -105,17 +103,16 @@ class GameHistoryTest {
     @Test
     fun fileWithoutPlayerShouldRaiseInvalidGameFormatException() {
         /*
-        id: 42
+        id: "42"
         name: "Some game name"
-        adminID: 1
+        adminID: "1"
         start_timestamp: 1583
         end_timestamp: 2494
         players: [ ]
         events: [ { timestamp: 1583; location_event: { playerID: 0; location: { latitude: 46.48; longitude: 6.56 } } } ]
          */
         val invalidGameID =
-                "CCoSDlNvbWUgZ2FtZSBuYW1lGAElLwYAAC2+CQAAWhsNLwYAAFoUEhIJPQrXo3A9R0ARPQrXo3A9" +
-                "GkA="
+                "CgI0MhIOU29tZSBnYW1lIG5hbWUaATElLwYAAC2+CQAAWhsNLwYAAFoUEhIJPQrXo3A9R0ARPQrXo3A9GkA="
         exception.expect(GameHistory.InvalidGameFormat::class.java)
         exception.expectMessage("No player")
         GameHistory.fromFile(gameAsInputStream(invalidGameID))
@@ -124,15 +121,15 @@ class GameHistoryTest {
     @Test
     fun fileWithoutEventShouldRaiseInvalidGameFormatException() {
         /*
-        id: 42
+        id: "42"
         name: "Some game name"
-        adminID: 1
+        adminID: "1"
         start_timestamp: 1583
         end_timestamp: 2494
         players: [ ]
         events: [ { timestamp: 1583; location_event: { playerID: 0; location: { latitude: 46.48; longitude: 6.56 } } } ]
          */
-        val invalidGameID = "CCoSDlNvbWUgZ2FtZSBuYW1lGAElLwYAAC2+CQAAUgA="
+        val invalidGameID = "CgI0MhIOU29tZSBnYW1lIG5hbWUaATElLwYAAC2+CQAAUgA="
         exception.expect(GameHistory.InvalidGameFormat::class.java)
         exception.expectMessage("No event")
         GameHistory.fromFile(gameAsInputStream(invalidGameID))
@@ -141,20 +138,20 @@ class GameHistoryTest {
     @Test
     fun parsingValidFileShouldGiveCorrectGameID() {
         GameHistory.fromFile(gameAsInputStream(veryShortGame)).let {
-            assertEquals(42, it.gameID)
+            assertEquals("42", it.gameID)
         }
         GameHistory.fromFile(gameAsInputStream(veryShortGame2)).let {
-            assertEquals(37, it.gameID)
+            assertEquals("37", it.gameID)
         }
     }
 
     @Test
     fun parsingValidFileShouldGiveCorrectAdminID() {
         GameHistory.fromFile(gameAsInputStream(veryShortGame)).let {
-            assertEquals(1, it.adminID)
+            assertEquals("1", it.adminID)
         }
         GameHistory.fromFile(gameAsInputStream(veryShortGame2)).let {
-            assertEquals(4, it.adminID)
+            assertEquals("4", it.adminID)
         }
     }
 

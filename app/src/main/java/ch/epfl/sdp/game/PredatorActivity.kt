@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.nfc.NfcAdapter
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,8 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     private lateinit var targetSelectionFragment: TargetSelectionFragment
     private lateinit var targetDistanceFragment: TargetDistanceFragment
     private lateinit var preyFragment: PreyFragment
+    private val heartbeatHandler = Handler()
+    private val heartbeatRunnable = Runnable { onHeartbeat() }
 
     private var catchCount = 0
 
@@ -67,6 +70,12 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         }
 
         loadFragments()
+        onHeartbeat()
+    }
+
+    private fun onHeartbeat() {
+        heartbeatHandler.postDelayed(heartbeatRunnable,1000)
+        locationHandler.emitLocation()
     }
 
     private fun loadFragments() { // create a FragmentManager
@@ -137,6 +146,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     override fun onDestroy() {
         super.onDestroy()
         if (validGame) {
+            heartbeatHandler.removeCallbacks(heartbeatRunnable)
             locationHandler.stop()
         }
     }
@@ -184,6 +194,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
 
         if (players.values.filterIsInstance<Prey>().none { p -> p.state != PreyState.DEAD }) {
             EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
+            gameTimerFragment.stop()
         }
     }
 
