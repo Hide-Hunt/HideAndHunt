@@ -1,7 +1,6 @@
 package ch.epfl.sdp.lobby.game
 
-import ch.epfl.sdp.db.Callback
-import ch.epfl.sdp.db.UnitCallback
+import ch.epfl.sdp.db.SuccFailCallbacks.*
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
@@ -17,8 +16,9 @@ interface IGameLobbyRepository {
     /**
      * Register the current user in the game associated to the given id
      * @param gameId Int: id of the game to join
+     * @param cb UnitCallback: UnitSuccFailCallback pair of success/failure unit callbacks
      */
-    fun addLocalParticipation(gameId: String)
+    fun addLocalParticipation(gameId: String, cb: UnitSuccFailCallback)
 
     /**
      * Create name with specified name and duration
@@ -31,51 +31,44 @@ interface IGameLobbyRepository {
     /**
      * Get a game's name given its id
      * @param gameId Int: id of the game
-     * @param cb Callback<String>: callback operating on the game name
+     * @param cb UnitCallback: SuccFailCallback<String> pair of success/failure callbacks
      */
-    fun getGameName(gameId: String, cb: Callback<String>)
+    fun getGameName(gameId: String, cb: SuccFailCallback<String>)
 
     /**
      * Get a game's duration given its id
      * @param gameId Int: id of the game
-     * @param cb Callback<Long>: callback operating on the game duration
+     * @param cb UnitCallback: SuccFailCallback<Long> pair of success/failure callbacks
      */
-    fun getGameDuration(gameId: String, cb: Callback<Long>)
+    fun getGameDuration(gameId: String, cb: SuccFailCallback<Long>)
 
     /**
      * Get a game's list of players given its id
      * @param gameId Int: id of the game
-     * @param cb Callback<List<Player>>: callback operating on the list of players
+     * @param cb UnitCallback: SuccFailCallback<List<Player>> pair of success/failure callbacks
      */
-    fun getPlayers(gameId: String, cb: Callback<List<Player>>)
+    fun getPlayers(gameId: String, cb: SuccFailCallback<List<Player>>)
 
     /**
      * Get a game's list of participations given its id
      * @param gameId Int: id of the game
-     * @param cb Callback<List<Participation>>: callback operating on the list of participations
+     * @param cb UnitCallback: SuccFailCallback<List<Participation>> pair of success/failure callbacks
      */
-    fun getParticipations(gameId: String, cb: Callback<List<Participation>>)
+    fun getParticipation(gameId: String, cb: SuccFailCallback<List<Participation>>)
 
     /**
      * Get a game's admin's id given the game id
      * @param gameId Int: id of the game
-     * @param cb Callback<Int>: callback operating on the list of admin's ids
+     * @param cb UnitCallback: SuccFailCallback<String> pair of success/failure callbacks
      */
-    fun getAdminId(gameId: String, cb: Callback<String>)
-
-    /**
-     * Change the ready attribute of a player
-     * @param gameId Int: the id of the game the player is in
-     * @param uid Int: the id of the player
-     * @param cb UnitCallback: The callback function to call when done changing player
-     */
-    fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback)
+    fun getAdminId(gameId: String, cb: SuccFailCallback<String>)
 
     /**
      * Requests the game to be launched on the server
      * @param gameId Int: the id of the game to start
+     * @param cb UnitCallback: UnitSuccFailCallback pair of success/failure unit callbacks
      */
-    fun requestGameLaunch(gameId: String)
+    fun requestGameLaunch(gameId: String, cb: UnitSuccFailCallback)
 
     /**
      * Registers a listener for a game start
@@ -89,31 +82,31 @@ interface IGameLobbyRepository {
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
      * @param ready Boolean: the new state of the attribute
-     * @param cb UnitCallback: The callback function to call when done changing player
+     * @param cb UnitCallback: UnitSuccFailCallback pair of success/failure unit callbacks
      */
-    fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback)
+    fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitSuccFailCallback)
 
     /**
      * Sets the faction of the player to the given value
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
      * @param faction PlayerFaction: the new player's faction
-     * @param cb UnitCallback: The callback function to call when done changing player
+     * @param cb UnitCallback: UnitSuccFailCallback pair of success/failure unit callbacks
      */
-    fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback)
+    fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitSuccFailCallback)
 
     /**
      * Sets the nfc tag of the player to the given value
      * @param gameId Int: the id of the game the player is in
      * @param uid Int: the id of the player
      * @param tag String: the new player's tag
-     * @param cb UnitCallback: The callback function to call when done changing player
+     * @param cb UnitCallback: UnitSuccFailCallback pair of success/failure unit callbacks
      */
-    fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback)
+    fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitSuccFailCallback)
 
     /**
      * Remove a participation from a game lobby
      * @param gameId Int: the id of the game
      */
-    fun removeLocalParticipation(gameId: String)
+    fun removeLocalParticipation(gameId: String, cb: UnitSuccFailCallback)
 }
