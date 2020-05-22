@@ -8,4 +8,7 @@ object FirebaseConstants {
     const val GAME_PARTICIPATION_COLLECTION = "participation"
 
     const val GAME_ACTION_QUEUE_COLLECTION = "game_action_queue"
+
+    // For testing
+    const val INVALID_DOC_ID = "éé'èè"
 }

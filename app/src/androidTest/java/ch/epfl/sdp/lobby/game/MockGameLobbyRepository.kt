@@ -1,7 +1,6 @@
 package ch.epfl.sdp.lobby.game
 
-import ch.epfl.sdp.db.Callback
-import ch.epfl.sdp.db.UnitCallback
+import ch.epfl.sdp.db.SuccFailCallbacks.*
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
@@ -24,35 +23,33 @@ object MockGameLobbyRepository : IGameLobbyRepository {
     var gameState = GameState.LOBBY
     val gameStartListeners = HashMap<String, IGameLobbyRepository.OnGameStartListener?>()
 
-    override fun addLocalParticipation(gameId: String) = Unit //No code
+    override fun addLocalParticipation(gameId: String, cb: UnitSuccFailCallback) = Unit //No code
 
-    override fun removeLocalParticipation(gameId: String) = Unit //No code
+    override fun removeLocalParticipation(gameId: String, cb: UnitSuccFailCallback) = Unit //No code
 
     override fun createGame(gameName: String, gameDuration: Long): String = "42"
 
-    override fun getGameName(gameId: String, cb: Callback<String>) = cb("My mock game")
+    override fun getGameName(gameId: String, cb: SuccFailCallback<String>) = cb.success("My mock game")
 
-    override fun getGameDuration(gameId: String, cb: Callback<Long>) = cb(1200L)
+    override fun getGameDuration(gameId: String, cb: SuccFailCallback<Long>) = cb.success(1200L)
 
-    override fun getParticipations(gameId: String, cb: Callback<List<Participation>>) = cb(players)
+    override fun getParticipation(gameId: String, cb: SuccFailCallback<List<Participation>>) = cb.success(players)
 
-    override fun getPlayers(gameId: String, cb: Callback<List<Player>>) {
-        cb(players.sortedBy { it.userID }.withIndex().map { p -> p.value.toPlayer(p.index) })
+    override fun getPlayers(gameId: String, cb: SuccFailCallback<List<Player>>) {
+        cb.success(players.sortedBy { it.userID }.withIndex().map { p -> p.value.toPlayer(p.index) })
     }
 
-    override fun getAdminId(gameId: String, cb: Callback<String>) { cb(players[1].userID) }
+    override fun getAdminId(gameId: String, cb: SuccFailCallback<String>) { cb.success(players[1].userID) }
 
-    override fun changePlayerReady(gameId: String, uid: String, cb: UnitCallback) {
-        players.first { it.userID == uid }.let { it.ready = !it.ready }
-        cb()
-    }
-
-    override fun requestGameLaunch(gameId: String) {
+    override fun requestGameLaunch(gameId: String, cb: UnitSuccFailCallback) {
         if (gameState == GameState.LOBBY) {
+            cb.success()
             gameState = GameState.STARTED
             if (gameStartListeners.containsKey(gameId)) {
                 gameStartListeners[gameId]?.onGameStart()
             }
+        } else {
+            cb.failure()
         }
     }
 
@@ -60,18 +57,21 @@ object MockGameLobbyRepository : IGameLobbyRepository {
         gameStartListeners[gameId] = listener
     }
 
-    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean, cb: UnitCallback) {
+    override fun setPlayerReady(gameId: String, uid: String, ready: Boolean,
+                                   cb: UnitSuccFailCallback) {
         players.first { it.userID == uid }.ready = ready
-        cb()
+        cb.success()
     }
 
-    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction, cb: UnitCallback) {
+    override fun setPlayerFaction(gameId: String, uid: String, faction: Faction,
+                                   cb: UnitSuccFailCallback) {
         players.first { it.userID == uid }.faction = faction
-        cb()
+        cb.success()
     }
 
-    override fun setPlayerTag(gameId: String, uid: String, tag: String, cb: UnitCallback) {
+    override fun setPlayerTag(gameId: String, uid: String, tag: String,
+                                   cb: UnitSuccFailCallback) {
         players.first { it.userID == uid }.tag = tag
-        cb()
+        cb.success()
     }
 }
