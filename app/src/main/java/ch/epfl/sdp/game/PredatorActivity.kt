@@ -146,6 +146,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
     override fun onDestroy() {
         super.onDestroy()
         if (validGame) {
+            heartbeatHandler.removeCallbacks(heartbeatRunnable)
             locationHandler.stop()
         }
     }
