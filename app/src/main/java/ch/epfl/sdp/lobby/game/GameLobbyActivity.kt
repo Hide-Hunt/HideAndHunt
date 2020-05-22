@@ -16,6 +16,9 @@ import ch.epfl.sdp.R
 import ch.epfl.sdp.authentication.LocalUser
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityGameLobbyBinding
+import ch.epfl.sdp.error.Error
+import ch.epfl.sdp.error.ErrorActivity
+import ch.epfl.sdp.error.ErrorCode
 import ch.epfl.sdp.game.*
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.lobby.PlayerParametersFragment
@@ -30,7 +33,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rv: RecyclerView
-    private lateinit var adminId: String
 
     @Inject
     lateinit var repository: IGameLobbyRepository
@@ -40,6 +42,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private lateinit var gameID: String
     private val userID: String = LocalUser.uid
     private var playerID: Int = 0
+    private var adminId: String = ""
     private lateinit var gameLobbyBinding: ActivityGameLobbyBinding
     private var myFaction: Faction = Faction.PREDATOR
     private var myTag: String? = null
@@ -58,20 +61,18 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         rv.layoutManager = LinearLayoutManager(this)
 
         repository.addLocalParticipation(gameID, {
-            //repository interactions
-            repository.setPlayerFaction(gameID, userID, Faction.PREDATOR, {}, {
-                // TODO handle error
-            })
-            repository.getAdminId(gameID, { id ->
-                adminId = id
-                repository.getParticipations(gameID, { playerList ->
-                    rv.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
-                }, {})
-            }, {})
             repository.setOnGameStartListener(gameID, this)
         }, {
-            // TODO handle error
+            ErrorActivity.startWith(this, Error(ErrorCode.OPERATION_FAILURE, "Unable to join lobby for game {}".format(gameID)))
         })
+
+        //repository interactions
+        repository.getAdminId(gameID, { id ->
+            adminId = id
+            repository.getParticipations(gameID, { playerList ->
+                rv.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
+            }, {})
+        }, {})
 
         //set game info views
         setGameLobbyViews()
