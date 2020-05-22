@@ -16,27 +16,23 @@ import java.util.*
  * Cache tu store user information on the phone
  */
 class UserCache {
-    private val cacheFilename = "user_cache"
-    private val imageFilename = "user_image"
+    companion object {
+        private const val CACHE_EXPIRATION = 60
+        private const val CACHE_FILENAME = "user_cache"
+        private const val IMAGE_FILENAME = "user_image"
+    }
 
     /**
      * Invalidate the cache if it currently exists, otherwise does nothing
      * @param context Context: The [Context] from which the call is operated
      */
     fun invalidateCache(context: Context) {
-        if (doesExist(context))
-            context.deleteFile(cacheFilename)
-        if(retrieveProfilePic(context) == null)
-            context.deleteFile(imageFilename)
-    }
-
-    /**
-     * Check if the cache exists on the phone
-     * @param context Context: The [Context] from which the call is operated
-     * @return Boolean: True if the cache exists, False otherwise
-     */
-    fun doesExist(context: Context): Boolean {
-        return File(context.filesDir.absolutePath + "/" + cacheFilename).exists()
+        File(context.cacheDir, CACHE_FILENAME).let {
+            if(it.exists()) it.delete()
+        }
+        File(context.cacheDir, IMAGE_FILENAME).let {
+            if(it.exists()) it.delete()
+        }
     }
 
     /**
@@ -45,12 +41,9 @@ class UserCache {
      * @return Bitmap?: The Bitmap of the profile pic cached, or null if none is found
      */
     private fun retrieveProfilePic(context: Context): Bitmap? {
-        if(!File(context.filesDir.absolutePath + "/" + imageFilename).exists())
-            return null
-        return try {
-            BitmapFactory.decodeFile(context.filesDir.absolutePath + "/" + imageFilename)
-        } catch (e: Exception) {
-            null
+        File(context.cacheDir, IMAGE_FILENAME).let {
+            return if(it.exists()) BitmapFactory.decodeFile(context.cacheDir.absolutePath + "/" + IMAGE_FILENAME)
+            else null
         }
     }
 
@@ -59,37 +52,24 @@ class UserCache {
      * @param context Context: The [Context] from which the call is operated
      */
     fun get(context: Context) {
-        if (!doesExist(context)) {
+        val cacheFile = File(context.cacheDir, CACHE_FILENAME)
+        if(!cacheFile.exists()) {
             LocalUser.connected = false
             return
         }
 
-        var state = 0
-        val reader = BufferedReader(InputStreamReader(context.openFileInput(cacheFilename)))
-        var line: String? = reader.readLine()
-        while (line != null) {
-            when (line.trim()) {
-                "DATE" -> state = 0
-                "UID" -> state = 1
-                "PSEUDO" -> state = 2
-                else -> when (state) {
-                    0 -> {
-                        val sdf = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale("fr-fr"))
-                        val currentTime = Calendar.getInstance()
-                        currentTime.add(Calendar.MINUTE, -1)
+        val currentTime = System.currentTimeMillis() / 1000
+        val lines = cacheFile.readLines()
+        val timestampLimit = lines[0].toLong()
 
-                        if (currentTime.time.after(sdf.parse(line))) {
-                            context.deleteFile(cacheFilename)
-                            context.deleteFile(imageFilename)
-                            return
-                        }
-                    }
-                    1 -> LocalUser.uid = line.trim()
-                    2 -> LocalUser.pseudo = line.trim()
-                }
-            }
-            line = reader.readLine()
+        if(timestampLimit + CACHE_EXPIRATION < currentTime) {
+            invalidateCache(context)
+            LocalUser.connected = false
+            return
         }
+
+        LocalUser.uid = lines[1].trim()
+        LocalUser.pseudo = lines[2].trim()
         LocalUser.connected = true
         LocalUser.profilePic = retrieveProfilePic(context)
     }
@@ -99,21 +79,8 @@ class UserCache {
      * @param context Context: The [Context] from which the call is operated
      */
     fun put(context: Context) {
-        val outputStream = OutputStreamWriter(context.openFileOutput(cacheFilename, Context.MODE_PRIVATE))
-        val currentTime = Calendar.getInstance().time
-        val output = "DATE\n" + currentTime.toString() + "\nUID\n" + LocalUser.uid + "\nPSEUDO\n" + LocalUser.pseudo + "\n"
-        outputStream.write(output, 0, output.length)
-        outputStream.flush()
-        outputStream.close()
-
-        LocalUser.profilePic?.let { profilePic ->
-            val imageStream = context.openFileOutput(imageFilename, Context.MODE_PRIVATE)
-            val byteStream = ByteArrayOutputStream()
-            profilePic.compress(Bitmap.CompressFormat.PNG, 90, byteStream)
-            imageStream.write(byteStream.toByteArray())
-            imageStream.flush()
-            imageStream.close()
-            byteStream.close()
-        }
+        val currentTime = System.currentTimeMillis() / 1000
+        val output = currentTime.toString() + "\n" + LocalUser.uid + "\n" + LocalUser.pseudo
+        File(context.cacheDir, CACHE_FILENAME).writeText(output)
     }
 }
