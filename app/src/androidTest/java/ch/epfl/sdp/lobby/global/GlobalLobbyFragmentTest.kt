@@ -59,7 +59,7 @@ class GlobalLobbyFragmentTest {
     }
 
     @Test
-    fun swipeRefreshesDataset() {
+    fun swipeRefreshesDataSet() {
         val scenario = launchFragmentInContainer<GlobalLobbyFragment>()
         var size = -1
         scenario.onFragment { f-> size = f.view!!.findViewById<RecyclerView>(R.id.global_lobby_recycler).size}
