@@ -70,6 +70,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
         }
 
         loadFragments()
+        onHeartbeat()
     }
 
     private fun onHeartbeat() {
