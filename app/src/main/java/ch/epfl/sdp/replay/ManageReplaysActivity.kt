@@ -49,7 +49,7 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
     override fun onListFragmentInteraction(game: ReplayInfo) {
         if (game.localCopy) {
             val intent = Intent(this, ReplayActivity::class.java)
-            intent.putExtra(ReplayActivity.REPLAY_PATH_ARG, "${game.gameID}.game")
+            intent.putExtra(ReplayActivity.REPLAY_GAME_ID, game.gameID)
             startActivity(intent)
         } else {
             AlertDialog.Builder(this)
