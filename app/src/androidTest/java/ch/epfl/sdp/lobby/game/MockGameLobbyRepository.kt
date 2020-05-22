@@ -6,6 +6,7 @@ import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
 
+@Suppress("MemberVisibilityCanBePrivate")
 object MockGameLobbyRepository : IGameLobbyRepository {
     val players = mutableListOf(
             Participation("u53r1d", Faction.PREDATOR, false, "u53rt4g", ""),

@@ -45,7 +45,6 @@
             android:theme="@style/FullscreenNoTitle"
             tools:ignore="LockedOrientationActivity" />
         <activity android:name=".lobby.GameCreationActivity" />
-        <activity android:name=".lobby.LobbyActivity" />
         <activity android:name=".lobby.game.GameLobbyActivity" android:noHistory="true" />
         <activity android:name=".authentication.LoginActivity" />
         <activity android:name=".user.ProfileActivity" />
