@@ -127,6 +127,9 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     private fun setLobbyDataFromRepo() {
+        recyclerView = gameLobbyBinding.playerList
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
         repository.addLocalParticipation(gameID, UnitSuccFailCallback({
             repository.setOnGameStartListener(gameID, this)
         }, { joiningGameError() }))
@@ -140,9 +143,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     private fun setGameLobbyViews() {
-        recyclerView = gameLobbyBinding.playerList
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
         val gameInfo = gameLobbyBinding.gameInfo
         repository.getGameName(gameID, SuccFailCallback({ name ->
             (gameInfo.getChildAt(0) as TextView).text = getString(R.string.game_name).format(name)
