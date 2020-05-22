@@ -30,6 +30,7 @@ class ErrorActivity : AppCompatActivity() {
     companion object {
         fun startWith(context: Context, error: Error) {
             val intent = Intent(context, ErrorActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra("error", error)
             context.startActivity(intent)
         }
