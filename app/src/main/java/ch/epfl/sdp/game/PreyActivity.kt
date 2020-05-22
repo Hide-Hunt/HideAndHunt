@@ -1,71 +1,36 @@
 package ch.epfl.sdp.game
 
 import android.os.Bundle
-import android.os.Handler
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.databinding.ActivityPreyBinding
-import ch.epfl.sdp.error.Error
-import ch.epfl.sdp.error.ErrorActivity
-import ch.epfl.sdp.error.ErrorCode
 import ch.epfl.sdp.game.data.*
-import ch.epfl.sdp.game.location.ILocationListener
-import ch.epfl.sdp.game.location.LocationHandler
 
 /**
  * Activity shown as a prey during the game
  */
-class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.GameTimeOutListener {
-
+class PreyActivity : GameActivity() {
     private lateinit var binding: ActivityPreyBinding
+
     private lateinit var preyFragment: PreyFragment
     private lateinit var gameTimerFragment: GameTimerFragment
     private lateinit var predatorRadarFragment: PredatorRadarFragment
-    private val heartbeatHandler = Handler()
-    private val heartbeatRunnable = Runnable { onHeartbeat() }
 
-    private lateinit var gameData: GameIntentUnpacker.GameIntentData
-    private var validGame: Boolean = false
-
-    //TODO : Should they be private ?
-    val players: HashMap<Int, Player> = HashMap()
     val ranges: List<Int> = listOf(10, 20, 50, 100, 100000)
     val rangePopulation: HashMap<Int, Int> = HashMap()
 
     private var mostDangerousManDistance: Float = 10e+9f
 
-    lateinit var locationHandler: LocationHandler
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPreyBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val gameDataAndValidity = GameIntentUnpacker.unpack(intent)
-        validGame = gameDataAndValidity.second
-        if (!validGame) {
-            val error = Error(ErrorCode.INVALID_ACTIVITY_PARAMETER, "Invalid intent")
-            ErrorActivity.startWith(this, error)
-            finish()
-            return
-        }
-        gameData = gameDataAndValidity.first
-        locationHandler = LocationHandler(this, this, gameData.gameID, gameData.playerID, gameData.mqttURI)
-        loadPlayers(gameData.playerList)
-        loadFragments()
-        onHeartbeat()
-    }
 
-    private fun onHeartbeat() {
-        heartbeatHandler.postDelayed(heartbeatRunnable,1000)
-        locationHandler.emitLocation()
-    }
-
-    private fun loadPlayers(lst: List<Player>) {
-        for (p: Player in lst) {
-            players[p.id] = p
-            if (p is Predator) {
+        if (validGame) {
+            for (p: Player in gameData.playerList.filterIsInstance<Predator>()) {
                 locationHandler.subscribeToPlayer(p.id)
             }
+
+            loadFragments()
         }
     }
 
@@ -116,40 +81,12 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
         updateThreat()
     }
 
-    override fun onResume() {
-        super.onResume()
-        locationHandler.enableRequestUpdates()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        locationHandler.onRequestPermissionsResult(requestCode)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        locationHandler.removeUpdates()
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (validGame) {
-            heartbeatHandler.removeCallbacks(heartbeatRunnable)
-            locationHandler.stop()
-        }
-    }
-
-    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-    }
-
-    override fun onProviderEnabled(provider: String) {
-    }
-
-    override fun onProviderDisabled(provider: String) {
-    }
+    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+    override fun onProviderEnabled(provider: String) {}
+    override fun onProviderDisabled(provider: String) {}
 
     override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
-        players[playerID]?.lastKnownLocation = location
+        super.onPlayerLocationUpdate(playerID, location)
         updateThreat()
     }
 
@@ -171,9 +108,5 @@ class PreyActivity : AppCompatActivity(), ILocationListener, GameTimerFragment.G
 
     override fun onTimeOut() {
         EndGameHelper.startEndGameActivity(this, gameData.initialTime, 0)
-    }
-
-    override fun onBackPressed() {
-        //No code
     }
 }
