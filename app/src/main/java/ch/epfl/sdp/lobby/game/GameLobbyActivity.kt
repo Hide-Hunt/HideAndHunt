@@ -157,6 +157,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             gameLobbyBinding.startButton.setOnClickListener {
                 gameLobbyBinding.startButton.isEnabled = false
                 repository.requestGameLaunch(gameID, UnitSuccFailCallback({}, {
+                    this@GameLobbyActivity.gameLobbyBinding.startButton.isEnabled = true
                     Toast.makeText(applicationContext, "Unable to start game", Toast.LENGTH_LONG).show()
                 }))
             }
