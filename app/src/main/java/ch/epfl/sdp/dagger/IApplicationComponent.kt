@@ -2,6 +2,7 @@ package ch.epfl.sdp.dagger
 
 import android.content.Context
 import ch.epfl.sdp.authentication.LoginActivity
+import ch.epfl.sdp.dagger.modules.DBModule
 import ch.epfl.sdp.dagger.modules.ReplayModule
 import ch.epfl.sdp.dagger.modules.RepoModule
 import ch.epfl.sdp.dagger.modules.UserConnectorModule
@@ -20,10 +21,10 @@ import javax.inject.Singleton
 interface IApplicationComponent
 
 @Singleton
-@Component(modules = [RepoModule::class, UserConnectorModule::class, ReplayModule::class])
+@Component(modules = [DBModule::class, RepoModule::class, ReplayModule::class, UserConnectorModule::class])
 interface ApplicationComponent : IApplicationComponent {
     @Component.Factory
-    interface Factory{
+    interface Factory {
         fun create(@BindsInstance context: Context): ApplicationComponent
     }
 
