@@ -169,11 +169,15 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         gameLobbyBinding.leaveButton.setBackgroundColor(Color.RED)
     }
 
-    override fun finish() {
+    override fun onDestroy() {
+        super.onDestroy()
         repository.setOnGameStartListener(gameID, null)
+    }
+
+    override fun finish() {
+        super.finish()
         //Remove player from lobby on finish
         repository.removeLocalParticipation(gameID, UnitSuccFailCallback())
-        super.finish()
     }
 
     override fun onGameStart() {
