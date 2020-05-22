@@ -184,6 +184,7 @@ class PredatorActivity : AppCompatActivity(), OnTargetSelectedListener, ILocatio
 
         if (players.values.filterIsInstance<Prey>().none { p -> p.state != PreyState.DEAD }) {
             EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
+            gameTimerFragment.stop()
         }
     }
 
