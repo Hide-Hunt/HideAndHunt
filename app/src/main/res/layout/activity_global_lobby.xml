@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".lobby.global.GlobalLobbyActivity"
-    android:orientation="horizontal">
+    android:backgroundTint="@color/colorPrimaryVeryDark"
+    android:orientation="horizontal"
+    tools:context=".lobby.global.GlobalLobbyActivity">
 
     <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/container" />
+        android:backgroundTint="@color/colorPrimaryVeryDark" />
 
 </LinearLayout>

@@ -31,8 +31,8 @@ class GameCreationActivity : AppCompatActivity() {
 
         binding.createButton.setOnClickListener {
             val time = binding.gameDuration.text.toString()
-            val timeeInSeconds: Long = time.toLong() * 60
-            val newGameID = lobbyRepo.createGame(binding.gameName.text.toString(), timeeInSeconds)
+            val timeInSeconds: Long = time.toLong() * 60
+            val newGameID = lobbyRepo.createGame(binding.gameName.text.toString(), timeInSeconds)
             val intent = Intent(this@GameCreationActivity, GameLobbyActivity::class.java)
             intent.putExtra("gameID", newGameID)
             startActivity(intent)
