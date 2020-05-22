@@ -1,6 +1,5 @@
 package ch.epfl.sdp.lobby.game
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
 import android.nfc.NfcAdapter
@@ -24,6 +23,7 @@ import ch.epfl.sdp.game.*
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.lobby.PlayerParametersFragment
 import ch.epfl.sdp.user.IUserRepo
+import ch.epfl.sdp.utils.NFCHelper
 import javax.inject.Inject
 
 /**
@@ -96,15 +96,12 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     override fun onResume() {
         super.onResume()
-        val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-        val adapter = NfcAdapter.getDefaultAdapter(this)
-        adapter?.enableForegroundDispatch(this, pendingIntent, null, null)
+        NFCHelper.enableForegroundDispatch(this)
     }
 
     override fun onPause() {
         super.onPause()
-        NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
+        NFCHelper.disableForegroundDispatch(this)
     }
 
     override fun onRefresh() {
