@@ -63,9 +63,7 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
                     Log.w("Mqtt", "Failed to connect to: $SERVER_URI$exception")
                 }
             })
-        } catch (ex: MqttException) {
-            ex.printStackTrace()
-        }
+        } catch (ex: MqttException) { ex.printStackTrace() }
     }
 
     override fun stop() {
