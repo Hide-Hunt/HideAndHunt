@@ -84,7 +84,10 @@ class LocationHandler(val activity: AppCompatActivity, val listener: ILocationLi
         locationSynchronizer.subscribeToPlayer(playerID)
     }
 
-    //TODO: Cette function n'est jamais utilisée ?
+    fun emitLocation() {
+        locationSynchronizer.updateOwnLocation(lastKnownLocation)
+    }
+
     fun declareCatch(preyID: Int) {
         locationSynchronizer.declareCatch(preyID)
     }

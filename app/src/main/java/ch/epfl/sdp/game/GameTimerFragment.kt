@@ -29,16 +29,21 @@ class GameTimerFragment : Fragment() {
     private lateinit var textView: TextView
     var listener: GameTimeOutListener? = null
     var remaining: Long = 0L
+    private lateinit var countDown: CountDownTimer
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentGameTimerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    fun stop(){
+        this.countDown.cancel()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         textView = binding.currentTime
         arguments?.let {
-            object : CountDownTimer(it.getLong(ARG_TIME), COUNTDOWN_INTERVAL.toLong()) {
+            this.countDown = object : CountDownTimer(it.getLong(ARG_TIME), COUNTDOWN_INTERVAL.toLong()) {
                 override fun onTick(millisUntilFinished: Long) {
                     //update displayed time
                     textView.text = TimerHelper.millisToTimeString(millisUntilFinished)
