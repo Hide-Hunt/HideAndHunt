@@ -41,33 +41,38 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
     }
 
     private fun connect() {
-        val mqttConnectOptions = MqttConnectOptions()
-        mqttConnectOptions.isAutomaticReconnect = true
-        mqttConnectOptions.isCleanSession = false
-        mqttConnectOptions.userName = USERNAME
-        mqttConnectOptions.password = PASSWORD.toCharArray()
-
         try {
+            val disconnectedBufferOptions = disconnectedBufferOptions()
+            val mqttConnectOptions = mqttConnectOptions()
             mqttAndroidClient.connect(mqttConnectOptions, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken) {
-                    val disconnectedBufferOptions = DisconnectedBufferOptions()
-                    disconnectedBufferOptions.isBufferEnabled = true
-                    disconnectedBufferOptions.bufferSize = 100
-                    disconnectedBufferOptions.isPersistBuffer = false
-                    disconnectedBufferOptions.isDeleteOldestMessages = false
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions)
-                    for (s in pendingSub) {
-                        subscribe(s)
-                    }
+                    pendingSub.forEach { subscribe(it) }
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                     Log.w("Mqtt", "Failed to connect to: $SERVER_URI$exception")
                 }
             })
-        } catch (ex: MqttException) {
-            ex.printStackTrace()
-        }
+        } catch (ex: MqttException) { ex.printStackTrace() }
+    }
+
+    private fun mqttConnectOptions(): MqttConnectOptions {
+        val mqttConnectOptions = MqttConnectOptions()
+        mqttConnectOptions.isAutomaticReconnect = true
+        mqttConnectOptions.isCleanSession = false
+        mqttConnectOptions.userName = USERNAME
+        mqttConnectOptions.password = PASSWORD.toCharArray()
+        return mqttConnectOptions
+    }
+
+    private fun disconnectedBufferOptions(): DisconnectedBufferOptions {
+        val disconnectedBufferOptions = DisconnectedBufferOptions()
+        disconnectedBufferOptions.isBufferEnabled = true
+        disconnectedBufferOptions.bufferSize = 100
+        disconnectedBufferOptions.isPersistBuffer = false
+        disconnectedBufferOptions.isDeleteOldestMessages = false
+        return disconnectedBufferOptions
     }
 
     override fun stop() {

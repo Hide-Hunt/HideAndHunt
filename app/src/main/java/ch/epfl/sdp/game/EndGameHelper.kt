@@ -16,6 +16,7 @@ object EndGameHelper {
      */
     fun startEndGameActivity(ctx: Context, duration: Long, catchCount: Int) {
         val intent = Intent(ctx, EndGameActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra("duration", duration)
         intent.putExtra("catchcount", catchCount)
         ctx.startActivity(intent)
