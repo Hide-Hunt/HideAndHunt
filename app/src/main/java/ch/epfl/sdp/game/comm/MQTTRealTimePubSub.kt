@@ -34,7 +34,6 @@ class MQTTRealTimePubSub internal constructor(context: Context, uri: String?) : 
             }
 
             override fun deliveryComplete(iMqttDeliveryToken: IMqttDeliveryToken) {
-                @Suppress("SpellCheckingInspection")
                 Log.w("mqtt", "delivery complete")
             }
         })
