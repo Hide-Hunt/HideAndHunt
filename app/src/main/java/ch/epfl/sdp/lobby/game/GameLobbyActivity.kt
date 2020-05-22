@@ -88,11 +88,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
                 repository.setPlayerReady(gameID, userID, true, UnitSuccFailCallback({
                     repository.setPlayerTag(gameID, userID, it, UnitSuccFailCallback({
                         updateLocalPlayerState()
-                    }, {
-                        // TODO handle error
                     }))
-                }, {
-                    // TODO handle error
                 }))
             }
         }
@@ -120,8 +116,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         repository.setPlayerFaction(gameID, userID, newFaction, UnitSuccFailCallback({
             myFaction = newFaction
             updateLocalPlayerState()
-        }, {
-            // TODO handle error
         }))
     }
 
@@ -136,8 +130,6 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
                 }
         repository.setPlayerReady(gameID, userID, newReadyState, UnitSuccFailCallback({
             refreshPlayerList()
-        }, {
-            // TODO handle error
         }))
     }
 
@@ -182,9 +174,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     override fun finish() {
         repository.setOnGameStartListener(gameID, null)
         //Remove player from lobby on finish
-        repository.removeLocalParticipation(gameID, UnitSuccFailCallback({}, {
-            // TODO handle error
-        }))
+        repository.removeLocalParticipation(gameID, UnitSuccFailCallback())
         super.finish()
     }
 
