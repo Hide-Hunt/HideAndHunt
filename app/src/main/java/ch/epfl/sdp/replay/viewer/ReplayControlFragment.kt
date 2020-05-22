@@ -55,7 +55,6 @@ class ReplayControlFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 updateTimeCursor(firstTimestamp + progress)
             }
-
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
             override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
         })
@@ -111,11 +110,11 @@ class ReplayControlFragment : Fragment() {
          */
         @JvmStatic
         fun newInstance(firstTimestamp: Int, lastTimestamp: Int) =
-                ReplayControlFragment().apply {
-                    arguments = Bundle().apply {
-                        putInt(FIRST_TIMESTAMP, firstTimestamp)
-                        putInt(LAST_TIMESTAMP, lastTimestamp)
-                    }
+            ReplayControlFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(FIRST_TIMESTAMP, firstTimestamp)
+                    putInt(LAST_TIMESTAMP, lastTimestamp)
                 }
+            }
     }
 }
