@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityManageReplaysBinding
 import ch.epfl.sdp.replay.viewer.ReplayActivity
-import java.io.File
 import javax.inject.Inject
 
 class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnListFragmentInteractionListener {
@@ -18,6 +17,7 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
 
     @Inject
     lateinit var downloader: IReplayDownloader
+    private lateinit var localReplayStore: LocalReplayStore
     private lateinit var replayInfoListFragment: ReplayInfoListFragment
     private val downloads = HashMap<String, IReplayDownloader.IReplayDownload>()
 
@@ -28,6 +28,8 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
         super.onCreate(savedInstanceState)
         binding = ActivityManageReplaysBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        localReplayStore = LocalReplayStore(this)
 
         if (savedInstanceState == null) {
             replayInfoListFragment = ReplayInfoListFragment.newInstance()
@@ -82,15 +84,14 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
             return
         }
 
-        File(filesDir.absolutePath + "/replays").let {if(!it.exists()) it.mkdir()}
-
-        val tempFile = File(filesDir.absolutePath + "/replays/game_$gameID.tmp")
+        localReplayStore.createReplayDir()
+        val tempFile = localReplayStore.getTmpFile(gameID)
         // TODO Set downloading state on replayInfoListFragment
         val dl = downloader.download(
                 gameID,
                 tempFile,
                 {
-                    tempFile.renameTo(File(filesDir.absolutePath + "/replays/${gameID}.game"))
+                    tempFile.renameTo(localReplayStore.getFile(gameID))
                     replayInfoListFragment.setDownloadedGame(gameID)
                     downloads.remove(gameID)
                 },
