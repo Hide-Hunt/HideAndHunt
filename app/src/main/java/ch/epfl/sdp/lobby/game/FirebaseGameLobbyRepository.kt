@@ -39,14 +39,14 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun createGame(gameName: String, gameDuration: Long): String {
-        val newGameRef = fs.collection(GAME_COLLECTION).document() //TODO: Better id generation
+        val newGameRef = fs.collection(GAME_COLLECTION).document()
         newGameRef.set(Game(
                 newGameRef.id,
                 gameName,
                 LocalUser.uid,
                 gameDuration,
                 emptyMap(), //TODO: For now no params
-                listOf(Participation(LocalUser.uid, Faction.PREDATOR, false, "", "")), //TODO: Add local user participation
+                listOf(Participation(LocalUser.uid, Faction.PREDATOR, false, "", "")),
                 Date(),
                 Date((Int.MAX_VALUE / 2).toLong()), //TODO: For now the game is available to the max
                 Date(),
