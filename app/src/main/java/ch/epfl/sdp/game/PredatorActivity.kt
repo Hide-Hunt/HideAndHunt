@@ -1,6 +1,5 @@
 package ch.epfl.sdp.game
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.nfc.NfcAdapter
 import android.os.Bundle
@@ -10,6 +9,7 @@ import ch.epfl.sdp.game.TargetSelectionFragment.OnTargetSelectedListener
 import ch.epfl.sdp.game.data.Location
 import ch.epfl.sdp.game.data.Prey
 import ch.epfl.sdp.game.data.PreyState
+import ch.epfl.sdp.utils.NFCHelper
 
 /**
  *  Activity that shows the in-game predator interface
@@ -59,10 +59,7 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
 
     override fun onResume() {
         super.onResume()
-        val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-        val adapter = NfcAdapter.getDefaultAdapter(this)
-        adapter?.enableForegroundDispatch(this, pendingIntent, null, null)
+        NFCHelper.enableForegroundDispatch(this)
     }
 
     override fun onTargetSelected(targetID: Int) {
@@ -93,7 +90,7 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
 
     override fun onPause() {
         super.onPause()
-        NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
+        NFCHelper.disableForegroundDispatch(this)
     }
 
     override fun onLocationChanged(newLocation: Location) {
