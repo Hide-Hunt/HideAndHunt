@@ -25,6 +25,13 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     private var gameStartListener: IGameLobbyRepository.OnGameStartListener? = null
     private var gameStartSnapshotRegistration: ListenerRegistration? = null
 
+    private fun <T> getField(gameId: String, fieldName: String, cb: Callback<T>) {
+        fs.collection(GAME_COLLECTION).document(gameId).get().addOnSuccessListener {
+            @Suppress("UNCHECKED_CAST")
+            cb(it[fieldName] as T)
+        }
+    }
+
     override fun addLocalParticipation(gameId: String) {
         fs.collection(GAME_COLLECTION).document(gameId)
                 .update(GAME_PARTICIPATION_COLLECTION, FieldValue.arrayUnion(
@@ -49,13 +56,11 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     }
 
     override fun getGameName(gameId: String, cb: Callback<String>) {
-        fs.collection(GAME_COLLECTION).document(gameId).get()
-                .addOnSuccessListener { cb(it["name"] as String) }
+        getField(gameId, "name", cb)
     }
 
     override fun getGameDuration(gameId: String, cb: Callback<Long>) {
-        fs.collection(GAME_COLLECTION).document(gameId).get()
-                .addOnSuccessListener { cb(it["duration"] as Long) }
+        getField(gameId, "duration", cb)
     }
 
     override fun getPlayers(gameId: String, cb: Callback<List<Player>>) {
