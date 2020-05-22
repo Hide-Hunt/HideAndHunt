@@ -19,7 +19,7 @@ import ch.epfl.sdp.user.UserCache
  */
 class MainActivity : AppCompatActivity() {
 
-    val cache: UserCache = UserCache()
+    private val cache: UserCache = UserCache()
     private lateinit var binding: ActivityMainBinding
 
     private fun buttonToActivity(button: Button, cls: Class<*>, intentFiller: (Intent) -> Unit = {}) {

@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import ch.epfl.sdp.authentication.LocalUser
-import java.io.BufferedReader
-import java.io.ByteArrayOutputStream
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,35 +12,44 @@ import java.util.*
  * Cache tu store user information on the phone
  */
 class UserCache {
-    private val cacheFilename = "user_cache"
-    private val imageFilename = "user_image"
+    companion object {
+        private const val CACHE_EXPIRATION = 3600
+        private const val CACHE_FILENAME = "user_cache"
+        private const val IMAGE_FILENAME = "user_image"
+    }
 
     /**
      * Invalidate the cache if it currently exists, otherwise does nothing
      * @param context Context: The [Context] from which the call is operated
      */
     fun invalidateCache(context: Context) {
-        if (doesExist(context)) {
-            context.deleteFile(cacheFilename)
-            context.deleteFile(imageFilename)
+        File(context.cacheDir, CACHE_FILENAME).let {
+            if(it.exists()) it.delete()
+        }
+        File(context.cacheDir, IMAGE_FILENAME).let {
+            if(it.exists()) it.delete()
         }
     }
 
     /**
-     * Check if the cache exists on the phone
+     * Check whether the cache currently exists
      * @param context Context: The [Context] from which the call is operated
-     * @return Boolean: True if the cache exists, False otherwise
+     * @return Boolean: true if the cache is set
      */
     fun doesExist(context: Context): Boolean {
-        try {
-            val inputStream = InputStreamReader(context.openFileInput(cacheFilename))
-            inputStream.close()
-            val imageStream = InputStreamReader(context.openFileInput(imageFilename))
-            imageStream.close()
-        } catch (e: Exception) {
-            return false
+        return File(context.cacheDir, CACHE_FILENAME).exists()
+    }
+
+    /**s
+     * Check if a profile pic is cached, returns the corresponding bitmap if it exists or null otherwise
+     * @param context Context: The [Context] from which the call is operated
+     * @return Bitmap?: The Bitmap of the profile pic cached, or null if none is found
+     */
+    private fun retrieveProfilePic(context: Context): Bitmap? {
+        File(context.cacheDir, IMAGE_FILENAME).let {
+            return if(it.exists()) BitmapFactory.decodeFile(context.cacheDir.absolutePath + "/" + IMAGE_FILENAME)
+            else null
         }
-        return true
     }
 
     /**
@@ -51,39 +57,26 @@ class UserCache {
      * @param context Context: The [Context] from which the call is operated
      */
     fun get(context: Context) {
-        if (!doesExist(context)) {
+        val cacheFile = File(context.cacheDir, CACHE_FILENAME)
+        if(!cacheFile.exists()) {
             LocalUser.connected = false
             return
         }
 
-        var state = 0
-        val reader = BufferedReader(InputStreamReader(context.openFileInput(cacheFilename)))
-        var line: String? = reader.readLine()
-        while (line != null) {
-            when (line.trim()) {
-                "DATE" -> state = 0
-                "UID" -> state = 1
-                "PSEUDO" -> state = 2
-                else -> when (state) {
-                    0 -> {
-                        val sdf = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale("fr-fr"))
-                        val currentTime = Calendar.getInstance()
-                        currentTime.add(Calendar.MINUTE, -1)
+        val currentTime = System.currentTimeMillis() / 1000
+        val lines = cacheFile.readLines()
+        val timestampLimit = lines[0].toLong()
 
-                        if (currentTime.time.after(sdf.parse(line))) {
-                            context.deleteFile(cacheFilename)
-                            context.deleteFile(imageFilename)
-                            return
-                        }
-                    }
-                    1 -> LocalUser.uid = line.trim()
-                    2 -> LocalUser.pseudo = line.trim()
-                }
-            }
-            line = reader.readLine()
+        if(timestampLimit + CACHE_EXPIRATION < currentTime) {
+            invalidateCache(context)
+            LocalUser.connected = false
+            return
         }
+
+        LocalUser.uid = lines[1].trim()
+        LocalUser.pseudo = lines[2].trim()
         LocalUser.connected = true
-        LocalUser.profilePic = BitmapFactory.decodeFile(context.filesDir.absolutePath + "/" + imageFilename)
+        LocalUser.profilePic = retrieveProfilePic(context)
     }
 
     /**
@@ -91,19 +84,16 @@ class UserCache {
      * @param context Context: The [Context] from which the call is operated
      */
     fun put(context: Context) {
-        val outputStream = OutputStreamWriter(context.openFileOutput(cacheFilename, Context.MODE_PRIVATE))
-        val currentTime = Calendar.getInstance().time
-        val output = "DATE\n" + currentTime.toString() + "\nUID\n" + LocalUser.uid + "\nPSEUDO\n" + LocalUser.pseudo + "\n"
-        outputStream.write(output, 0, output.length)
-        outputStream.flush()
-        outputStream.close()
+        val currentTime = System.currentTimeMillis() / 1000
+        val output = currentTime.toString() + "\n" + LocalUser.uid + "\n" + LocalUser.pseudo
+        File(context.cacheDir, CACHE_FILENAME).writeText(output)
 
-        LocalUser.profilePic?.let { profilePic ->
-            val imageStream = context.openFileOutput(imageFilename, Context.MODE_PRIVATE)
+        LocalUser.profilePic?.let {
+            val file = File(context.cacheDir, IMAGE_FILENAME)
+            val imageStream = FileOutputStream(file)
             val byteStream = ByteArrayOutputStream()
-            profilePic.compress(Bitmap.CompressFormat.PNG, 90, byteStream)
+            it.compress(Bitmap.CompressFormat.PNG, 90, byteStream)
             imageStream.write(byteStream.toByteArray())
-            imageStream.flush()
             imageStream.close()
             byteStream.close()
         }
