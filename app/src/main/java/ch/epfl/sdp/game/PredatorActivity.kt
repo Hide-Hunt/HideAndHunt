@@ -31,7 +31,9 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
         binding = ActivityPredatorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        loadFragments()
+        if (validGame) {
+            loadFragments()
+        }
     }
 
     private fun loadFragments() { // create a FragmentManager

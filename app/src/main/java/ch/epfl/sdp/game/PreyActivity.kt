@@ -25,11 +25,13 @@ class PreyActivity : GameActivity() {
         binding = ActivityPreyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        for (p: Player in gameData.playerList.filterIsInstance<Predator>()) {
-            locationHandler.subscribeToPlayer(p.id)
-        }
+        if (validGame) {
+            for (p: Player in gameData.playerList.filterIsInstance<Predator>()) {
+                locationHandler.subscribeToPlayer(p.id)
+            }
 
-        loadFragments()
+            loadFragments()
+        }
     }
 
     private fun loadFragments() {
