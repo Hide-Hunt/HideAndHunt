@@ -3,6 +3,7 @@ package ch.epfl.sdp.lobby.game
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.db.SuccFailCallbacks.*
 import ch.epfl.sdp.game.data.Faction
+import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
 import org.junit.Assert.*
 import org.junit.Test
@@ -11,7 +12,17 @@ import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class MockGameLobbyRepositoryTest {
-    private val glr = MockGameLobbyRepository
+    private val glr = MockGameLobbyRepository()
+
+    @Test
+    fun mockGameLobbyRepositoryStateIsBoundedToAnInstance() {
+        val m1 = MockGameLobbyRepository()
+        assertEquals(GameState.LOBBY, m1.gameState)
+        m1.gameState = GameState.STARTED
+        assertEquals(GameState.STARTED, m1.gameState)
+        val m2 = MockGameLobbyRepository()
+        assertEquals(GameState.LOBBY, m2.gameState)
+    }
 
     @Test
     fun getGameNameCallbackIsCalled() {
