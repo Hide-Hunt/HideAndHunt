@@ -1,6 +1,5 @@
 package ch.epfl.sdp.lobby.global
 
-import android.os.Bundle
 import androidx.core.view.size
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.recyclerview.widget.RecyclerView
@@ -18,13 +17,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.epfl.sdp.R
-import ch.epfl.sdp.db.Callback
-import ch.epfl.sdp.game.data.Game
-import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.lobby.game.GameLobbyActivity
 import org.junit.*
 import org.junit.runner.RunWith
-import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class GlobalLobbyFragmentTest {
@@ -59,7 +54,7 @@ class GlobalLobbyFragmentTest {
     }
 
     @Test
-    fun swipeRefreshesDataset() {
+    fun swipeRefreshesDataSet() {
         val scenario = launchFragmentInContainer<GlobalLobbyFragment>()
         var size = -1
         scenario.onFragment { f-> size = f.view!!.findViewById<RecyclerView>(R.id.global_lobby_recycler).size}

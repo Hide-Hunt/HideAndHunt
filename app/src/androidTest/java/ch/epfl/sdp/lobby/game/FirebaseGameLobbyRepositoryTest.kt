@@ -62,7 +62,7 @@ class FirebaseGameLobbyRepositoryTest {
     }
 
     @Test
-    fun getParticipationsShouldFailWithInvalidGameID() {
+    fun getParticipationShouldFailWithInvalidGameID() {
         mustCallFailureCallback<List<Participation>> { cb ->
             repo.getParticipation(INVALID_DOC_ID, cb)
         }

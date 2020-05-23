@@ -50,7 +50,7 @@ interface IGameLobbyRepository {
     fun getPlayers(gameId: String, cb: SuccFailCallback<List<Player>>)
 
     /**
-     * Get a game's list of participations given its id
+     * Get a game's list of participation given its id
      * @param gameId Int: id of the game
      * @param cb UnitCallback: SuccFailCallback<List<Participation>> pair of success/failure callbacks
      */

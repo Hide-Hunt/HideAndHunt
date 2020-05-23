@@ -6,12 +6,14 @@ import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
 
-object MockGameLobbyRepository : IGameLobbyRepository {
+// Suppress is made to allow mutable public fields as they are used in the tests to simulate the repo logic
+@Suppress("MemberVisibilityCanBePrivate", "MayBeConstant")
+class MockGameLobbyRepository : IGameLobbyRepository {
     val players = mutableListOf(
-            Participation("u53r1d", Faction.PREDATOR, false, "u53rt4g", ""),
             Participation("George Kittle", Faction.PREDATOR, false, "CAFE", ""),
             Participation("Nick Bosa", Faction.PREDATOR, false, "0A0A", ""),
             Participation("Richard Sherman", Faction.PREDATOR, false, "C0BA", ""),
+            Participation("u53r1d", Faction.PREDATOR, false, "u53rt4g", ""),
             Participation("Dummy ", Faction.PREDATOR, false, "AB00", ""),
             Participation("Hello World", Faction.PREY, true, "C0B0", ""),
             Participation("Morgan Freeman", Faction.PREDATOR, false, "0BBB", ""),
@@ -21,6 +23,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
             Participation("Neymar Jr", Faction.PREDATOR, false, "C000", "")
     )
     var gameState = GameState.LOBBY
+    val gameDuration = 1200L
     val gameStartListeners = HashMap<String, IGameLobbyRepository.OnGameStartListener?>()
 
     override fun addLocalParticipation(gameId: String, cb: UnitSuccFailCallback) = Unit //No code
@@ -31,7 +34,7 @@ object MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun getGameName(gameId: String, cb: SuccFailCallback<String>) = cb.success("My mock game")
 
-    override fun getGameDuration(gameId: String, cb: SuccFailCallback<Long>) = cb.success(1200L)
+    override fun getGameDuration(gameId: String, cb: SuccFailCallback<Long>) = cb.success(gameDuration)
 
     override fun getParticipation(gameId: String, cb: SuccFailCallback<List<Participation>>) = cb.success(players)
 

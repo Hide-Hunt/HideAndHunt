@@ -13,12 +13,12 @@ import kotlinx.android.synthetic.main.game_lobby_player_cell.view.*
 
 /**
  * Adapter for the game lobby recyclerView
- * @param participations List<Participation>: list of player participations
+ * @param participation List<Participation>: list of player participations
  * @param playerId Int: current player's id
  * @param adminId  Int: game admin'is id
  */
 class GameLobbyAdapter(
-        private val participations: List<Participation>,
+        private val participation: List<Participation>,
         private val playerId: String,
         private val adminId: String,
         private val userRepo: IUserRepo
@@ -31,11 +31,11 @@ class GameLobbyAdapter(
     }
 
     override fun getItemCount(): Int {
-        return participations.size
+        return participation.size
     }
 
     override fun onBindViewHolder(holder: GameLobbyViewHolder, position: Int) {
-        val player = participations[position]
+        val player = participation[position]
         holder.display(player)
     }
 

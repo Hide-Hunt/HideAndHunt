@@ -59,7 +59,7 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
 
     override fun onResume() {
         super.onResume()
-        NFCHelper.enableForegroundDispatch(this)
+        NFCHelper.enableForegroundDispatch(this, javaClass)
     }
 
     override fun onTargetSelected(targetID: Int) {

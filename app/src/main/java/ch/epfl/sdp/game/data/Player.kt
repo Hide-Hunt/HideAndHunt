@@ -17,4 +17,9 @@ open class Player(val id: Int) : Serializable {
                 ", lastKnownLocation=" + lastKnownLocation +
                 '}'
     }
+
+    override fun equals(other: Any?): Boolean =
+            this === other || (other is Player && other.id == id && other.lastKnownLocation == lastKnownLocation)
+
+    override fun hashCode(): Int = 31 * id + (lastKnownLocation?.hashCode() ?: 0)
 }

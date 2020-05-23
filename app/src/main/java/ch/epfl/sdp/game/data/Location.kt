@@ -21,4 +21,9 @@ class Location(var latitude: Double, var longitude: Double) {
     override fun toString(): String {
         return "Location(latitude=$latitude, longitude=$longitude)"
     }
+
+    override fun equals(other: Any?): Boolean =
+            this === other || (other is Location && other.latitude == latitude && other.longitude == longitude)
+
+    override fun hashCode(): Int = 31 * latitude.hashCode() + longitude.hashCode()
 }
