@@ -43,22 +43,24 @@ class GameLobbyActivityTest {
     @Test
     fun swipeDownAndFactionChangeRefreshesData() {
         val scenario = launchActivity<GameLobbyActivity>(activityIntent)
+        lateinit var repo: MockGameLobbyRepository
+        scenario.onActivity {
+            repo = it.repository as MockGameLobbyRepository
+        }
 
         // Initially 11 players
         onView(withId(R.id.player_list)).check(RecyclerViewItemCount(11))
 
         // Add one then change faction => should reload
         scenario.onActivity {
-            (it.repository as MockGameLobbyRepository).players
-                    .add(Participation("Player11", Faction.PREY, false, "0ABC", ""))
+            repo.players.add(Participation("Player11", Faction.PREY, false, "0ABC", ""))
         }
         onView(withId(R.id.faction_selection)).perform(click())
         onView(withId(R.id.player_list)).check(RecyclerViewItemCount(12))
 
         // Add one then swipe => should reload again
         scenario.onActivity {
-            (it.repository as MockGameLobbyRepository).players
-                    .add(Participation("Player12", Faction.PREY, false, "0ABC", ""))
+            repo.players.add(Participation("Player12", Faction.PREY, false, "0ABC", ""))
         }
         onView(withId(R.id.player_list)).perform(swipeDown())
         onView(withId(R.id.player_list)).check(RecyclerViewItemCount(13))
