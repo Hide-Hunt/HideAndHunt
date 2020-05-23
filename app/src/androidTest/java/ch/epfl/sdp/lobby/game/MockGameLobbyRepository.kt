@@ -10,10 +10,10 @@ import ch.epfl.sdp.game.data.Player
 @Suppress("MemberVisibilityCanBePrivate", "MayBeConstant")
 class MockGameLobbyRepository : IGameLobbyRepository {
     val players = mutableListOf(
-            Participation("u53r1d", Faction.PREDATOR, false, "u53rt4g", ""),
             Participation("George Kittle", Faction.PREDATOR, false, "CAFE", ""),
             Participation("Nick Bosa", Faction.PREDATOR, false, "0A0A", ""),
             Participation("Richard Sherman", Faction.PREDATOR, false, "C0BA", ""),
+            Participation("u53r1d", Faction.PREDATOR, false, "u53rt4g", ""),
             Participation("Dummy ", Faction.PREDATOR, false, "AB00", ""),
             Participation("Hello World", Faction.PREY, true, "C0B0", ""),
             Participation("Morgan Freeman", Faction.PREDATOR, false, "0BBB", ""),
