@@ -82,4 +82,23 @@ class GameLobbyActivityTest {
 
         onView(withId(R.id.txt_player_ready)).check(matches(withText("You are ready")))
     }
+
+    @Test
+    fun startButtonShouldBeDisabledAfterClickingOnIt() {
+        val scenario = launchActivity<GameLobbyActivity>(activityIntent)
+
+        onView(withId(R.id.start_button)).check(matches(isEnabled()))
+        onView(withId(R.id.start_button)).perform(click())
+        onView(withId(R.id.start_button)).check(matches(not(isEnabled())))
+
+        // In the mock repo, a started game cannot be restarted, leading to an error
+        // In case of starting error, the button should be re-enabled
+        scenario.onActivity {
+            it.start_button.isEnabled = true
+        }
+
+        onView(withId(R.id.start_button)).check(matches(isEnabled()))
+        onView(withId(R.id.start_button)).perform(click())
+        onView(withId(R.id.start_button)).check(matches(isEnabled()))
+    }
 }
