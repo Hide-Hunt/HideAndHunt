@@ -6,6 +6,7 @@ import ch.epfl.sdp.game.data.GameState
 import ch.epfl.sdp.game.data.Participation
 import ch.epfl.sdp.game.data.Player
 
+// Suppress is made to allow public fields as they are used in the tests to simulate the repo logic
 @Suppress("MemberVisibilityCanBePrivate")
 object MockGameLobbyRepository : IGameLobbyRepository {
     val players = mutableListOf(
