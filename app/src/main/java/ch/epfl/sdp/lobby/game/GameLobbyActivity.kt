@@ -55,7 +55,10 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         setContentView(gameLobbyBinding.root)
 
         intent.getStringExtra("gameID").let {
-            if (it == null) joiningGameError()
+            if (it == null) {
+                gameID = "--missing--"
+                joiningGameError()
+            }
             else gameID = it
         }
 
