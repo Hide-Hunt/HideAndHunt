@@ -17,18 +17,18 @@ import org.junit.Test
 import java.io.File
 
 class ReplayActivityTest {
-
     private val activityIntent = Intent()
+    private val validGameID = "42"
     init {
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        activityIntent.putExtra("replay_path", "4.game")
+        activityIntent.putExtra("replay_path", validGameID)
     }
 
     private val invalidPathActivityIntent = Intent()
-    private val invalidFilename = "inexisting"
+    private val invalidGameID = "inexisting"
     init {
         invalidPathActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        invalidPathActivityIntent.putExtra("replay_path", invalidFilename)
+        invalidPathActivityIntent.putExtra("replay_path", invalidGameID)
     }
 
     private val emptyIntent = Intent()
@@ -93,18 +93,18 @@ class ReplayActivityTest {
     }
 
     private fun checkFolderExists() {
-        File(activityRule.activity.filesDir.absolutePath + "/replays").let {
+        File(activityRule.activity.cacheDir.absolutePath + "/replays").let {
             if (!it.exists()) {
                 it.mkdir()
             }
         }
     }
 
-    private fun createFile(filename: String, fileContent: String) {
+    private fun createFile(fileContent: String) {
         activityRule.launchActivity(emptyIntent)
         val prepActivity = activityRule.activity
         checkFolderExists()
-        val file = File(prepActivity.filesDir.absolutePath + "/replays/$filename")
+        val file = File(prepActivity.cacheDir.absolutePath + "/replays/$validGameID.game")
         file.writeBytes(Base64.decode(fileContent, Base64.DEFAULT))
         activityRule.finishActivity()
     }
@@ -118,20 +118,20 @@ class ReplayActivityTest {
     @Test
     fun testInvalidFilePathProvided(){
         activityRule.launchActivity(invalidPathActivityIntent)
-        val file = activityRule.activity.filesDir.absolutePath + "/replays/" + invalidFilename
+        val file = activityRule.activity.cacheDir.absolutePath + "/replays/$invalidGameID.game"
         Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("File not found $file")))
     }
 
     @Test
     fun testValidFilePathProvided(){
-        createFile("4.game", exampleFile)
+        createFile(exampleFile)
         activityRule.launchActivity(activityIntent)
         Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("")))
     }
 
     @Test
     fun testValidFileWrongFormatPathProvided(){
-        createFile("4.game", badFormatExampleFile)
+        createFile(badFormatExampleFile)
         activityRule.launchActivity(activityIntent)
         Espresso.onView(ViewMatchers.withId(R.id.errorDetails)).check(ViewAssertions.matches(withText("Replay file format error")))
     }

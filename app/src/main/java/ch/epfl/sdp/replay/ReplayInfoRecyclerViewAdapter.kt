@@ -44,7 +44,7 @@ class ReplayInfoRecyclerViewAdapter(
             holder.mView.gameName.text = it.name
             holder.mView.playerFaction.text = it.winningFaction.toString()
             holder.mView.score.text = it.score
-            with(it.endTimestamp - it.startTimestamp) {
+            with((it.endTimestamp - it.startTimestamp) / 1000) {
                 holder.mView.game_duration.text = String.format("%d:%02d:%02d",
                         this / 3600,
                         (this % 3600) / 60,
@@ -52,7 +52,7 @@ class ReplayInfoRecyclerViewAdapter(
                 )
             }
 
-            holder.mView.date.text = DateFormat.getDateInstance().format(it.startTimestamp*1000)
+            holder.mView.date.text = DateFormat.getDateTimeInstance().format(it.startTimestamp)
             holder.mView.replayStatus.setImageResource(if (it.localCopy) R.drawable.ic_saved else R.drawable.ic_download)
         }
 

@@ -24,8 +24,8 @@ class ReplayActivity : AppCompatActivity() {
 
         title = "Replay: Error"
         replayID =
-                if (savedInstanceState != null) savedInstanceState.getString(REPLAY_PATH_ARG)
-                else intent.getStringExtra(REPLAY_PATH_ARG)
+                if (savedInstanceState != null) savedInstanceState.getString(REPLAY_GAME_ID)
+                else intent.getStringExtra(REPLAY_GAME_ID)
 
         getReplayFile()?.let {file ->
             try {
@@ -69,7 +69,7 @@ class ReplayActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
-        outState.putString(REPLAY_PATH_ARG, replayID)
+        outState.putString(REPLAY_GAME_ID, replayID)
     }
 
     override fun onDestroy() {
@@ -78,6 +78,6 @@ class ReplayActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val REPLAY_PATH_ARG = "replay_path"
+        const val REPLAY_GAME_ID = "replay_path"
     }
 }
