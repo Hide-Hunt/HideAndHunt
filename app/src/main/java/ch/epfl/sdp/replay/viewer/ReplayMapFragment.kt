@@ -168,11 +168,6 @@ class ReplayMapFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.map.layerManager.layers.forEach {
-            if (it is TileRendererLayer) {
-                it.tileCache.purge()
-            }
-        }
         binding.map.destroyAll()
     }
 

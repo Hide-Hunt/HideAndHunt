@@ -1,5 +1,6 @@
 package ch.epfl.sdp.dagger.modules
 
+import android.content.Context
 import ch.epfl.sdp.db.AppDatabaseCompanion
 import ch.epfl.sdp.db.FakeAppDatabase
 import ch.epfl.sdp.replay.FakeReplayDownloader
@@ -10,8 +11,8 @@ import dagger.Provides
 @Module
 class FakeReplayModule {
     @Provides
-    fun providesFirebaseDownloader(): IReplayDownloader {
-        return FakeReplayDownloader()
+    fun providesFirebaseDownloader(context: Context): IReplayDownloader {
+        return FakeReplayDownloader(context)
     }
 
     @Provides
