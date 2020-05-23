@@ -23,6 +23,7 @@ class MockGameLobbyRepository : IGameLobbyRepository {
             Participation("Neymar Jr", Faction.PREDATOR, false, "C000", "")
     )
     var gameState = GameState.LOBBY
+    val gameDuration = 1200L
     val gameStartListeners = HashMap<String, IGameLobbyRepository.OnGameStartListener?>()
 
     override fun addLocalParticipation(gameId: String, cb: UnitSuccFailCallback) = Unit //No code
@@ -33,7 +34,7 @@ class MockGameLobbyRepository : IGameLobbyRepository {
 
     override fun getGameName(gameId: String, cb: SuccFailCallback<String>) = cb.success("My mock game")
 
-    override fun getGameDuration(gameId: String, cb: SuccFailCallback<Long>) = cb.success(1200L)
+    override fun getGameDuration(gameId: String, cb: SuccFailCallback<Long>) = cb.success(gameDuration)
 
     override fun getParticipation(gameId: String, cb: SuccFailCallback<List<Participation>>) = cb.success(players)
 
