@@ -5,6 +5,9 @@ import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.*
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers.*
+import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -12,18 +15,28 @@ import ch.epfl.sdp.EspressoViewAssertions.RecyclerViewItemCount
 import ch.epfl.sdp.NFCTestHelper
 import ch.epfl.sdp.R
 import ch.epfl.sdp.authentication.LocalUser
+import ch.epfl.sdp.db.SuccFailCallbacks
 import ch.epfl.sdp.game.NFCTagHelper.byteArrayFromHexString
+import ch.epfl.sdp.game.PredatorActivity
+import ch.epfl.sdp.game.PreyActivity
 import ch.epfl.sdp.game.data.Faction
 import ch.epfl.sdp.game.data.Participation
 import kotlinx.android.synthetic.main.activity_game_lobby.*
+import org.hamcrest.CoreMatchers.anyOf
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Matchers.*
+import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class GameLobbyActivityTest {
     private lateinit var activityIntent: Intent
+
+    @get:Rule
+    val intentsTestRule = IntentsTestRule(GameLobbyActivity::class.java, false, false)
 
     @Before
     fun setup() {
@@ -32,6 +45,12 @@ class GameLobbyActivityTest {
         activityIntent.putExtra("gameID", "g4m31d")
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         LocalUser.uid = "u53r1d"
+        Intents.init()
+    }
+
+    @After
+    fun clean() {
+        Intents.release()
     }
 
     @Test
@@ -102,5 +121,52 @@ class GameLobbyActivityTest {
         onView(withId(R.id.start_button)).check(matches(isEnabled()))
         onView(withId(R.id.start_button)).perform(click())
         onView(withId(R.id.start_button)).check(matches(isEnabled()))
+    }
+
+    @Test
+    fun onGameStartShouldLaunchThePreyActivityIfThePlayerIsAPrey() {
+        val scenario = launchActivity<GameLobbyActivity>(activityIntent)
+        // Test for prey
+        scenario.onActivity {
+            // Set player as a prey and scan a tag to make it ready
+            it.onFactionChange(Faction.PREY)
+            val tag = NFCTestHelper.createMockTag("ABBA".byteArrayFromHexString())
+            val nfcIntent = NFCTestHelper.createTechDiscovered(tag)
+            it.onNewIntent(nfcIntent)
+            it.onGameStart()
+        }
+        Intents.intended(hasComponent(PreyActivity::class.java.name))
+    }
+
+    @Test
+    fun onGameStartShouldLaunchThePredatorActivityIfThePlayerIsAPredator() {
+        val scenario = launchActivity<GameLobbyActivity>(activityIntent)
+        // Test for predator
+        scenario.onActivity {
+            it.onFactionChange(Faction.PREDATOR)
+            it.onGameStart()
+        }
+        Intents.intended(hasComponent(PredatorActivity::class.java.name))
+    }
+
+    @Test
+    fun onGameStartShouldLaunchGameActivityWithGameRelatedExtras() {
+        val scenario = launchActivity<GameLobbyActivity>(activityIntent)
+        lateinit var repo: MockGameLobbyRepository
+        scenario.onActivity {
+            repo = it.repository as MockGameLobbyRepository
+            it.onGameStart()
+        }
+
+        // Starts PreyActivity or PredatorActivity
+        Intents.intended(anyOf(hasComponent(PreyActivity::class.java.name), hasComponent(PredatorActivity::class.java.name)))
+        // Has correct extras
+        Intents.intended(allOf(
+                hasExtra("initialTime", repo.gameDuration*1000L),
+                hasExtra("gameID", "g4m31d"),
+                hasExtra("playerID", 3)))
+        repo.getPlayers("g4m31d", SuccFailCallbacks.SuccFailCallback({
+            Intents.intended(hasExtra("players", it))
+        }))
     }
 }
