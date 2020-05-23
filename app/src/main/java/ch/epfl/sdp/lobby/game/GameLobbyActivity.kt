@@ -73,10 +73,11 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent?.action) {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 myTag = it
-                repository.setPlayerReady(gameID, userID, true, UnitSuccFailCallback({
-                    repository.setPlayerTag(gameID, userID, it, UnitSuccFailCallback({
-                        updateLocalPlayerState()
-                    }))
+                repository.setPlayerTag(gameID, userID, it, UnitSuccFailCallback({
+                    repository.setPlayerReady(gameID, userID, true, UnitSuccFailCallback(
+                            { updateLocalPlayerState() },
+                            { updateLocalPlayerState() }
+                    ))
                 }))
             }
         }
