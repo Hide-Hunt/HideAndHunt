@@ -18,21 +18,8 @@ open class Player(val id: Int) : Serializable {
                 '}'
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    override fun equals(other: Any?): Boolean =
+            this === other || (other is Player && other.id == id && other.lastKnownLocation == lastKnownLocation)
 
-        other as Player
-
-        if (id != other.id) return false
-        if (lastKnownLocation != other.lastKnownLocation) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id
-        result = 31 * result + (lastKnownLocation?.hashCode() ?: 0)
-        return result
-    }
+    override fun hashCode(): Int = 31 * id + (lastKnownLocation?.hashCode() ?: 0)
 }
