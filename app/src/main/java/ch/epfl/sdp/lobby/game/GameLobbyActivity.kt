@@ -81,7 +81,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     override fun onResume() {
         super.onResume()
-        NFCHelper.enableForegroundDispatch(this)
+        NFCHelper.enableForegroundDispatch(this, javaClass)
     }
 
     override fun onPause() {
