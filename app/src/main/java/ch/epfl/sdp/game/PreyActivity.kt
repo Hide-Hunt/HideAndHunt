@@ -78,6 +78,7 @@ class PreyActivity : GameActivity() {
     }
 
     override fun onLocationChanged(newLocation: Location) {
+        players[gameData.playerID]?.lastKnownLocation = newLocation;
         updateThreat()
     }
 
