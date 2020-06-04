@@ -122,7 +122,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     private fun refreshPlayerList(then: () -> Unit = {}) {
         repository.getParticipation(gameID, SuccFailCallback({ playerList ->
-            playerID = playerList.sortedBy { it.userID.capitalize() }.indexOfFirst { it.userID == userID }
+            playerID = playerList.sortedBy { it.userID }.indexOfFirst { it.userID == userID }
             recyclerView.adapter = GameLobbyAdapter(playerList, userID, adminId, userRepo)
             mSwipeRefreshLayout.isRefreshing = false
             then()
