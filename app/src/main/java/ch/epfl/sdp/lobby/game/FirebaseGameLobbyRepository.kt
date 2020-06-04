@@ -74,7 +74,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun getPlayers(gameId: String, cb: SuccFailCallback<List<Player>>) {
         getParticipation(gameId, SuccFailCallback({ list ->
-            cb.success(list.sortedBy { it.userID }.withIndex().map { x -> x.value.toPlayer(x.index) })
+            cb.success(list.sortedBy { it.userID.capitalize() }.withIndex().map { x -> x.value.toPlayer(x.index) })
         }, cb.failure))
     }
 
