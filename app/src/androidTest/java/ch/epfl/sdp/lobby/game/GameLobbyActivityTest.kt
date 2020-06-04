@@ -163,8 +163,7 @@ class GameLobbyActivityTest {
         // Has correct extras
         Intents.intended(allOf(
                 hasExtra("initialTime", repo.gameDuration*1000L),
-                hasExtra("gameID", "g4m31d"),
-                hasExtra("playerID", 3)))
+                hasExtra("gameID", "g4m31d")))
         repo.getPlayers("g4m31d", SuccFailCallbacks.SuccFailCallback({
             Intents.intended(hasExtra("players", it))
         }))
