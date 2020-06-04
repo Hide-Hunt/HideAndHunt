@@ -42,7 +42,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
     override fun addLocalParticipation(gameId: String, cb: UnitSuccFailCallback) {
         fs.collection(GAME_COLLECTION).document(gameId)
                 .update(GAME_PARTICIPATION_COLLECTION, FieldValue.arrayUnion(
-                        Participation(LocalUser.uid, Faction.PREDATOR, false, "", "")))
+                        Participation(LocalUser.uid, Faction.PREDATOR, true, "", "")))
                 .addOnSuccessListener { cb.success() }
                 .addOnFailureListener { cb.failure() }
     }
@@ -55,7 +55,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
                 LocalUser.uid,
                 gameDuration,
                 emptyMap(), //TODO: For now no params
-                listOf(Participation(LocalUser.uid, Faction.PREDATOR, false, "", "")), //TODO: Add local user participation
+                listOf(Participation(LocalUser.uid, Faction.PREDATOR, true, "", "")), //TODO: Add local user participation
                 Date(),
                 Date((Int.MAX_VALUE / 2).toLong()), //TODO: For now the game is available to the max
                 Date(),

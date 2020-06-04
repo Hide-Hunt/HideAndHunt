@@ -94,6 +94,7 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
     }
 
     override fun onLocationChanged(newLocation: Location) {
+        players[gameData.playerID]?.lastKnownLocation = newLocation;
         if (targetID != TargetSelectionFragment.NO_TARGET) {
             targetDistanceFragment.distance =
                     players[targetID]?.lastKnownLocation?.distanceTo(newLocation)?.toInt()
@@ -113,6 +114,7 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
 
     override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
         if (players.containsKey(playerID) && playerID == targetID) {
+            players[targetID]?.lastKnownLocation = location;
             targetDistanceFragment.distance =
                     players[targetID]?.lastKnownLocation?.distanceTo(locationHandler.lastKnownLocation)?.toInt()
                             ?: TargetDistanceFragment.NO_DISTANCE

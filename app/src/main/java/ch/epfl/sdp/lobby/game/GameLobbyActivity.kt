@@ -161,6 +161,7 @@ class GameLobbyActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         mSwipeRefreshLayout.setOnRefreshListener(this)
 
         gameLobbyBinding.startButton.setOnClickListener {
+            refreshPlayerList()
             gameLobbyBinding.startButton.isEnabled = false
             repository.requestGameLaunch(gameID, UnitSuccFailCallback({}, {
                 this@GameLobbyActivity.gameLobbyBinding.startButton.isEnabled = true

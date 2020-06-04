@@ -29,7 +29,7 @@ class PredatorRadarFragment : Fragment() {
         for (r in 0 until ranges.size) {
             if (mdm < ranges[r]) {
                 range = min(r + 1, ranges.size - 1)
-                for (r2 in 0..(r + 1)) {
+                for (r2 in 0..range) {
                     count += rangePopulation[ranges[r2]] ?: 0
                 }
                 break
