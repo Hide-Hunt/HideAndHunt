@@ -81,8 +81,8 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 preys[it]?.let { preyID ->
                     catchCount++
+                    locationHandler.declareCatch(preyID);
                     onPreyCatches(gameData.playerID, preyID)
-                    locationHandler.declareCatch(preyID)
                 }
             }
         }
@@ -130,7 +130,7 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
         }
 
         if (players.values.filterIsInstance<Prey>().none { p -> p.state != PreyState.DEAD }) {
-            EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, 0)
+            EndGameHelper.startEndGameActivity(this, gameData.initialTime - gameTimerFragment.remaining, catchCount)
             gameTimerFragment.stop()
         }
     }
