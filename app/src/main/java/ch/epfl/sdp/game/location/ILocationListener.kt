@@ -14,7 +14,7 @@ interface ILocationListener {
     /**
      * Function called when the player's status changed
      * @param provider String: String describing the author of the action
-     * @param newLocation Location: The new [Location] of the player
+     * @param status Int: The status of the player
      * @param extras Bundle: [Bundle] for additional data
      */
     fun onStatusChanged(provider: String, status: Int, extras: Bundle)

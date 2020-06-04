@@ -36,7 +36,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.profilePictureView.setOnClickListener() {
+        binding.profilePictureView.setOnClickListener {
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
@@ -77,7 +77,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
         }
     }
 
-    fun setInformations() {
+    private fun setInformations() {
         binding.pseudoText.text = Editable.Factory().newEditable(LocalUser.pseudo)
         if(LocalUser.profilePic == null) {
             Picasso.with(this)
@@ -113,7 +113,7 @@ class ProfileActivity: AppCompatActivity(), Callback {
         builder.setTitle("Success")
                 .setMessage("Successfully uploaded profile pic")
                 .setCancelable(false)
-                .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ -> finish()})
+                .setPositiveButton("OK") { _, _ -> finish()}
                 .setOnDismissListener {finish()}
         val alertDialog = builder.create()
         alertDialog.show()

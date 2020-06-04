@@ -1,6 +1,5 @@
 package ch.epfl.sdp.utils
 
-import org.junit.Assert.*
 import org.junit.Test
 import org.mapsforge.core.model.LatLong
 import ch.epfl.sdp.game.data.Location

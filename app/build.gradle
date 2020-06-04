@@ -71,7 +71,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation "androidx.core:core-ktx:1.2.0"
+    implementation "androidx.core:core-ktx:1.3.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     implementation 'com.google.android.material:material:1.1.0'
@@ -95,7 +95,7 @@ dependencies {
     // Application (production)
     implementation "androidx.appcompat:appcompat:1.1.0"
     implementation "androidx.constraintlayout:constraintlayout:1.1.3"
-    implementation "androidx.core:core-ktx:1.3.0-rc01"
+    implementation "androidx.core:core-ktx:1.4.0-alpha01"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.localbroadcastmanager:localbroadcastmanager:1.0.0"
@@ -130,8 +130,6 @@ dependencies {
 
     // Testing or debug
     androidTestImplementation "com.android.support.test.espresso:espresso-core:3.1.0"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.1.0"
-    androidTestImplementation "com.android.support.test:runner:1.0.2"
     androidTestImplementation "com.android.support.test:runner:1.0.2"
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
