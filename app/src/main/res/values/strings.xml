@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Hide &amp; Hunt</string>
 
     <string name="loginButtonText">Login</string>
@@ -22,7 +22,7 @@
     <string name="start">Start</string>
 
     <string name="game_name">Game name : %s</string>
-    <string name="game_duration">Game duration : %d seconds</string>
+    <string name="game_duration" tools:ignore="PluralsCandidate">Game duration : %d seconds</string>
 
     <!-- Prey catching fragment -->
     <string name="prey_alive">Your prey is alive</string>

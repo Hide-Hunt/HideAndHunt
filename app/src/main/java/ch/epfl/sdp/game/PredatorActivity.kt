@@ -81,7 +81,7 @@ class PredatorActivity : GameActivity(), OnTargetSelectedListener {
             NFCTagHelper.intentToNFCTag(intent)?.let {
                 preys[it]?.let { preyID ->
                     catchCount++
-                    locationHandler.declareCatch(preyID);
+                    locationHandler.declareCatch(preyID)
                     onPreyCatches(gameData.playerID, preyID)
                 }
             }
