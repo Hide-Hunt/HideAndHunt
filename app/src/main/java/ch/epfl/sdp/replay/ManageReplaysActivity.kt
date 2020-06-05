@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import ch.epfl.sdp.dagger.HideAndHuntApplication
 import ch.epfl.sdp.databinding.ActivityManageReplaysBinding
 import ch.epfl.sdp.replay.viewer.ReplayActivity
+import ch.epfl.sdp.replay.viewer.ReplayMapFragment
+import java.io.File
 import javax.inject.Inject
 
 class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnListFragmentInteractionListener {
@@ -50,7 +52,15 @@ class ManageReplaysActivity : AppCompatActivity(), ReplayInfoListFragment.OnList
         if (game.localCopy) {
             val intent = Intent(this, ReplayActivity::class.java)
             intent.putExtra(ReplayActivity.REPLAY_GAME_ID, game.gameID)
-            startActivity(intent)
+
+            val mapFile = File(getExternalFilesDir(null), ReplayMapFragment.MAP_FILE)
+            // First check that there is a map, if not load it from the resources
+            if (!mapFile.isFile){
+                downloader.download("default_map", mapFile, {
+                    startActivity(intent)}, { startActivity(intent)})
+            }else {
+                startActivity(intent)
+            }
         } else {
             AlertDialog.Builder(this)
                     .setTitle("No local copy")
