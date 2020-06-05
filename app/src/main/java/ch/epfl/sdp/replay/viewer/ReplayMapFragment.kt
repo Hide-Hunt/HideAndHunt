@@ -34,6 +34,8 @@ import org.mapsforge.map.layer.renderer.TileRendererLayer
 import org.mapsforge.map.reader.MapFile
 import org.mapsforge.map.rendertheme.InternalRenderTheme
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 
 class ReplayMapFragment : Fragment() {
@@ -107,6 +109,15 @@ class ReplayMapFragment : Fragment() {
                 mapView.model.frameBufferModel.overdrawFactor)
 
         val mapFile = File(requireContext().getExternalFilesDir(null), MAP_FILE)
+        // First check that there is a map, if not load it from the resources
+        if (!mapFile.isFile){
+            val mapFd = resources.openRawResourceFd(R.raw.default_map)
+            val mapFileInputStream = FileInputStream(mapFd.fileDescriptor)
+            val mapNewFile = File(requireContext().getExternalFilesDir(null), MAP_FILE)
+            val mapFiller = FileOutputStream(mapNewFile)
+            mapFiller.write(mapFileInputStream.read())
+        }
+
         val mapDataStore: MapDataStore = MapFile(mapFile)
         val tileRendererLayer = TileRendererLayer(tileCache, mapDataStore,
                 mapView.model.mapViewPosition, AndroidGraphicFactory.INSTANCE)
