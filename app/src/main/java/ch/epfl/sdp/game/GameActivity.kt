@@ -84,9 +84,7 @@ abstract class GameActivity : AppCompatActivity(), ILocationListener, GameTimerF
         }
     }
 
-    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-        Toast.makeText(applicationContext, "Location: onStatusChanged: $status", Toast.LENGTH_LONG).show()
-    }
+    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
 
     override fun onPlayerLocationUpdate(playerID: Int, location: Location) {
         players[playerID]?.lastKnownLocation = location
