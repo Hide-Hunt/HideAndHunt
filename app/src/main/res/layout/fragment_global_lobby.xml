@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/globallobbybackground"
+    android:background="@drawable/mainbackground"
     tools:context=".lobby.global.GlobalLobbyFragment">
 
     <TextView
@@ -15,6 +15,7 @@
         android:text="@string/available_games"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
