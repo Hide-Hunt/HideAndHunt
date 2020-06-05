@@ -12,9 +12,7 @@ open class Player(val id: Int) : Serializable {
     var lastKnownLocation: Location? = null
 
     override fun toString(): String {
-        return "Player{" +
-                "id=" + id +
-                '}'
+        return "Player $id "
     }
 
     override fun equals(other: Any?): Boolean =
