@@ -5,8 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import ch.epfl.sdp.authentication.LocalUser
 import java.io.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * Cache tu store user information on the phone

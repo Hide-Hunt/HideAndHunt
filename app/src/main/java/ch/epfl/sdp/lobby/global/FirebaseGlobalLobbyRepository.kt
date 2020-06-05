@@ -18,7 +18,9 @@ class FirebaseGlobalLobbyRepository : IGlobalLobbyRepository {
 
     override fun getAllGames(cb: Callback<List<Game>>) {
         fs.collection(GAME_COLLECTION).whereEqualTo("state", GameState.LOBBY).get().addOnSuccessListener { result ->
-            cb(result.map { it.toObject<Game>() })
+            cb(result.map { val toObject = it.toObject<Game>()
+                toObject
+            })
         }
     }
 }

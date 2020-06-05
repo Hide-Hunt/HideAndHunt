@@ -10,20 +10,20 @@ import javax.inject.Inject
 
 class LocalReplayStore(private val context: Context) {
     @Inject lateinit var myAppDatabase: AppDatabaseCompanion
-    private val REPLAY_DIR = File(context.cacheDir.absolutePath + "/replays")
+    private val REPLAYDIR = File(context.cacheDir.absolutePath + "/replays")
 
     init {
         (context.applicationContext as HideAndHuntApplication).appComponent.inject(this)
     }
 
     fun createReplayDir() {
-        if(!REPLAY_DIR.exists()) {
-            REPLAY_DIR.mkdirs()
+        if(!REPLAYDIR.exists()) {
+            REPLAYDIR.mkdirs()
         }
     }
 
-    fun getTmpFile(id: String) = File(REPLAY_DIR, "game_$id.tmp")
-    fun getFile(id: String) = File(REPLAY_DIR, "$id.game")
+    fun getTmpFile(id: String) = File(REPLAYDIR, "game_$id.tmp")
+    fun getFile(id: String) = File(REPLAYDIR, "$id.game")
 
     fun getList(cb: Callback<List<ReplayInfo>>) {
         GlobalScope.launch {

@@ -4,7 +4,7 @@ import ch.epfl.sdp.db.Callback
 import ch.epfl.sdp.game.data.Faction
 
 class MockReplayRepository : IReplayRepository {
-    val mockReplayList = listOf(
+    private val mockReplayList = listOf(
             ReplayInfo("0", "Game #0", 0, 2345, "", Faction.PREDATOR, true),
             ReplayInfo("1", "Game #1", 6753759194, 6753759194 + 675, "", Faction.PREDATOR, false),
             ReplayInfo("2", "Game #2", 964781131, 964781131 + 182, "", Faction.PREY, false),

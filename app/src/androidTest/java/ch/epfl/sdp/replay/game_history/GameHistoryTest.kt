@@ -137,22 +137,14 @@ class GameHistoryTest {
 
     @Test
     fun parsingValidFileShouldGiveCorrectGameID() {
-        GameHistory.fromFile(gameAsInputStream(veryShortGame)).let {
-            assertEquals("42", it.gameID)
-        }
-        GameHistory.fromFile(gameAsInputStream(veryShortGame2)).let {
-            assertEquals("37", it.gameID)
-        }
+        assertEquals("42", GameHistory.fromFile(gameAsInputStream(veryShortGame)).gameID)
+        assertEquals("37", GameHistory.fromFile(gameAsInputStream(veryShortGame2)).gameID)
     }
 
     @Test
     fun parsingValidFileShouldGiveCorrectAdminID() {
-        GameHistory.fromFile(gameAsInputStream(veryShortGame)).let {
-            assertEquals("1", it.adminID)
-        }
-        GameHistory.fromFile(gameAsInputStream(veryShortGame2)).let {
-            assertEquals("4", it.adminID)
-        }
+        assertEquals("1", GameHistory.fromFile(gameAsInputStream(veryShortGame)).adminID)
+        assertEquals("4", GameHistory.fromFile(gameAsInputStream(veryShortGame2)).adminID)
     }
 
     @Test
