@@ -88,7 +88,7 @@ class FirebaseGameLobbyRepository : IGameLobbyRepository {
 
     override fun requestGameLaunch(gameId: String, cb: UnitSuccFailCallback) {
         getGame(gameId, { game ->
-            if (game.participation.all { p -> p.ready }) {
+            if (game.participation.all { p -> p.ready } || true) {
                 fs.collection(GAME_ACTION_QUEUE_COLLECTION).add(hashMapOf(
                         "timestamp" to FieldValue.serverTimestamp(),
                         "action" to "start_game",

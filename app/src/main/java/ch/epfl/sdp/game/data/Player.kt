@@ -14,7 +14,6 @@ open class Player(val id: Int) : Serializable {
     override fun toString(): String {
         return "Player{" +
                 "id=" + id +
-                ", lastKnownLocation=" + lastKnownLocation +
                 '}'
     }
 
