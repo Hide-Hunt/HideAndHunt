@@ -37,10 +37,17 @@ Once you selected a prey, you can track it using the distance shown on screen.
 ### Playing as a prey 
 If you are playing as a prey, try to escape the predators using the distance to the closest predator shown on screen.
 
+### Replay
+If you wish to watch the replay of a game, click on the replay button on the main screen. 
+Select the game you wish to replay and click on the download button. 
+Once the game is downloaded, click on the game to watch the replay.
 
 
+### Credits 
 
 main activity background photo : <a href="https://www.freepik.com/free-photos-vectors/background">Background photo created by natanaelginting - www.freepik.com</a>
+
+### Code 
 
 [![Build Status](https://travis-ci.org/Hide-Hunt/HideAndHunt.svg?branch=master)](https://travis-ci.org/Hide-Hunt/HideAndHunt)
 [![Maintainability](https://api.codeclimate.com/v1/badges/08a07eac60241c6ca861/maintainability)](https://codeclimate.com/github/Hide-Hunt/HideAndHunt/maintainability)
