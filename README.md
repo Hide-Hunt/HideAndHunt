@@ -40,10 +40,14 @@ If you are playing as a prey, try to escape the predators using the distance to 
 ### Replay
 If you wish to watch the replay of a game, click on the replay button on the main screen. 
 Select the game you wish to replay and click on the download button. 
-Once the game is downloaded, click on the game to watch the replay.
-Note : to watch the replay, you first need to download the map form where you played the game. 
-If you played in switzerland, the map can be found here : https://download.mapsforge.org/maps/v5/europe/switzerland.map
-Then run the command : adb push switzerland.map /storage/emulated/0/Android/data/ch.epfl.sdp/files/cache.map
+Once the game is downloaded, click on the game to watch the replay. It will stay registered and can be consulted offline.
+
+If this is the first replay you watch, the application will download the map. Currently only the map of the campus is available 
+for download, others must be manually pushed using adb.
+
+For instance, the whole Switzerland map can be obtained here : https://download.mapsforge.org/maps/v5/europe/switzerland.map
+Then using the adb program through the command line on a USB connected Android phone with USB debugging turned on, one can use 
+the command : adb push switzerland.map /storage/emulated/0/Android/data/ch.epfl.sdp/files/cache.map
 
 ## Credits 
 
